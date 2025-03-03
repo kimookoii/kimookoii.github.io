@@ -1,156 +1,88 @@
-/* Reset default styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Body and container */
+/* Gaya umum untuk body */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    background-color: #fafafa;
-    color: #333;
-    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
     margin: 0;
-    font-size: 18px;
+    padding: 0;
+    color: #333;
+    line-height: 1.6;
 }
 
-/* Main container for center alignment */
-.container {
-    width: 90%;
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-/* Header */
+/* Pengaturan header */
 header {
-    background-color: #fff;
+    background-color: #333;
+    color: white;
     padding: 20px 0;
-    border-bottom: 1px solid #ddd;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 
 header h1 {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #222;
     margin: 0;
+    font-size: 2.5em;
 }
 
-/* Main content styling */
+header p {
+    margin: 10px 0 0;
+    font-size: 1.2em;
+}
+
+/* Pengaturan konten utama */
 main {
-    margin-top: 40px;
+    max-width: 1000px;
+    margin: 0 auto; /* Agar konten berada di tengah */
+    padding: 20px;
 }
 
+/* Mengatur jarak antar artikel */
 article {
-    background-color: #fff;
+    background-color: white;
     padding: 20px;
+    margin-bottom: 20px; /* Jarak antar artikel */
     border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-article h2 {
-    font-size: 2.2rem;
-    color: #222;
-    margin-bottom: 15px;
+/* Mengatur jarak kanan dan kiri konten */
+.content {
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
-article p {
-    font-size: 1.2rem;
-    line-height: 1.8;
-    margin-bottom: 20px;
+/* Mengatur table agar tidak terlalu lebar */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
 }
 
-article a {
-    color: #0073e6;
-    text-decoration: none;
-    transition: color 0.3s ease;
+table th, table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
 }
 
-article a:hover {
-    color: #0056b3;
-    text-decoration: underline;
+table th {
+    background-color: #f4f4f4;
 }
 
-/* Sidebar or additional content */
-aside {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    margin-top: 40px;
-}
-
-aside h3 {
-    font-size: 1.8rem;
-    margin-bottom: 15px;
-}
-
-aside p {
-    font-size: 1rem;
-    color: #555;
-}
-
-/* Footer */
+/* Pengaturan untuk footer */
 footer {
-    background-color: #222;
-    color: #fff;
-    text-align: center;
-    padding: 15px;
-    margin-top: 40px;
-    border-radius: 8px;
-}
-
-footer p {
-    font-size: 1rem;
-    margin: 0;
-}
-
-/* Button (used for interactive items) */
-button {
-    background-color: #0073e6;
-    border: none;
-    padding: 10px 20px;
-    font-size: 1.1rem;
+    background-color: #333;
     color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
 }
 
-button:hover {
-    background-color: #0056b3;
-    transform: scale(1.1);
-}
-
-/* Responsive Design */
+/* Responsif: menyesuaikan tampilan pada layar kecil */
 @media (max-width: 768px) {
-    .container {
-        width: 90%;
+    main {
+        padding: 15px;
     }
-
-    article h2 {
-        font-size: 1.8rem;
+    article {
+        padding: 15px;
     }
-
-    article p {
-        font-size: 1rem;
-    }
-
-    footer p {
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 500px) {
-    article h2 {
-        font-size: 1.5rem;
-    }
-
-    article p {
-        font-size: 0.9rem;
+    table {
+        font-size: 0.9em;
     }
 }
