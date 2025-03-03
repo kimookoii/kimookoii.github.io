@@ -42,12 +42,13 @@ article {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+/* Mengatur gambar dalam artikel */
 .article-image {
     width: 100%;
     max-width: 800px;
     height: auto;
     display: block;
-    margin: 0 auto 20px; /* Menambahkan jarak 20px antara gambar dan artikel */
+    margin: 20px auto; /* Membuat jarak atas dan bawah 20px */
     border-radius: 10px;
 }
 
@@ -90,6 +91,9 @@ footer {
     }
     article {
         padding: 15px;
+    }
+    .article-image {
+        margin: 15px auto; /* Jarak lebih kecil untuk layar kecil */
     }
     table {
         font-size: 0.9em;
