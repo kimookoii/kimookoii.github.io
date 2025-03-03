@@ -7,109 +7,114 @@
 
 /* Body and container */
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    background-color: #f0f4f8;
+    background-color: #fafafa;
     color: #333;
-    padding: 20px;
-    font-size: 16px;
+    padding: 0;
+    margin: 0;
+    font-size: 18px;
 }
 
-/* Container to center content */
+/* Main container for center alignment */
 .container {
     width: 90%;
-    max-width: 1200px;
+    max-width: 900px;
     margin: 0 auto;
 }
 
 /* Header */
 header {
-    background: linear-gradient(135deg, #ff7e5f, #feb47b);
-    color: white;
-    padding: 40px 0;
+    background-color: #fff;
+    padding: 20px 0;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #222;
+    margin: 0;
+}
+
+/* Main content styling */
+main {
+    margin-top: 40px;
+}
+
+article {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+article h2 {
+    font-size: 2.2rem;
+    color: #222;
+    margin-bottom: 15px;
+}
+
+article p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    margin-bottom: 20px;
+}
+
+article a {
+    color: #0073e6;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+article a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Sidebar or additional content */
+aside {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 40px;
+}
+
+aside h3 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+aside p {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Footer */
+footer {
+    background-color: #222;
+    color: #fff;
+    text-align: center;
+    padding: 15px;
+    margin-top: 40px;
     border-radius: 8px;
 }
 
-h1 {
-    font-size: 2.5rem;
-    font-weight: bold;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    animation: fadeIn 2s ease-out;
-}
-
-/* Main content */
-main {
-    margin-top: 30px;
-}
-
-section {
-    margin-bottom: 40px;
-    padding: 20px;
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-}
-
-h2 {
-    font-size: 2rem;
-    color: #ff7e5f;
-    margin-bottom: 10px;
-    position: relative;
-    font-weight: bold;
-}
-
-h3 {
-    font-size: 1.6rem;
-    color: #feb47b;
-    margin-bottom: 10px;
-}
-
-ul {
-    list-style-type: square;
-    padding-left: 20px;
+footer p {
     font-size: 1rem;
-}
-
-table {
-    width: 100%;
-    margin-top: 20px;
-    border-collapse: collapse;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-table, th, td {
-    border: 1px solid #ddd;
-}
-
-th, td {
-    padding: 15px;
-    text-align: left;
-}
-
-th {
-    background-color: #ff7e5f;
-    color: white;
-    font-size: 1.1rem;
-}
-
-tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-td {
-    font-size: 1rem;
+    margin: 0;
 }
 
 /* Button (used for interactive items) */
 button {
-    background-color: #feb47b;
+    background-color: #0073e6;
     border: none;
     padding: 10px 20px;
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: white;
     border-radius: 5px;
     cursor: pointer;
@@ -117,63 +122,35 @@ button {
 }
 
 button:hover {
-    background-color: #ff7e5f;
+    background-color: #0056b3;
     transform: scale(1.1);
-}
-
-/* Hover Effects on Links */
-a {
-    text-decoration: none;
-    color: #ff7e5f;
-    transition: all 0.3s ease;
-}
-
-a:hover {
-    color: #feb47b;
-    text-decoration: underline;
-}
-
-/* Footer */
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 15px;
-    margin-top: 40px;
-    border-radius: 8px;
-}
-
-/* Fancy Animations */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {
-        width: 95%;
+        width: 90%;
     }
 
-    h1, h2, h3 {
-        font-size: 1.5rem;
+    article h2 {
+        font-size: 1.8rem;
     }
 
-    table, th, td {
+    article p {
+        font-size: 1rem;
+    }
+
+    footer p {
         font-size: 0.9rem;
-    }
-
-    section {
-        padding: 15px;
     }
 }
 
 @media (max-width: 500px) {
-    h1 {
-        font-size: 1.8rem;
+    article h2 {
+        font-size: 1.5rem;
+    }
+
+    article p {
+        font-size: 0.9rem;
     }
 }
