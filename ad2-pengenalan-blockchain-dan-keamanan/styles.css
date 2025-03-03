@@ -42,6 +42,15 @@ article {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.article-image {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
 /* Mengatur jarak kanan dan kiri konten */
 .content {
     padding-left: 15px;
