@@ -1,0 +1,88 @@
+/* Gaya umum untuk body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Pengaturan header */
+header {
+    background-color: #333;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+header p {
+    margin: 10px 0 0;
+    font-size: 1.2em;
+}
+
+/* Pengaturan konten utama */
+main {
+    max-width: 1000px;
+    margin: 0 auto; /* Agar konten berada di tengah */
+    padding: 20px;
+}
+
+/* Mengatur jarak antar artikel */
+article {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 20px; /* Jarak antar artikel */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Mengatur jarak kanan dan kiri konten */
+.content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Mengatur table agar tidak terlalu lebar */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f4f4f4;
+}
+
+/* Pengaturan untuk footer */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+/* Responsif: menyesuaikan tampilan pada layar kecil */
+@media (max-width: 768px) {
+    main {
+        padding: 15px;
+    }
+    article {
+        padding: 15px;
+    }
+    table {
+        font-size: 0.9em;
+    }
+}
