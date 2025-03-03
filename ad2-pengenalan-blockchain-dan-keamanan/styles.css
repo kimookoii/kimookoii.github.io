@@ -1,6 +1,6 @@
 /* Gaya umum untuk body */
 body {
-    font-family: Arial, sans-serif;
+    font-family: Tahoma, sans-serif;
     background-color: #f4f4f4;
     margin: 0;
     padding: 0;
@@ -8,23 +8,73 @@ body {
     line-height: 1.6;
 }
 
+
+
+
 /* Pengaturan header */
 header {
     background-color: #333;
     color: white;
     padding: 20px 0;
-    text-align: center;
+    margin-bottom: 40px;
 }
 
 header h1 {
     margin: 0;
-    font-size: 2.5em;
+    font-size: 1em;
+    text-align: right;
+    margin-right: 40px; /* Jarak agar tidak terlalu pojok */
 }
 
 header p {
     margin: 10px 0 0;
-    font-size: 1.2em;
+    font-size: 1.3em;
+    text-align: center;
 }
+
+
+
+
+/* Tombol Back */
+.back-button {
+    background-color: #555;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.3s;
+    position: absolute;
+    left: 40px;
+    top: 20px;
+}
+
+.back-button:hover {
+    background-color: #777;
+}
+
+
+
+
+/* Judul */
+title1 {
+    text-align: center;
+    font-size: 1.3em;
+}
+
+.title1-container h1,
+.title1-container h2 {
+    margin-bottom: 0px; /* Mengurangi jarak bawah */
+}
+
+.title1-container h2 {
+    margin-top: 0; /* Menghilangkan jarak atas agar lebih rapat */
+    font-size: 1.5em; /* Bisa disesuaikan ukurannya agar proporsional */
+}
+
+
+
 
 /* Pengaturan konten utama */
 main {
@@ -32,6 +82,9 @@ main {
     margin: 0 auto; /* Agar konten berada di tengah */
     padding: 20px;
 }
+
+
+
 
 /* Mengatur jarak antar artikel */
 article {
@@ -41,6 +94,9 @@ article {
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
+
+
 
 /* Mengatur gambar dalam artikel */
 .article-image {
@@ -52,11 +108,17 @@ article {
     border-radius: 10px;
 }
 
+
+
+
 /* Mengatur jarak kanan dan kiri konten */
 .content {
     padding-left: 15px;
     padding-right: 15px;
 }
+
+
+
 
 /* Mengatur table agar tidak terlalu lebar */
 table {
@@ -75,6 +137,9 @@ table th {
     background-color: #f4f4f4;
 }
 
+
+
+
 /* Pengaturan untuk footer */
 footer {
     background-color: #333;
@@ -83,6 +148,9 @@ footer {
     padding: 20px 0;
     margin-top: 40px;
 }
+
+
+
 
 /* Responsif: menyesuaikan tampilan pada layar kecil */
 @media (max-width: 768px) {
