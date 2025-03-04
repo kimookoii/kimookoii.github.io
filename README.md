@@ -12,11 +12,11 @@
 
 ## Tugas Cloud Computing
 
-1. **[...](https://kimookoii.github.io/)**
+1. **[Dasar DevOps](https://kimookoii.github.io/cc2-dasar-devops)**
 
 ---
 
 ### Cara Menggunakan
-1. Klik salah satu link di atas untuk membuka halaman yang diinginkan.
+1. Klik salah satu [link](https://kimookoii.github.io) di atas untuk membuka halaman yang diinginkan.
 
 Selamat belajar! -zico
