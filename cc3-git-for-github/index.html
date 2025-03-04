@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevOps: Menghubungkan Dua Dunia untuk Perangkat Lunak Tanpa Batas</title>
+    <title>Kuasai GitHub/GitLab: Panduan Praktis untuk Pengelolaan Proyek</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -17,93 +18,109 @@
 
     <title1>
         <div class="title1-container">
-            <h1>DevOps:</h1>
-            <h2>Menghubungkan Dua Dunia untuk Perangkat Lunak Tanpa Batas</h2>
+            <h1>Kuasai GitHub/GitLab:</h1>
+            <h2>Panduan Praktis untuk Pengelolaan Proyek</h2>
         </div>
     </title1>
 
     <main>
         <section class="content">
             
-            <img src="assets/ad4-1.webp" alt="Image1" class="article-image">
+            <img src="assets/cc3-1.gif" alt="Image1" class="article-image">
+
 
             <article>
-                <h2>Apa itu DevOps?</h2>
-                <p>DevOps adalah pendekatan dalam pengembangan perangkat lunak yang menggabungkan pengembang perangkat lunak (Development) dan tim operasional (Operations). Tujuannya adalah untuk meningkatkan kolaborasi, mempercepat pengiriman perangkat lunak, serta meningkatkan keandalan dan efisiensi sistem. DevOps memungkinkan otomatisasi proses, integrasi berkelanjutan (CI/CD), dan pendekatan berbasis infrastruktur sebagai kode (IaC).</p>
+                <p>Dalam pengelolaan proyek perangkat lunak, kolaborasi yang efektif sangatlah penting. Git, bersama dengan platform seperti GitHub dan GitLab, memungkinkan tim untuk bekerja secara bersamaan tanpa mengganggu kode utama. Artikel ini akan memandu Anda melalui langkah-langkah dasar dalam menggunakan Git untuk mengelola proyek dengan lebih efisien.</p>
             </article>
 
+
             <article>
-                <h2>Mengapa DevOps?</h2>
-                <p>DevOps hadir sebagai solusi atas berbagai tantangan dalam siklus pengembangan perangkat lunak, seperti keterlambatan dalam rilis produk, ketidaksempurnaan sistem, serta kurangnya koordinasi antara pengembang dan tim operasional. Berikut beberapa alasan utama mengapa DevOps penting:</p>
+                <h2>1. Membuat Repository di GitHub/GitLab</h2>
+                <p>Repository adalah tempat penyimpanan kode proyek. Ikuti langkah berikut untuk membuat repository:</p>
                 <ol>
-                    <li><strong>Kecepatan:</strong> Memungkinkan pengiriman fitur dan perbaikan lebih cepat.</li>
-                    <li><strong>Kolaborasi:</strong> Meningkatkan kerja sama antara tim pengembang dan operasional.</li>
-                    <li><strong>Keandalan:</strong> Memastikan sistem lebih stabil dan dapat diperbarui tanpa gangguan besar.</li>
-                    <li><strong>Efisiensi:</strong> Mengotomatiskan tugas-tugas manual yang berulang, menghemat waktu dan biaya.</li>
-                    <li><strong>Skalabilitas:</strong> Mempermudah pengelolaan infrastruktur dengan teknologi cloud dan containerization.</li>
+                    <li>Masuk ke akun GitHub/GitLab Anda.</li>
+                    <li>Klik tombol <strong>New Repository.</strong></li>
+                    <li>Masukkan nama repository, deskripsi (opsional), dan pilih jenis repository (public/private).</li>
+                    <li>Klik <strong>Create Repository.</strong></li>
                 </ol>
+                <img src="assets/cc3-2.webp" alt="Image2" class="article-image">
+                <p>Setelah repository dibuat, Anda dapat menginisialisasi proyek dengan perintah yang direkomendasikan oleh GitHub, atau menggunakan perintah berikut untuk menghubungkan repository lokal ke repository remote.</p>
+                <textarea id="markdown-input" rows="25" cols="50">
+echo "# labCC1" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/kimookoii/labCC1.git
+git push -u origin main
+                </textarea>
+                <img src="assets/cc3-3.webp" alt="Image3" class="article-image">
+                <img src="assets/cc3-4.webp" alt="Image4" class="article-image">
             </article>
 
+
             <article>
-                <h2>Sejarah DevOps</h2>
-                <p>Konsep DevOps pertama kali muncul pada akhir 2000-an sebagai respons terhadap tantangan dalam pengembangan perangkat lunak tradisional. Beberapa tonggak sejarah DevOps meliputi:</p>
+                <h2>2. Membuat Branch Baru</h2>
+                <p>Branch digunakan untuk mengembangkan fitur atau memperbaiki bug tanpa mengganggu kode utama.</p>
+                <textarea id="markdown-input2" rows="25" cols="50">
+git checkout -b nama-branch
+                </textarea>
+                <p>Gantilah nama-branch dengan nama cabang yang sesuai, misalnya zico-branch.</p>
+                <img src="assets/cc3-5.webp" alt="Image5" class="article-image">
+            </article>
+
+
+            <article>
+                <h2>3. Melakukan Perubahan dan Commit</h2>
+                <p>Setelah melakukan perubahan pada kode, Anda harus menyimpannya dengan commit.</p>
+                <textarea id="markdown-input2" rows="25" cols="50">
+git add .
+git commit -m "Menambahkan branch"
+                </textarea>
+                <img src="assets/cc3-6.webp" alt="Image6" class="article-image">
+            </article>
+
+
+            <article>
+                <h2>4. Push ke Repository</h2>
+                <p>Untuk menyimpan perubahan ke repository online, gunakan perintah berikut:</p>
+                <textarea id="markdown-input2" rows="25" cols="50">
+git push origin nama-branch
+                </textarea>
+                <img src="assets/cc3-7.webp" alt="Image7" class="article-image">
+            </article>
+
+
+            <article>
+                <h2>5. Membuat Pull Request dan Merge ke Main</h2>
+                <p>Pull request digunakan untuk meminta penggabungan perubahan dari branch ke main.</p>
                 <ol>
-                    <li><strong>2007–2008:</strong> Patrick Debois, seorang insinyur IT dari Belgia, mulai mengembangkan konsep yang kemudian disebut DevOps.</li>
-                    <li><strong>2009:</strong> Konferensi pertama “DevOpsDays” diadakan di Belgia, menandai awal gerakan DevOps.</li>
-                    <li><strong>2010–2015:</strong> DevOps mulai diadopsi oleh perusahaan besar seperti Facebook, Google, dan Amazon untuk meningkatkan efisiensi dan kecepatan pengembangan.</li>
-                    <li><strong>Saat Ini:</strong> DevOps menjadi standar dalam pengembangan perangkat lunak modern, didukung oleh berbagai alat seperti Docker, Kubernetes, Jenkins, Terraform, dan lainnya.</li>
+                    <li>Masuk ke GitHub/GitLab dan buka repository Anda.</li>
+                    <li>Klik <strong>Pull request</strong> pada branch yang telah dipush.</li>
+                    <li>Tambahkan deskripsi perubahan dan klik <strong>New Pull Request.</strong></li>
+                    <li>Setelah direview, jalankan perintah berikut untuk menggabungkan branch ke main:</li>
                 </ol>
+                <textarea id="markdown-input2" rows="25" cols="50">
+git checkout main
+git merge nama-branch
+                </textarea>
+                <img src="assets/cc3-8.webp" alt="Image8" class="article-image">
             </article>
 
-            <article>
-                <h2>Arsitektur DevOps</h2>
-                <p>Arsitektur DevOps terdiri dari beberapa komponen utama yang bekerja bersama untuk mendukung pengembangan dan operasional perangkat lunak yang efisien. Beberapa elemen kunci dalam arsitektur DevOps meliputi:</p>
-                <ol>
-                    <li><strong>Continuous Integration (CI):</strong> Menggabungkan perubahan kode secara berkala ke dalam repositori utama.</li>
-                    <li><strong>Continuous Delivery (CD):</strong> Mengotomatiskan proses pengiriman perangkat lunak ke lingkungan produksi.</li>
-                    <li><strong>Infrastructure as Code (IaC):</strong> Mengelola dan menyebarkan infrastruktur menggunakan kode.</li>
-                    <li><strong>Monitoring dan Logging:</strong> Mengawasi performa aplikasi dan infrastruktur untuk mendeteksi masalah lebih awal.</li>
-                    <li><strong>Security (DevSecOps):</strong> Mengintegrasikan keamanan ke dalam siklus pengembangan perangkat lunak.</li>
-                </ol>
-            </article>
 
             <article>
-                <h2>Kelebihan dan Kekurangan DevOps</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Kelebihan</th>
-                            <th>Kekurangan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Kecepatan dalam pengembangan dan rilis perangkat lunak.</td>
-                            <td>Implementasi awal yang kompleks dan membutuhkan perubahan budaya dalam organisasi.</td>
-                        </tr>
-                        <tr>
-                            <td>Peningkatan efisiensi dengan otomatisasi.</td>
-                            <td>Memerlukan investasi besar dalam alat dan infrastruktur.</td>
-                        </tr>
-                        <tr>
-                            <td>Kolaborasi lebih baik antar tim.</td>
-                            <td>Keamanan bisa menjadi tantangan jika tidak diterapkan dengan benar.</td>
-                        </tr>
-                        <tr>
-                            <td>Respon lebih cepat terhadap perubahan pasar.</td>
-                            <td>Tidak semua perusahaan memiliki keahlian teknis untuk mengadopsi DevOps dengan cepat.</td>
-                        </tr>
-                        <tr>
-                            <td>Kualitas perangkat lunak yang lebih baik melalui pengujian berkelanjutan.</td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <h2>6. Push ke Repository</h2>
+                <p>Untuk menyimpan perubahan ke repository online, gunakan perintah berikut:</p>
+                <textarea id="markdown-input2" rows="25" cols="50">
+git push origin main
+                </textarea>
+                <img src="assets/cc3-9.webp" alt="Image9" class="article-image">
             </article>
+
 
             <article>
                 <h2>Kesimpulan</h2>
-                <p>DevOps telah membawa revolusi dalam cara pengembangan dan operasional perangkat lunak dilakukan. Dengan pendekatan yang mengedepankan kolaborasi, otomatisasi, dan efisiensi, DevOps memungkinkan perusahaan untuk merilis perangkat lunak dengan lebih cepat dan andal. Meskipun memiliki tantangan dalam implementasinya, manfaat jangka panjang DevOps sangat signifikan. Dengan memahami konsep, arsitektur, dan kelebihannya, organisasi dapat memanfaatkan DevOps untuk mencapai tujuan bisnis yang lebih baik dan lebih cepat.</p>
+                <p>Git dan platform seperti GitHub/GitLab mempermudah pengelolaan proyek perangkat lunak, baik secara individu maupun dalam tim. Dengan memahami langkah-langkah dasar seperti membuat repository, menggunakan branch, melakukan commit, push, dan merge, Anda dapat bekerja lebih efisien dan terorganisir. Praktik ini juga membantu menjaga kualitas kode dan kolaborasi yang lebih baik dalam pengembangan perangkat lunak. Selamat mencoba dan terus eksplorasi fitur-fitur Git lainnya!
             </article>
         </section>
     </main>
