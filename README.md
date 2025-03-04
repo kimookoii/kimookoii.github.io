@@ -7,6 +7,7 @@
 1. **[Pengenalan Blockchain dan Keamanan](https://kimookoii.github.io/ad2-pengenalan-blockchain-dan-keamanan/)**
 2. **[Teknik Hashing Blockchain](https://kimookoii.github.io/ad3-teknik-hashing-blockchain)**
 3. **[Mining di Blockchain](https://kimookoii.github.io/ad4-mining-di-blockchain)**
+4. **[Konsensus di Blockchain](https://kimookoii.github.io/ad4-konsensus-di-blockchain)** x
 
 ---
 
@@ -14,7 +15,7 @@
 
 1. **[Dasar DevOps](https://kimookoii.github.io/cc2-dasar-devops)**
 2. **[Git for Devops](https://kimookoii.github.io/cc3-git-for-devops)**
-2. **[Docker Introduction](https://kimookoii.github.io/cc4-docker-introduction)**
+3. **[Docker Introduction](https://kimookoii.github.io/cc4-docker-introduction)** x
 
 ---
 
