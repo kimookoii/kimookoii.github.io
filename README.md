@@ -13,7 +13,7 @@
 ## Tugas Cloud Computing
 
 1. **[Dasar DevOps](https://kimookoii.github.io/cc2-dasar-devops)**
-2. **[Git for Github](https://kimookoii.github.io/cc3-git-for-github)**
+2. **[Git for Devops](https://kimookoii.github.io/cc3-git-for-devops)**
 2. **[Docker Introduction](https://kimookoii.github.io/cc4-docker-introduction)**
 
 ---
