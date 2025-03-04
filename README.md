@@ -7,7 +7,7 @@
 1. **[Pengenalan Blockchain dan Keamanan](https://kimookoii.github.io/ad2-pengenalan-blockchain-dan-keamanan/)**
 2. **[Teknik Hashing Blockchain](https://kimookoii.github.io/ad3-teknik-hashing-blockchain)**
 3. **[Mining di Blockchain](https://kimookoii.github.io/ad4-mining-di-blockchain)**
-4. **[Konsensus di Blockchain](https://kimookoii.github.io/ad4-konsensus-di-blockchain)** x
+4. **[Konsensus di Blockchain](https://kimookoii.github.io/ad5-konsensus-di-blockchain)** x
 
 ---
 
