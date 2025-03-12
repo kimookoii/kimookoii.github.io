@@ -17,16 +17,100 @@
 
     <title1>
         <div class="title1-container">
-            <h1>Konsensus di Blockchain</h1>
+            <h1>Konsensus di Blockchain:</h1>
+            <h2>Fondasi Keamanan dan Kepercayaan</h2>
         </div>
     </title1>
 
     <main>
         <section class="content">
+            
+            <img src="assets/ad5-1.jpg" alt="Image1" class="article-image">
 
             <article>
-                <p>Konsensus di Blockchain</p>
+                <h2>Apa Itu Konsensus?</h2>
+                <p>Konsensus adalah mekanisme yang memungkinkan jaringan komputer yang terdistribusi untuk mencapai kesepakatan tentang keadaan data atau transaksi yang valid tanpa memerlukan otoritas pusat. Dalam konteks blockchain, konsensus digunakan untuk memastikan bahwa semua node dalam jaringan memiliki salinan buku besar yang identik dan valid, mencegah serangan serta menjaga integritas sistem.</p>
             </article>
+
+            <article>
+                <h2>Mengapa Konsensus Penting?</h2>
+                <p>Konsensus memainkan peran penting dalam blockchain karena alasan berikut:</p>
+                <ol>
+                    <li><strong>Keamanan: </strong>Menghindari manipulasi atau pemalsuan data oleh aktor jahat.</li>
+                    <li><strong>Desentralisasi: </strong>Memastikan bahwa tidak ada entitas tunggal yang memiliki kendali penuh atas jaringan.</li>
+                    <li><strong>Ketahanan terhadap kegagalan: </strong>Memastikan bahwa jaringan tetap beroperasi meskipun beberapa node mengalami kegagalan.</li>
+                    <li><strong>Transparansi: </strong>Memungkinkan semua peserta dalam jaringan untuk memverifikasi transaksi dengan cara yang dapat dipercaya.</li>
+                </ol>
+            </article>
+
+            <article>
+                <h2>Cara Kerja Byzantine Fault Tolerance (BFT)</h2>
+                <p>Byzantine Fault Tolerance (BFT) adalah mekanisme konsensus yang dirancang untuk menangani masalah Byzantine Generals, yaitu situasi di mana beberapa node dalam sistem mungkin bertindak secara jahat atau mengalami kegagalan. Cara kerja BFT melibatkan:</p>
+                <ol>
+                    <li><strong>Replikasi data:</strong> Semua node menyimpan salinan data yang sama.</li>
+                    <li><strong>Validasi pesan:</strong> Setiap node berkomunikasi dan memvalidasi transaksi.</li>
+                    <li><strong>Mayoritas jujur:</strong> Keputusan diambil berdasarkan suara mayoritas dari node yang jujur.</li>
+                    <li><strong>Toleransi terhadap kesalahan:</strong> Sistem tetap berfungsi meskipun ada node yang gagal atau bertindak tidak jujur.</li>
+                </ol>
+            </article>
+
+            <article>
+                <h2>Perbedaan Metode BFT dengan Proof of Work (PoW)</h2>
+                <p>BFT dan Proof of Work (PoW) adalah dua pendekatan berbeda dalam mencapai konsensus. Berikut adalah perbedaannya:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Aspek</th>
+                            <th>Byzantine Fault Tolerance (BFT)</th>
+                            <th>Proof of Work (PoW)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Keamanan</td>
+                            <td>Mengandalkan validasi oleh mayoritas node</td>
+                            <td>Menggunakan teka-teki kriptografi yang membutuhkan daya komputasi</td>
+                        </tr>
+                        <tr>
+                            <td>Efisiensi Energi</td>
+                            <td>Lebih hemat energi karena tidak memerlukan perhitungan intensif</td>
+                            <td>Membutuhkan daya komputasi besar sehingga boros energi</td>
+                        </tr>
+                        <tr>
+                            <td>Skala Jaringan</td>
+                            <td>Cocok untuk jaringan dengan jumlah node terbatas</td>
+                            <td>Lebih cocok untuk jaringan besar dan terbuka</td>
+                        </tr>
+                        <tr>
+                            <td>Waktu Validasi</td>
+                            <td>Cepat karena tidak memerlukan perhitungan matematis yang kompleks</td>
+                            <td>Lambat karena harus memecahkan teka-teki kriptografi</td>
+                        </tr>
+                        <tr>
+                            <td>Contoh Implementasi</td>
+                            <td>Tendermint, PBFT (Practical BFT)</td>
+                            <td>Bitcoin, Ethereum (sebelum PoS)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </article>
+
+            <article>
+                <h2>Implementasi Konsensus Selain pada Blockchain</h2>
+                <p>Selain dalam blockchain, mekanisme konsensus juga diterapkan di berbagai sistem lain, seperti:</p>
+                <ol>
+                    <li><strong>Sistem Database Terdistribusi:</strong> Digunakan dalam database terdistribusi seperti Google Spanner untuk memastikan konsistensi data antar server.</li>
+                    <li><strong>Jaringan Peer-to-Peer (P2P):</strong> Digunakan dalam protokol berbagi file seperti BitTorrent untuk memastikan data yang diunduh valid.</li>
+                    <li><strong>Sistem Keuangan:</strong> Digunakan dalam mekanisme pembayaran digital seperti Visa dan Mastercard untuk memastikan transaksi yang aman dan valid.</li>
+                    <li><strong>Internet of Things (IoT):</strong> Digunakan dalam sistem sensor terdistribusi agar dapat bekerja secara sinkron dan menghindari kesalahan data.</li>
+                </ol>
+            </article>
+
+            <article>
+                <h2>Kesimpulan</h2>
+                <p>Konsensus adalah elemen fundamental dalam blockchain dan sistem terdistribusi lainnya. Berbagai metode konsensus seperti BFT dan PoW memiliki keunggulan dan kelemahan masing-masing tergantung pada kebutuhan sistem. Dengan berkembangnya teknologi, mekanisme konsensus terus mengalami inovasi untuk meningkatkan efisiensi, keamanan, dan skalabilitas.</p>
+            </article>
+
         </section>
     </main>
 
