@@ -9,6 +9,7 @@
 3. **[Mining di Blockchain](https://kimookoii.github.io/ad4-mining-di-blockchain)**
 4. **[Konsensus di Blockchain](https://kimookoii.github.io/ad5-konsensus-di-blockchain)**
 5. **[Kripto dan Token di Blockchain](https://kimookoii.github.io/ad6-kripto-dan-token-di-blockchain)**
+6. **[UTS - Blockchain Fundamental](https://kimookoii.github.io/ad7-uts-blockchain-fundamental)**
 
 ---
 
