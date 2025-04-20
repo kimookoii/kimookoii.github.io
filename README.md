@@ -10,6 +10,8 @@
 4. **[Konsensus di Blockchain](https://kimookoii.github.io/ad5-konsensus-di-blockchain)**
 5. **[Kripto dan Token di Blockchain](https://kimookoii.github.io/ad6-kripto-dan-token-di-blockchain)**
 6. **[UTS - Blockchain Fundamental](https://kimookoii.github.io/ad7-uts-blockchain-fundamental)**
+7. **[Function Fundamental for Blockchain](https://kimookoii.github.io/ad8-function-fundamental-python-for-blockchain)**
+8. **[Building a Blockchain](https://kimookoii.github.io/ad9-building-a-blockchain)**
 
 ---
 
