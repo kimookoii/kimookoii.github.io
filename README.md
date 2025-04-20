@@ -20,7 +20,7 @@
 1. **[Dasar DevOps](https://kimookoii.github.io/cc2-dasar-devops)**
 2. **[Git for Devops](https://kimookoii.github.io/cc3-git-for-devops)**
 3. **[Docker Introduction](https://kimookoii.github.io/cc4-docker-introduction)**
-4. **[Integrasi Gitlab dengan Jenkins untuk Continuos Deployment](https://kimookoii.github.io/cc5-integrasi-gitlab-dengan-jenkins-untuk-continuos-deployment)** x
+4. **[UTS - Integrasi Gitlab dengan Jenkins untuk Continuos Deployment](https://kimookoii.github.io/cc5-integrasi-gitlab-dengan-jenkins-untuk-continuos-deployment)** x
 5. **[Basic Docker](https://kimookoii.github.io/cc6-basic-docker)** x
 
 ---
