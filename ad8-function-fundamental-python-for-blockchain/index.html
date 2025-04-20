@@ -29,66 +29,66 @@
 
 
             <article>
-                <p>Dalam proses belajar pemrograman, terutama di Python, kita pasti sering menemui istilah fungsi. Fungsi ini berguna banget untuk mempermudah penulisan kode, jadi kita nggak perlu berulang-ulang menulis perintah yang sama. Python sendiri sudah menyediakan banyak fungsi bawaan seperti sum(), len(), min(), dan max(). Tapi, kadang kita juga perlu membuat fungsi sendiri supaya kode yang kita buat bisa lebih rapi dan efisien, apalagi kalau tugas yang dikerjakan butuh pengulangan atau perhitungan khusus. Di artikel ini, aku bakal bahas beberapa contoh penggunaan fungsi, mulai dari yang simpel sampai yang bisa dipakai buat bantu proses analisis data.</p>
+                <p>Dalam proses belajar pemrograman, terutama di Python, kita pasti sering menemui istilah <strong>fungsi</strong>. Fungsi ini berguna banget untuk mempermudah penulisan kode, jadi kita nggak perlu berulang-ulang menulis perintah yang sama. Python sendiri sudah menyediakan banyak fungsi bawaan seperti <code>sum()</code>, <code>len()</code>, <code>min()</code>, dan <code>max()</code>. Tapi, kadang kita juga perlu membuat fungsi sendiri supaya kode yang kita buat bisa lebih rapi dan efisien, apalagi kalau tugas yang dikerjakan butuh pengulangan atau perhitungan khusus. Di artikel ini, aku bakal bahas beberapa contoh penggunaan fungsi, mulai dari yang simpel sampai yang bisa dipakai buat bantu proses <em>analisis data</em>.</p>
             </article>
+            
 
-
-
+            
             <article>
                 <h2>1. Built-in Function</h2>
-                <p>Fungsi mempermudah proses penulisan kode dan mempercepat pekerjaan, apalagi saat menangani tugas-tugas yang berulang. Python menyediakan berbagai fungsi bawaan seperti sum(), len(), min(), dan max(). Namun, tidak semua kebutuhan bisa dipenuhi hanya dengan fungsi-fungsi bawaan ini.</p>
+                <p>Fungsi mempermudah proses penulisan kode dan mempercepat pekerjaan, apalagi saat menangani tugas-tugas yang berulang. Python menyediakan berbagai fungsi bawaan seperti <code>sum()</code>, <code>len()</code>, <code>min()</code>, dan <code>max()</code>. Namun, tidak semua kebutuhan bisa dipenuhi hanya dengan fungsi-fungsi bawaan ini.</p>
                 
                 <p>Contohnya, saat ingin membuat tabel frekuensi dari data aplikasi iOS, kita bisa menulis fungsi buatan sendiri yang:</p>
                 <ul>
                     <li>Menerima input berupa data</li>
                     <li>Menghasilkan tabel frekuensi untuk kolom yang dipilih</li>
-                    <li>Mengembalikan hasil dalam bentuk dictionary</li>
+                    <li>Mengembalikan hasil dalam bentuk <code>dictionary</code></li>
                 </ul>
                 <p>Dengan membuat fungsi seperti ini, proses analisis data menjadi lebih cepat dan praktis.</p>
                 
                 <p><strong>Perintah:</strong></p>
                 <ul>
-                    <li>Buat tabel frekuensi dari daftar ratings yang sudah disediakan di editor kode.</li>
-                    <li>Awali dengan membuat dictionary kosong bernama content_ratings.</li>
+                    <li>Buat tabel frekuensi dari daftar <code>ratings</code> yang sudah disediakan di editor kode.</li>
+                    <li>Awali dengan membuat <code>dictionary</code> kosong bernama <code>content_ratings</code>.</li>
                     <li>
-                        Lakukan loop pada list ratings. Di setiap iterasi:
+                        Lakukan <code>loop</code> pada <code>list ratings</code>. Di setiap iterasi:
                         <ul>
-                            <li>Jika rating sudah ada dalam dictionary, tambahkan jumlahnya 1.</li>
+                            <li>Jika rating sudah ada dalam <code>dictionary</code>, tambahkan jumlahnya 1.</li>
                             <li>Jika belum ada, tambahkan entri baru dengan nilai 1.</li>
                         </ul>
                     </li>
-                    <li>Setelah selesai, tampilkan isi content_ratings untuk melihat hasilnya.</li>
+                    <li>Setelah selesai, tampilkan isi <code>content_ratings</code> untuk melihat hasilnya.</li>
                 </ul>
             </article>
-
+            
 
 
             <article>
                 <h2>2. Creating Our Own Functions</h2>
-                <p>Fungsi square() berfungsi untuk menghitung kuadrat dari angka yang diberikan. Dalam contoh, fungsi ini digunakan untuk menghitung kuadrat dari angka 10 dan 16, lalu hasilnya disimpan masing-masing ke dalam variabel squared_10 dan squared_16. Hasilnya kemudian ditampilkan di layar.</p>
-
+                <p>Fungsi <code>square()</code> berfungsi untuk menghitung kuadrat dari angka yang diberikan. Dalam contoh, fungsi ini digunakan untuk menghitung kuadrat dari angka 10 dan 16, lalu hasilnya disimpan masing-masing ke dalam variabel <code>squared_10</code> dan <code>squared_16</code>. Hasilnya kemudian ditampilkan di layar.</p>
+            
                 <p><strong>Perintah:</strong></p>
                 <ul>
-                    <li>Buat fungsi square() seperti penjelasan di atas.</li>
-                    <li>Hitung kuadrat dari angka 10 dan simpan ke variabel squared_10.</li>
-                    <li>Hitung kuadrat dari angka 16 dan simpan ke variabel squared_16.</li>
+                    <li>Buat fungsi <code>square()</code> seperti penjelasan di atas.</li>
+                    <li>Hitung kuadrat dari angka 10 dan simpan ke variabel <code>squared_10</code>.</li>
+                    <li>Hitung kuadrat dari angka 16 dan simpan ke variabel <code>squared_16</code>.</li>
                 </ul>
             </article>
-
+            
 
 
             <article>
                 <h2>3. The Structure of Function</h2>
-                <p>Fungsi add_10() dibuat untuk menambahkan angka 10 ke nilai input. Fungsi ini dipakai untuk menghitung hasil dari 30 + 10 dan 90 + 10. Hasil akhirnya disimpan di variabel add_30 dan add_90.</p>
-
+                <p>Fungsi <code>add_10()</code> dibuat untuk menambahkan angka 10 ke nilai input. Fungsi ini dipakai untuk menghitung hasil dari 30 + 10 dan 90 + 10. Hasil akhirnya disimpan di variabel <code>add_30</code> dan <code>add_90</code>.</p>
+            
                 <p><strong>Perintah:</strong></p>
                 <ul>
-                    <li>Tulis fungsi add_10() yang menerima satu angka, menambahkan angka 10, dan mengembalikan hasilnya.</li>
+                    <li>Tulis fungsi <code>add_10()</code> yang menerima satu angka, menambahkan angka 10, dan mengembalikan hasilnya.</li>
                     <li>
                         Gunakan fungsi ini untuk:
                         <ul>
-                            <li>Menambahkan 10 ke angka 30, simpan ke add_30.</li>
-                            <li>Menambahkan 10 ke angka 90, simpan ke add_90.</li>
+                            <li>Menambahkan 10 ke angka 30, simpan ke <code>add_30</code>.</li>
+                            <li>Menambahkan 10 ke angka 90, simpan ke <code>add_90</code>.</li>
                         </ul>
                     </li>
                 </ul>
@@ -98,103 +98,103 @@
 
             <article>
                 <h2>4. Parameters & Arguments</h2>
-                <p>Fungsi square() ditulis ulang agar langsung mengembalikan hasil kuadrat dari input tanpa membuat variabel tambahan di dalamnya. Kemudian, fungsi ini digunakan untuk menghitung kuadrat dari angka 6 dan 11, hasilnya disimpan dalam squared_6 dan squared_11.</p>
-
+                <p>Fungsi <code>square()</code> ditulis ulang agar langsung mengembalikan hasil kuadrat dari input tanpa membuat variabel tambahan di dalamnya. Kemudian, fungsi ini digunakan untuk menghitung kuadrat dari angka 6 dan 11, hasilnya disimpan dalam <code>squared_6</code> dan <code>squared_11</code>.</p>
+            
                 <p><strong>Perintah:</strong></p>
                 <ul>
-                    <li>Tulis ulang square() tanpa menggunakan variabel tambahan dalam fungsi.</li>
+                    <li>Tulis ulang <code>square()</code> tanpa menggunakan variabel tambahan dalam fungsi.</li>
                     <li>Pakai fungsi tersebut untuk menghitung kuadrat angka 6 dan 11.</li>
-                    <li>Simpan hasilnya masing-masing di squared_6 dan squared_11.</li>
+                    <li>Simpan hasilnya masing-masing di <code>squared_6</code> dan <code>squared_11</code>.</li>
                 </ul>
             </article>
-
+            
 
 
             <article>
                 <h2>5. Extract Values from any Column</h2>
-                <p>Fungsi extract() digunakan untuk mengambil data dari kolom tertentu di dataset apps_data. Fungsi ini menerima parameter berupa nomor indeks kolom, mengambil data dari kolom tersebut (kecuali header), dan mengembalikannya dalam bentuk list. Contoh: mengambil data dari kolom prime_genre (indeks ke-11) dan menyimpannya di variabel genres.</p>
-
+                <p>Fungsi <code>extract()</code> digunakan untuk mengambil data dari kolom tertentu di dataset <code>apps_data</code>. Fungsi ini menerima parameter berupa nomor indeks kolom, mengambil data dari kolom tersebut (kecuali header), dan mengembalikannya dalam bentuk <code>list</code>. Contoh: mengambil data dari kolom <code>prime_genre</code> (indeks ke-11) dan menyimpannya di variabel <code>genres</code>.</p>
+            
                 <p><strong>Perintah:</strong></p>
                 <ul>
-                    <li>Buat fungsi extract() yang menerima indeks kolom sebagai input.</li>
+                    <li>Buat fungsi <code>extract()</code> yang menerima indeks kolom sebagai input.</li>
                     <li>
                         Di dalam fungsi:
                         <ul>
-                            <li>Buat list kosong.</li>
-                            <li>Loop data dari apps_data (lewati header) dan ambil nilai dari kolom sesuai parameter.</li>
-                            <li>Tambahkan nilai tersebut ke list.</li>
-                            <li>Kembalikan list berisi hasil ekstraksi.</li>
+                            <li>Buat <code>list</code> kosong.</li>
+                            <li><code>Loop</code> data dari <code>apps_data</code> (lewati header) dan ambil nilai dari kolom sesuai parameter.</li>
+                            <li>Tambahkan nilai tersebut ke <code>list</code>.</li>
+                            <li>Kembalikan <code>list</code> berisi hasil ekstraksi.</li>
                         </ul>
                     </li>
-                    <li>Gunakan fungsi extract() untuk mengambil data dari kolom prime_genre (indeks 11) dan simpan ke variabel genres.</li>
+                    <li>Gunakan fungsi <code>extract()</code> untuk mengambil data dari kolom <code>prime_genre</code> (indeks 11) dan simpan ke variabel <code>genres</code>.</li>
                 </ul>
             </article>
 
 
-
+            
             <article>
                 <h2>6. Creating Frequency Tables</h2>
-                <p>Kode ini membuat tabel frekuensi dari sebuah daftar data dengan menghitung seberapa sering setiap elemen muncul.</p>
+                <p>Kode ini membuat tabel frekuensi dari sebuah <code>list</code> data dengan menghitung seberapa sering setiap elemen muncul.</p>
             
                 <p><strong>Perintah:</strong></p>
                 <ul>
-                    <li>Buat fungsi bernama freq_table() yang menerima list sebagai input.</li>
+                    <li>Buat fungsi bernama <code>freq_table()</code> yang menerima <code>list</code> sebagai input.</li>
                     <li>
                         Di dalam fungsi:
                         <ul>
-                            <li>Buat dictionary kosong.</li>
-                            <li>Loop setiap elemen list, hitung kemunculannya, dan simpan dalam dictionary.</li>
-                            <li>Kembalikan dictionary sebagai hasil.</li>
+                            <li>Buat <code>dictionary</code> kosong.</li>
+                            <li><code>Loop</code> setiap elemen <code>list</code>, hitung kemunculannya, dan simpan dalam <code>dictionary</code>.</li>
+                            <li>Kembalikan <code>dictionary</code> sebagai hasil.</li>
                         </ul>
                     </li>
-                    <li>Gunakan fungsi freq_table() untuk membuat tabel frekuensi dari genres dan simpan hasilnya di variabel genres_ft.</li>
+                    <li>Gunakan fungsi <code>freq_table()</code> untuk membuat tabel frekuensi dari <code>genres</code> dan simpan hasilnya di variabel <code>genres_ft</code>.</li>
                 </ul>
             </article>
+
+
             
-
-
             <article>
                 <h2>7. Writing a Single Function</h2>
-                <p>Kode ini membaca data dari file CSV dan membuat fungsi freq_table() yang lebih dinamis. Fungsi ini menerima parameter indeks kolom, lalu menghitung frekuensi kemunculan setiap nilai dalam kolom tersebut, dan menyimpannya di dictionary. Fungsi ini kemudian digunakan untuk menghitung frekuensi pada kolom user_rating (indeks 7) dan hasilnya disimpan di ratings_ft.</p>
+                <p>Kode ini membaca data dari file <code>CSV</code> dan membuat fungsi <code>freq_table()</code> yang lebih dinamis. Fungsi ini menerima parameter indeks kolom, lalu menghitung frekuensi kemunculan setiap nilai dalam kolom tersebut, dan menyimpannya di <code>dictionary</code>. Fungsi ini kemudian digunakan untuk menghitung frekuensi pada kolom <code>user_rating</code> (indeks 7) dan hasilnya disimpan di <code>ratings_ft</code>.</p>
             </article>
+
+
             
-
-
             <article>
                 <h2>8. Reusability & Multiple Parameters</h2>
-                <p>Kode ini memperbarui fungsi freq_table() agar lebih fleksibel dengan menerima dua parameter:</p>
+                <p>Kode ini memperbarui fungsi <code>freq_table()</code> agar lebih fleksibel dengan menerima dua parameter:</p>
                 <ul>
-                    <li>data_set untuk dataset.</li>
-                    <li>index untuk nomor kolom yang akan dihitung frekuensinya.</li>
+                    <li><code>data_set</code> untuk dataset.</li>
+                    <li><code>index</code> untuk nomor kolom yang akan dihitung frekuensinya.</li>
                 </ul>
                 <p>Dengan begitu, fungsi ini bisa dipakai untuk kolom manapun tanpa perlu mengubah kodenya.</p>
             </article>
+
+
             
-
-
             <article>
                 <h2>9. Keyword & Positional Arguments</h2>
-                <p>Fungsi freq_table() bisa dipanggil dengan positional atau keyword arguments:</p>
+                <p>Fungsi <code>freq_table()</code> bisa dipanggil dengan <code>positional</code> atau <code>keyword arguments</code>:</p>
                 <ul>
-                    <li>content_ratings_ft menggunakan freq_table(apps_data, 10).</li>
-                    <li>ratings_ft dipanggil dengan keyword argument sesuai urutan data_set dan index.</li>
-                    <li>genres_ft dipanggil dengan keyword argument tapi urutan argumen bisa ditukar (index duluan).</li>
+                    <li><code>content_ratings_ft</code> menggunakan <code>freq_table(apps_data, 10)</code>.</li>
+                    <li><code>ratings_ft</code> dipanggil dengan <code>keyword argument</code> sesuai urutan <code>data_set</code> dan <code>index</code>.</li>
+                    <li><code>genres_ft</code> dipanggil dengan <code>keyword argument</code> tapi urutan argumen bisa ditukar (<code>index</code> duluan).</li>
                 </ul>
                 <p>Cara ini memudahkan penggunaan fungsi dengan lebih fleksibel.</p>
             </article>
+
+
             
-
-
             <article>
                 <h2>10. Combining Functions</h2>
                 <p>Kode ini membaca data, mengambil kolom tertentu, lalu menghitung rata-rata nilainya. Hanya data numerik yang diproses, nilai yang tidak bisa dikonversi ke angka akan diabaikan. Selain itu, kode juga menghindari pembagian dengan nol jika tidak ada data valid.</p>
             </article>
+
+
             
-
-
             <article>
                 <h2>11. Debugging Functions</h2>
-                <p>Kode membaca data dari AppleStore.csv, menghitung rata-rata dari harga aplikasi dan rating aplikasi. Prosesnya:</p>
+                <p>Kode membaca data dari <code>AppleStore.csv</code>, menghitung rata-rata dari harga aplikasi dan rating aplikasi. Prosesnya:</p>
                 <ul>
                     <li>Mengambil data dari kolom.</li>
                     <li>Menjumlahkan semua nilai.</li>
@@ -203,11 +203,11 @@
                 </ul>
             </article>
 
-            
 
+            
             <article>
                 <h2>Kesimpulan</h2>
-                <p>Fungsi dalam Python sangat memudahkan kita untuk membuat program yang efisien, terstruktur, dan rapi. Dengan memahami fungsi, kita bisa menghemat waktu dan tenaga karena bisa memanggil kembali kode yang sudah dibuat tanpa harus menulis ulang.</p>
+                <p>Fungsi dalam Python sangat memudahkan kita untuk membuat program yang efisien, terstruktur, dan rapi. Dengan memahami fungsi, kita bisa menghemat waktu dan tenaga karena bisa memanggil kembali kode yang sudah dibuat tanpa harus menulis ulang.</p>
             </article>
             
 
