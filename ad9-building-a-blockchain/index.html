@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building a Blockchain</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <button class="back-button" onclick="window.history.back();">&#8592; Back</button>
+            <h1>88032023006  |  ZICO</h1>
+            <p>...</p>
+        </div>
+    </header>
+
+    <title1>
+        <div class="title1-container">
+            <h1>Building a Blockchain</h1>
+        </div>
+    </title1>
+
+    <main>
+        <section class="content">
+            
+            <img src="assets/ad9-1.png" alt="Image" class="article-image">
+
+
+
+            <article>
+                <p>Blockchain adalah teknologi yang menyimpan data secara terdesentralisasi dengan menggunakan blok-blok yang saling terhubung melalui hash. Dalam artikel ini, kita akan membahas proses pembuatan blockchain sederhana menggunakan Python, lengkap dengan penjelasan fungsi-fungsinya. Proses ini menggunakan beberapa library Python dan framework Flask untuk membangun API sederhana yang dapat diuji menggunakan Postman.</p>
+            </article>
+            
+
+
+            <article>
+                <h2>1. Instalasi dan Persiapan</h2>
+                <p>Sebelum mulai coding, kita perlu melakukan beberapa instalasi:</p>
+                <ul>
+                    <li>Instal Flask dengan perintah: <code>pip install Flask==0.12.2</code></li>
+                    <li>Unduh dan install Postman dari <a href="https://www.postman.com/downloads/">sini</a>.</li>
+                </ul>
+                <p>Selanjutnya, import beberapa library yang dibutuhkan:</p>
+                <ul>
+                    <li><code>datetime</code> untuk mencatat waktu.</li>
+                    <li><code>hashlib</code> untuk membuat hash.</li>
+                    <li><code>json</code> untuk format data JSON.</li>
+                    <li><code>flask</code> untuk membuat web server API.</li>
+                </ul>
+            </article>
+            
+
+
+            <article>
+                <h2>2. Pembuatan Class dan Init Function</h2>
+                <p>Pada tahap ini kita membuat class <code>Blockchain</code> untuk menyimpan data blockchain. Saat pertama kali dibuat, kita juga langsung membuat blok pertama atau <i>genesis block</i>.</p>
+                <p><strong>Perintah:</strong></p>
+                <ul>
+                    <li>Buat class <code>Blockchain</code> dengan atribut <code>self.chain</code> sebagai list kosong.</li>
+                    <li>Panggil fungsi <code>create_block()</code> saat inisialisasi untuk membuat blok pertama dengan nilai <code>proof=1</code> dan <code>previous_hash='0'</code>.</li>
+                </ul>
+            </article>
+            
+
+
+            <article>
+                <h2>3. Fungsi Create Block</h2>
+                <p>Fungsi ini digunakan untuk membuat blok baru dan menambahkannya ke dalam chain.</p>
+                <p><strong>Perintah:</strong></p>
+                <ul>
+                    <li>Buat dictionary <code>block</code> dengan atribut:
+                        <ul>
+                            <li><code>index</code>: nomor urut blok</li>
+                            <li><code>timestamp</code>: waktu saat blok dibuat</li>
+                            <li><code>proof</code>: hasil proof of work</li>
+                            <li><code>previous_hash</code>: hash blok sebelumnya</li>
+                        </ul>
+                    </li>
+                    <li>Tambahkan blok tersebut ke dalam <code>self.chain</code>.</li>
+                    <li>Kembalikan blok tersebut.</li>
+                </ul>
+            </article>
+            
+
+
+            <article>
+                <h2>4. Fungsi Get Previous Block</h2>
+                <p>Fungsi ini digunakan untuk mendapatkan blok terakhir dalam chain.</p>
+                <p><strong>Perintah:</strong></p>
+                <ul>
+                    <li>Kembalikan <code>self.chain[-1]</code>, yaitu elemen terakhir dalam chain.</li>
+                </ul>
+            </article>
+            
+
+
+            <article>
+                <h2>5. Fungsi Proof of Work</h2>
+                <p>Proof of Work adalah proses mencari nilai angka yang dapat menghasilkan hash tertentu sebagai bukti kerja. Di sini hash harus diawali dengan 0000.</p>
+                <p><strong>Perintah:</strong></p>
+                <ul>
+                    <li>Buat variabel <code>new_proof</code> dimulai dari 1 dan <code>check_proof</code> bernilai False.</li>
+                    <li>Lakukan loop hingga didapatkan hash yang awalan 4 digitnya adalah 0000.</li>
+                    <li>Gunakan operasi <code>hashlib.sha256(str(new_proof**2 - previous_proof**2).encode()).hexdigest()</code></li>
+                    <li>Kembalikan nilai <code>new_proof</code> jika syarat hash terpenuhi.</li>
+                </ul>
+            </article>
+            
+
+
+            <article>
+                <h2>6. Fungsi Hash</h2>
+                <p>Fungsi ini digunakan untuk menghasilkan hash SHA256 dari sebuah blok.</p>
+                <p><strong>Perintah:</strong></p>
+                <ul>
+                    <li>Ubah blok ke format JSON dengan <code>json.dumps()</code> dan <code>sort_keys=True</code>.</li>
+                    <li>Encode hasil JSON ke byte string.</li>
+                    <li>Lakukan hashing menggunakan <code>hashlib.sha256()</code>.</li>
+                    <li>Kembalikan hasil hash dalam format hexdigest.</li>
+                </ul>
+            </article>
+            
+
+
+            <article>
+                <h2>7. Fungsi Is Chain Valid</h2>
+                <p>Fungsi ini digunakan untuk memeriksa apakah rantai blok valid, dengan cara membandingkan hash blok sebelumnya dan validasi proof of work di setiap blok.</p>
+                <p><strong>Perintah:</strong></p>
+                <ul>
+                    <li>Ambil blok pertama sebagai <code>previous_block</code> dan mulai pengecekan dari blok kedua.</li>
+                    <li>Loop setiap blok dalam chain:
+                        <ul>
+                            <li>Periksa apakah <code>previous_hash</code> di blok saat ini sesuai dengan hasil <code>hash()</code> blok sebelumnya.</li>
+                            <li>Periksa apakah hasil hash dari proof of work blok sesuai syarat (awalan 0000).</li>
+                        </ul>
+                    </li>
+                    <li>Jika salah satu syarat tidak terpenuhi, kembalikan <code>False</code>. Jika semua valid, kembalikan <code>True</code>.</li>
+                </ul>
+            </article>
+            
+
+            
+            <article>
+                <h2>Penutup</h2>
+                <p>Dengan mengikuti langkah-langkah di atas, kita dapat membangun sebuah blockchain sederhana yang memiliki fitur pembuatan blok, proof of work, hashing, validasi chain, dan pembuatan API menggunakan Flask. Fungsi-fungsi seperti <code>create_block</code>, <code>proof_of_work</code>, <code>hash</code>, dan <code>is_chain_valid</code> menjadi kunci utama dalam menjaga integritas dan keamanan sistem blockchain ini. Semoga artikel ini bisa jadi referensi dasar untuk memahami cara kerja blockchain secara praktis menggunakan Python.</p>
+            </article>
+            
+            
+            
+
+            
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 | made with love -zico</p>
+    </footer>
+</body>
+</html>
