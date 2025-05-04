@@ -12,6 +12,7 @@
 6. **[UTS - Blockchain Fundamental](https://kimookoii.github.io/ad7-uts-blockchain-fundamental)**
 7. **[Function Fundamental for Blockchain](https://kimookoii.github.io/ad8-function-fundamental-python-for-blockchain)**
 8. **[Building a Blockchain](https://kimookoii.github.io/ad9-building-a-blockchain)**
+9. **[Mining a Blockchain](https://kimookoii.github.io/ad10-mining-a-blockchain)**
 
 ---
 
