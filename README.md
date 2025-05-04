@@ -13,6 +13,7 @@
 7. **[Function Fundamental for Blockchain](https://kimookoii.github.io/ad8-function-fundamental-python-for-blockchain)**
 8. **[Building a Blockchain](https://kimookoii.github.io/ad9-building-a-blockchain)**
 9. **[Mining a Blockchain](https://kimookoii.github.io/ad10-mining-a-blockchain)**
+10. **[Resume Cryptocurrency](https://kimookoii.github.io/ad11-resume-cryptocurrency)**
 
 ---
 
