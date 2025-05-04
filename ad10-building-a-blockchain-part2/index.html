@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building a Blockchain</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <button class="back-button" onclick="window.history.back();">&#8592; Back</button>
+            <h1>88032023006  |  ZICO</h1>
+            <p>...</p>
+        </div>
+    </header>
+
+    <title1>
+        <div class="title1-container">
+            <h1>Building a Blockchain Part2:</h1>
+            <h2>Mining a Blockchain</h2>
+        </div>
+    </title1>
+
+    <main>
+        <section class="content">
+            
+            <img src="assets/ad10-1.png" alt="Image" class="article-image">
+
+
+
+            <article>
+                <p>Dalam pengembangan teknologi blockchain, proses <i>mining</i> (penambangan) merupakan salah satu komponen penting untuk menjaga keamanan dan integritas jaringan. Pada bagian kedua ini, kita akan membahas implementasi fungsi-fungsi utama dalam proses <i>mining</i> sebuah blockchain menggunakan bahasa Python dan dijalankan melalui Spyder serta diuji menggunakan Postman.</p>
+            </article>
+            
+
+
+            <article>
+                <h2>1. Membuat Web & Blockchain (Spyder: Create Web & a Blockchain)</h2>
+                <p>Pada tahap awal, kita membuat struktur dasar blockchain dan menghubungkannya ke server web sederhana menggunakan Flask. Fungsi <code>__init__()</code> dalam kelas Blockchain digunakan untuk menginisialisasi chain dan membuat blok genesis (blok pertama dalam blockchain).</p>
+
+                <textarea id="markdown-input" rows="0" cols="0">
+class Blockchain:
+    def __init__(self):
+        self.chain = []
+        self.create_block(proof=1, previous_hash='0')
+                </textarea>
+
+                <p>Fungsi <code>create_block()</code> bertugas untuk membuat blok baru dan menambahkannya ke chain. Blok ini terdiri dari <code>index</code>, <code>timestamp</code>, <code>proof</code>, dan <code>previous_hash</code></p>
+            </article>
+            
+
+
+            <article>
+                <h2>2. Menambang Blok Baru (Spyder: Mining a New Block)</h2>
+                <p>Proses mining dilakukan dengan memecahkan permasalahan <i>Proof of Work</i>. Fungsi <code>proof_of_work(previous_proof)</code> mencari angka yang sesuai dengan kondisi tertentu agar blok bisa ditambahkan ke chain.</p>
+                
+                <textarea id="markdown-input2" rows="25" cols="50">
+def proof_of_work(self, previous_proof):
+    new_proof = 1
+    check_proof = False
+    while check_proof is False:
+        hash_operation = hashlib.sha256(str(new_proof**2 - previous_proof**2).encode()).hexdigest()
+        if hash_operation[:4] == '0000':
+            check_proof = True
+        else:
+            new_proof += 1
+    return new_proof
+                </textarea>
+                <p>Setelah mendapatkan proof yang valid, fungsi <code>mine_block()</code> akan memanggil <code>create_block()</code> dan mengembalikan blok tersebut dalam format JSON.</p>
+            </article>
+            
+
+
+            <article>
+                <h2>3. Mendapatkan Seluruh Blockchain (Spyder: Getting the full Blockchain)</h2>
+                <p>Untuk melihat seluruh isi blockchain, dibuatlah endpoint get_chain yang mengembalikan seluruh chain beserta panjangnya:</p>
+
+                <textarea id="markdown-input" rows="0" cols="0">
+@app.route('/get_chain', methods=['GET'])
+def get_chain():
+    response = {'chain': blockchain.chain, 'length': len(blockchain.chain)}
+    return jsonify(response), 200
+                </textarea>
+            </article>
+            
+
+
+            <article>
+                <h2>4. Validasi Blockchain (Spyder: Checking Blockchain Validation)</h2>
+                <p>Fungsi <code>is_chain_valid()</code> memastikan bahwa setiap blok dalam blockchain valid, yaitu setiap <code>previous_hash</code> cocok dan setiap proof valid:</p>
+
+                <textarea id="markdown-input4" rows="0" cols="0">
+def is_chain_valid(self, chain):
+    previous_block = chain[0]
+    block_index = 1
+    while block_index < len(chain):
+        block = chain[block_index]
+        if block['previous_hash'] != self.hash(previous_block):
+            return False
+        previous_proof = previous_block['proof']
+        proof = block['proof']
+        hash_operation = hashlib.sha256(str(proof**2 - previous_proof**2).encode()).hexdigest()
+        if hash_operation[:4] != '0000':
+            return False
+        previous_block = block
+        block_index += 1
+    return True
+                </textarea>
+                <p>Endpoint <code>/is_valid</code> memanggil fungsi ini dan mengembalikan hasilnya.</p>
+            </article>
+            
+
+
+            <article>
+                <h2>5. Menjalankan Aplikasi (Spyder: Running the app)</h2>
+                <p>Aplikasi dijalankan menggunakan:</p>
+
+                <textarea id="markdown-input5" rows="0" cols="0">
+app.run(host='0.0.0.0', port=5000)
+                </textarea>
+                <p>Ini memungkinkan aplikasi untuk diakses melalui localhost atau alamat IP yang sesuai.</p>
+            </article>
+            
+
+
+            <article>
+                <h2>6. Uji Coba di Postman</h2>
+                <p>Setelah server berjalan, dilakukan pengujian menggunakan Postman:</p>
+                <ul>
+                    <li><strong>Get Chain:</strong> Mengakses <code>/get_chain</code> untuk melihat seluruh blok.</li>
+                    <li><strong>Mine Block:</strong> Mengakses <code>/mine_block</code> untuk menambang blok baru.</li>
+                    <li><strong>Is Valid:</strong> Mengakses <code>/is_valid</code> untuk mengecek keabsahan blockchain.</li>
+                </ul>
+            </article>
+            
+
+            
+            <article>
+                <h2>Kesimpulan</h2>
+                <p>Bagian kedua dari pembuatan blockchain ini fokus pada proses penambangan blok, validasi chain, dan pengujian fungsi-fungsi utama. Proses mining yang melibatkan proof of work membentuk pondasi keamanan blockchain. Dengan menghubungkan ke Flask dan Postman, pengujian dapat dilakukan secara interaktif dan efisien.</p>
+            </article>
+            
+            
+            
+
+            
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 | made with love -zico</p>
+    </footer>
+</body>
+</html>
