@@ -9,6 +9,7 @@
 3. **[Insfrastruktur Jaringan dan Software IMS](https://kimookoii.github.io/mj3-insfrastruktur-jaringan-dan-software-ims/)** x
 4. **[Monitoring Performa Jaringan](https://kimookoii.github.io/mj4-monitoring-performa-jaringan/)** x
 5. **[Protokol Manajemen Jaringan dan Zero Trust Security](https://kimookoii.github.io/mj5-protokol-manajemen-jaringan-dan-zero-trust-security/)** x
+6. **[Standar Kepatuhan dan Pemantauan Jaringan](https://kimookoii.github.io/mj6-standar-kepatuhan-dan-pemantauan-jaringan/)** x
 
 ---
 
