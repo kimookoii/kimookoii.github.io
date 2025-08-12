@@ -138,7 +138,7 @@ ping 10.10.10.1 // router yang saya gunakan
   
                 
                   <h3>3. Monitoring dengan Wireshark</h3>
-                  <p>Langkah-langkah:</p>
+                  <p><strong>Langkah-langkah:</strong></p>
                   <ol>
                     <li>Buka Wireshark.</li>
                     <li>Pilih interface jaringan yang aktif (WiFi atau Ethernet).</li>
@@ -147,15 +147,67 @@ ping 10.10.10.1 // router yang saya gunakan
                     <li>Filter dengan mengetik <code>icmp</code> di kotak filter.</li>
                     <li>Amati paket ECHO REQUEST dan ECHO REPLY.</li>
                   </ol>
-                  
+
+                  <img src="assets/mj-6.png" alt="Image6" class="article-image">
+                  <p><strong>Analisis Traffic:</strong></p>
+                  <p>Dari hasil Traffic Capture dengan Wireshark, Didapatkan hasil analisis dibawah:</p>  
+                  <ul>
+                    <li><strong>10.10.10.4</strong> (Komputer)</li>
+                    <li><strong>8.8.8.8</strong> (Google DNS)</li>
+                    <li><strong>10.10.10.1</strong> (Router)</li>
+                    <li><strong>64.233.170.139</strong> (Google)</li>
+                  </ul>
+
+                  <p><strong>Detail Analisis:</strong></p>
+                  <p><strong>1. 8.8.8.8 (Google DNS)</strong></p>
+                  <p>Hasil ping:</p>
+                  <ul>
+                    <li>Request: 10.10.10.4 → 8.8.8.8 (Echo request)</li>
+                    <li>Reply: 8.8.8.8 → 10.10.10.4 (Echo reply)</li>
+                    <li>TTL: 128 untuk request (Windows default)</li>
+                    <li>TTL: 115 untuk reply (setelah melewati beberapa hop)</li>
+                    <li>Sequence number meningkat: 3/768, 4/1024, 5/1280, 6/1536</li>
+                    <li>ID: 0x0001 konsisten untuk satu sesi ping</li>
+                  </ul>
+                  <p><strong>2. 64.233.170.139 (Google)</strong></p>
+                  <p>Hasil ping:</p>
+                  <ul>
+                    <li>Request: 10.10.10.4 → 64.233.170.139 (Echo request)</li>
+                    <li>Reply: 64.233.170.139 → 10.10.10.4 (Echo reply)</li>
+                    <li>TTL: 128 untuk request (Windows default)</li>
+                    <li>TTL: 105 untuk reply (setelah melewati beberapa hop)</li>
+                    <li>Sequence number meningkat: 7/1792, 8/2048, 9/2304, 10/2560</li>
+                    <li>ID: 0x0001 konsisten untuk satu sesi ping</li>
+                  </ul>
+                  <p><strong>3. 10.10.10.1 (Router)</strong></p>
+                  <p>Hasil ping:</p>
+                  <ul>
+                    <li>Request: 10.10.10.4 → 10.10.10.1 (Echo request)</li>
+                    <li>Reply: 10.10.10.1 → 10.10.10.4 (Echo reply)</li>
+                    <li>TTL: 128 untuk request (Windows default)</li>
+                    <li>TTL: 64 untuk reply (setelah melewati beberapa hop)</li>
+                    <li>Sequence number meningkat: 11/2816, 12/3072, 13/3328, 14/3584</li>
+                    <li>ID: 0x0001 konsisten untuk satu sesi ping</li>
+                  </ul>
             </article>
             
 
             <article>
                 <h2>Kesimpulan</h2>
-                <p>Manajemen jaringan merupakan aspek penting dalam menjaga performa dan keandalan sistem jaringan komputer, terutama di era digital yang sangat bergantung pada konektivitas. Dengan memahami konsep dasar seperti FCAPS (Fault, Configuration, Accounting, Performance, dan Security), tujuan pengelolaan jaringan, serta pentingnya fault management, kita dapat mengantisipasi dan menangani berbagai permasalahan jaringan secara efektif.</p>
-                <p>Melalui praktik seperti perintah <code>ping</code> dan penggunaan tools seperti Wireshark, pengguna dapat memantau, menganalisis, dan meningkatkan kualitas koneksi jaringan secara langsung. Penerapan manajemen jaringan tidak hanya relevan bagi perusahaan besar seperti e-commerce, tetapi juga penting untuk institusi vital seperti rumah sakit dan lembaga pendidikan.</p>
-                <p>Dengan kombinasi pemahaman teori dan praktik, pengelolaan jaringan menjadi lebih terstruktur dan efisien, serta mampu menunjang keberlangsungan layanan digital yang andal dan aman.</p>
+                <p><strong>1. Fault Management</strong></p>
+                <ul>
+                    <li>Seluruh Echo Request menerima Echo Reply ➝ Menandakan tidak ada gangguan (no fault) pada jalur jaringan menuju 8.8.8.8, google.com, maupun router lokal.</li>
+                    <li>Nilai TTL pada reply yang lebih rendah dibanding request menunjukkan bahwa paket benar-benar terkirim dan melewati hop jaringan, sehingga tidak terjadi packet loss atau unreachable destination.</li>
+                    <li>Peningkatan sequence number berlangsung normal tanpa loncatan ➝ Menunjukkan tidak ada paket yang hilang atau rusak selama proses transmisi.</li>
+                </ul>
+                <p>Berdasarkan data tersebut, dapat disimpulkan bahwa koneksi antara host lokal (10.10.10.4) dengan ketiga tujuan tidak mengalami gangguan. Jaringan berjalan normal sehingga sistem Fault Management tidak perlu mengeluarkan alarm atau notifikasi.</p>
+                <p><strong>2. Performance Management</strong></p>
+                <ul>
+                    <li>Nilai TTL merepresentasikan jumlah hop yang dilewati, sehingga dapat dimanfaatkan untuk mengukur jarak logis jaringan (contohnya, TTL 128 ➝ reply TTL 115 ➝ sekitar 13 hop menuju Google DNS).</li>
+                    <li>Sequence number yang meningkat secara teratur menunjukkan konsistensi dan stabilitas proses transmisi.</li>
+                    <li>Meskipun RTT (Round-Trip Time) tidak terlihat langsung pada tangkapan ini, perkiraan RTT dapat diperoleh dari selisih waktu antara request dan reply untuk menilai tingkat latency.</li>
+                </ul>
+                <p>Kinerja jaringan terjaga stabil dan optimal karena tidak ditemukan tanda-tanda keterlambatan, kehilangan data, maupun anomali lainnya. Berdasarkan kondisi tersebut, sistem Performance Management dapat menyatakan bahwa koneksi antar host, baik menuju target internal maupun eksternal, berada dalam keadaan sehat.</p>
             </article>
         </section>
     </main>
