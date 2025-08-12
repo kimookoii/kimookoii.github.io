@@ -5,7 +5,7 @@
 ## Tugas Manajemen Jaringan
 
 1. **[Pengantar Manajemen Jaringan](https://kimookoii.github.io/mj1-pengantar-manajemen-jaringan/)**
-2. **[Peran Administrator Jaringan](https://kimookoii.github.io/mj2-peran-administrator-jaringan/)** x
+2. **[Peran Administrator Jaringan](https://kimookoii.github.io/mj2-peran-administrator-jaringan/)**
 3. **[Insfrastruktur Jaringan dan Software IMS](https://kimookoii.github.io/mj3-insfrastruktur-jaringan-dan-software-ims/)** x
 4. **[Monitoring Performa Jaringan](https://kimookoii.github.io/mj4-monitoring-performa-jaringan/)** x
 5. **[Protokol Manajemen Jaringan dan Zero Trust Security](https://kimookoii.github.io/mj5-protokol-manajemen-jaringan-dan-zero-trust-security/)** x

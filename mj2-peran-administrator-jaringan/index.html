@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mengenal Manajemen Jaringan: Konsep, FCAPS, dan Implementasi</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <button class="back-button" onclick="window.history.back();">&#8592; Back</button>
+            <h1>88032023006  |  ZICO</h1>
+            <p>...</p>
+        </div>
+    </header>
+
+    <title1>
+        <div class="title1-container">
+            <h1>Peran Administrator Jaringan</h1>
+            <h3>Tanggung Jawab Administrator Jaringan: Analisis Gangguan dan Strategi Pemecahan Masalah</h3>
+        </div>
+    </title1>
+
+    <main>
+        <section class="content">
+            
+            <img src="assets/mj-1.png" alt="Image1" class="article-image">
+
+            
+            <article>
+                <h2>Tugas 1</h2>
+                <h3>1. Menjalankan Ping</h3>
+                <textarea id="markdown-input" rows="25" cols="200">
+ping google.com
+                </textarea>
+                <textarea id="markdown-input2" rows="25" cols="200">
+C:\Users\ikoo>ping google.com
+
+Pinging google.com [64.233.170.100] with 32 bytes of data:
+Reply from 64.233.170.100: bytes=32 time=49ms TTL=104
+Reply from 64.233.170.100: bytes=32 time=48ms TTL=104
+Reply from 64.233.170.100: bytes=32 time=60ms TTL=104
+Reply from 64.233.170.100: bytes=32 time=49ms TTL=104
+
+Ping statistics for 64.233.170.100:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 48ms, Maximum = 60ms, Average = 51ms
+                </textarea>
+                <p><strong>Analisis:</strong></p>
+                <ul>
+                    <li><strong>Time</strong> sekitar 48–51ms menunjukkan koneksi internet yang responsif.</li>
+                    <li><strong>Loss = 0%,</strong> artinya semua paket terkirim dan diterima tanpa kehilangan.</li>
+                    <li><strong>TTL = 104</strong> menandakan jarak (hop) dari perangkat kita ke server Google (semakin besar TTL, semakin dekat ke sumber).</li>
+                </ul>
+                
+                <h3>2. Menjalankan Traceroute / Tracert</h3>
+                <textarea id="markdown-input" rows="25" cols="200">
+tracert google.com
+                </textarea>
+                <textarea id="markdown-input2" rows="25" cols="200">
+C:\Users\ikoo>tracert google.com
+
+Tracing route to google.com [64.233.170.100]
+over a maximum of 30 hops:
+
+  1     *        *        *     Request timed out.
+  2    <1 ms     1 ms    <1 ms  192.168.2.1
+  3     3 ms     2 ms     2 ms  192.168.8.1
+  4    51 ms    48 ms    48 ms  sg-in-f100.1e100.net [64.233.170.100]
+
+Trace complete.
+                </textarea>
+                <p><strong>Analisis:</strong></p>
+                <ol>
+                    <li><strong>Hop 1: Request timed out</strong>
+                        <p>- Tidak ada balasan dari hop pertama. Ini biasanya merupakan alamat gateway/modem/router lokal kamu yang tidak merespon permintaan ICMP traceroute.</p>
+                        <p>- Banyak perangkat jaringan memblokir paket traceroute untuk alasan keamanan, jadi bukan berarti ada masalah pada hop ini, hanya tidak merespon traceroute saja.</p>
+                    </li>
+                    <li><strong>Hop 2: 192.168.2.1 dengan waktu <1 ms</strong>
+                        <p>- Ini kemungkinan adalah router lokal atau perangkat jaringan di jaringan kamu, merespon dengan sangat cepat (<1 ms), menandakan jarak sangat dekat (biasanya perangkat dalam LAN).</p>
+                    </li>
+                    <li><strong>Hop 3: 192.168.8.1 dengan waktu 2-3 ms</strong>
+                        <p>- Ini juga perangkat jaringan lokal atau ISP awal, merespon dengan waktu yang masih sangat rendah, menandakan hop ini tidak bermasalah.</p>
+                    </li>
+                    <li><strong>Hop 4: sg-in-f100.1e100.net [64.233.170.100] dengan waktu sekitar 48-51 ms</strong>
+                        <p>- Ini adalah server Google yang kamu tuju (dari domainnya "1e100.net" adalah domain milik Google).</p>
+                        <p>- Waktu sekitar 50 ms masih wajar, menandakan koneksi stabil dan latency baik untuk koneksi internet.</p>
+                    </li>
+                </ol>
+                
+                <h3>Kesimpulan</h3>
+                <ul>
+                    <li>Tidak ada hop yang bermasalah berdasarkan hasil ini.</li>
+                    <li>Timeout di hop 1 adalah hal yang umum dan tidak perlu dikhawatirkan.</li>
+                    <li>Latensi di hop terakhir (server Google) cukup rendah dan konsisten, menandakan koneksi internet kamu baik dan stabil.</li>
+                    <li>Jalur paket relatif pendek, hanya 4 hop sampai tujuan, yang biasanya terjadi jika kamu berada dekat secara geografis dengan server tujuan.</li>
+                </ul>
+            </article>
+
+            
+            <article>
+                <h2>Tugas 2</h2>
+                <h3>Analisis Lalu Lintas Jaringan dengan Wireshark:</h3>
+                <img src="assets/mj-2.png" alt="Image1" class="article-image">
+                <h3>Simulasi Gangguan: Memutus Koneksi</h3>
+                <ul>
+                    <li>Atau cabut kabel Ethernet jika menggunakan kabel.</li>
+                    <li>Kembali ke Wireshark, amati perubahan yang terjadi pada capture.</li>
+                </ul>
+                <img src="assets/mj-3.png" alt="Image1" class="article-image">
+                
+                <h3>Kesimpulan</h3>
+                <ul>
+                    <li><strong>TCP Retransmission:</strong> Komputer mencoba mengirim ulang data karena tidak ada respons.</li>
+                    <li><strong>TCP Dup ACK:</strong> Server tidak menerima paket yang diharapkan.</li>
+                    <li><strong>Lost Segment:</strong> Menunjukkan hilangnya sebagian paket dalam perjalanan.</li>
+                </ul>
+            </article>
+
+            
+            <article>
+                <h2>Tugas 3</h2>
+                <img src="assets/mj-4.png" alt="Image1" class="article-image">
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 | made with love -zico</p>
+    </footer>
+</body>
+</html>
