@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps: Menghubungkan Dua Dunia untuk Perangkat Lunak Tanpa Batas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <button class="back-button" onclick="window.history.back();">&#8592; Back</button>
+            <h1>88032023006  |  ZICO</h1>
+            <p>...</p>
+        </div>
+    </header>
+
+    <title1>
+        <div class="title1-container">
+            <h1>Praktik Minggu 1 DevSecOps</h1>
+            <h2>Setup CI/CD Sederhana di GitHub</h2>
+        </div>
+    </title1>
+
+    <main>
+        <section class="content">
+            
+            <img src="assets/cc2-1.webp" alt="Image1" class="article-image">
+
+
+            <article>
+                <h2><strong>Tujuan Praktik</strong></h2>
+                <p>Tujuan dari praktik ini adalah memahami dasar penerapan Continuous Integration/Continuous Deployment (CI/CD) dengan menggunakan GitHub Actions. Melalui praktik ini, peserta diharapkan mampu:</p>
+                <ol>
+                    <li>Membuat pipeline sederhana di GitHub.</li>
+                    <li>Menambahkan kode Python beserta unit test.</li>
+                    <li>Memodifikasi pipeline agar dapat menjalankan pengujian otomatis.</li>
+                    <li>Melihat hasil eksekusi pipeline dan memastikan statusnya sukses.</li>
+                </ol>
+            </article>
+
+
+            <article>
+                <h2><strong>Langkah-langkah Praktik</strong></h2>
+                <p>Tujuan dari praktik ini adalah memahami dasar penerapan Continuous Integration/Continuous Deployment (CI/CD) dengan menggunakan GitHub Actions. Melalui praktik ini, peserta diharapkan mampu:</p>
+                <p><strong>1. Buat Akun GitHub (https://github.com) → jika belum punya.</strong></p>
+               
+                <p><strong>2. Install Git di laptop masing-masing:</strong></p>
+                <ul>
+                    <li>Windows: unduh di git-scm.com</li>
+                    <li>Linux/Mac: biasanya sudah terpasang, jika belum → sudo apt install git</li>
+                </ul>
+               
+                <p><strong>3. Siapkan editor (disarankan VS Code).</strong></p>
+               
+                <p><strong>4. Membuat Repository Baru</strong></p>
+                <ul>
+                    <li>Login ke GitHub → klik New Repository.</li>
+                    <li>Nama repo: devsecops-intro.</li>
+                    <li>Centang Initialize this repository with a README.</li>
+                    <li>Klik Create Repository.</li>
+                </ul>
+                <img src="assets/dso-1.png" alt="Image1" class="article-image">
+                <img src="assets/dso-2.png" alt="Image1" class="article-image">
+               
+                <p><strong>5. Clone Repository ke Laptop</strong></p>
+                <textarea id="markdown-input" rows="0" cols="0">
+# buka terminal atau git bash
+git clone https://github.com/<username>/devsecops-intro.git
+cd devsecops-intro
+                </textarea>
+                <img src="assets/dso-3.png" alt="Image1" class="article-image">
+
+                <p><strong>6. Menambahkan File Aplikasi Sederhana</strong></p>
+                <p>• Buat file hello.py (atau index.html)</p>
+                <p>Contoh hello.py:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+print("Hello DevSecOps - Minggu 1")
+                </textarea>
+                <p>• Simpan, lalu jalankan lokal untuk tes:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+python hello.py
+                </textarea>
+                <p>• Tambahkan ke Git:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+git add .
+git commit -m "Menambahkan hello.py"
+git push origin main
+                </textarea>
+                <img src="assets/dso-5.png" alt="Image1" class="article-image">
+
+                <p><strong>7. Membuat Workflow CI (GitHub Actions)</strong></p>
+                <ul>
+                    <li>Di repo, buat folder baru: .github/workflows/</li>
+                    <li>Tambahkan file ci.yml</li>
+                    <li>Isi file ci.yml:</li>
+                </ul>
+                <textarea id="markdown-input2" rows="0" cols="0">
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ] # jalankan saat ada push ke main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Run Program
+        run: python hello.py
+                </textarea>
+                <img src="assets/dso-6.png" alt="Image1" class="article-image">
+
+                <p><strong>8. Uji Pipeline</strong></p>
+                <p>• Commit & push file ci.yml:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+git add .
+git commit -m "Menambahkan pipeline CI"
+git push origin main
+                </textarea>
+                <img src="assets/dso-7.png" alt="Image1" class="article-image">
+                <p>• Buka repo GitHub → tab Actions → lihat pipeline berjalan.</p>
+                <img src="assets/dso-8.png" alt="Image1" class="article-image">                
+                <p>• Jika berhasil → log menunjukkan:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+Hello DevSecOps - Minggu 1
+                </textarea>
+
+                <p><strong>9. Tambahkan File Baru</strong></p>
+                <p>• Buat file greeting.py berisi fungsi sederhana:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+def greeting(name):
+    return f"Hello {name}, welcome to DevSecOps!"
+if __name__ == "__main__":
+    print(greeting("Mahasiswa"))
+                </textarea>
+                <img src="assets/dso-9.png" alt="Image1" class="article-image">
+
+                <p><strong>10. Tambahkan Unit Test</strong></p>
+                <p>• Buat file test_greeting.py:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+from greeting import greeting
+
+def test_greeting():
+    assert greeting("Polibest") == "Hello Polibest,welcome to DevSecOps!"
+                </textarea>
+                <img src="assets/dso-10.png" alt="Image1" class="article-image">
+
+                <p><strong>11. Modifikasi Workflow CI</strong></p>
+                <p>• Ubah file .github/workflows/ci.yml agar menjalankan unit test dengan pytest:</p>
+                <textarea id="markdown-input3" rows="0" cols="0">
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+ 
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+ 
+      - name: Install Dependencies
+        run: pip install pytest
+ 
+      - name: Run Tests
+        run: pytest
+                </textarea>
+                <img src="assets/dso-11.png" alt="Image1" class="article-image">
+
+                <p><strong>12. Push ke Github</strong></p>
+                <p>• Setelah di-push, pipeline harus menunjukkan hasil pytest berjalan</p>
+                <p>• Jika semua benar → status pipeline = sukses ( ).</p>
+                <img src="assets/dso-12.png" alt="Image1" class="article-image"> 
+                <img src="assets/dso-13.png" alt="Image1" class="article-image">   
+            </article>
+
+
+            <article>
+                <h2><strong>Hasil Akhir</strong></h2>
+                <img src="assets/dso-13.png" alt="Image1" class="article-image">
+            </article>
+
+
+            <article>
+                <h2>Kesimpulan</h2>
+                <p>Pada praktik minggu pertama ini, berhasil dibuat pipeline sederhana menggunakan GitHub Actions untuk menjalankan CI/CD. Proses dimulai dengan membuat fungsi greeting() di Python, menambahkan unit test, lalu mengintegrasikannya ke dalam workflow. Beberapa error sempat muncul (karakter kutip yang salah, nama fungsi tidak konsisten, dan perbedaan spasi pada string output), namun dapat diperbaiki dengan menyesuaikan kode dan test agar sinkron.</p>
+                <p>Dari praktik ini, dapat dipelajari bahwa:</p>
+                <ul>
+                    <li>CI/CD membantu memastikan kode yang di-push selalu diuji otomatis.</li>
+                    <li>Detail kecil seperti penulisan kutip atau spasi bisa menyebabkan pipeline gagal.</li>
+                    <li>Unit test sangat penting untuk menjaga konsistensi fungsi sesuai ekspektasi.</li>
+                    <li>GitHub Actions memudahkan developer untuk membangun alur otomatis mulai dari build hingga testing.</li>
+                </ul>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 | made with love -zico</p>
+    </footer>
+</body>
+</html>
