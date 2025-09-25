@@ -2,7 +2,13 @@
 
 ---
 
-## Tugas Manajemen Jaringan
+## Semester5 - Development Security Operation
+
+1. **[Pengantar DevSecOps](https://kimookoii.github.io/dso1-pengantar/)**
+
+---
+
+## Semester4 - Tugas Manajemen Jaringan
 
 1. **[Pengantar Manajemen Jaringan](https://kimookoii.github.io/mj1-pengantar-manajemen-jaringan/)**
 2. **[Peran Administrator Jaringan](https://kimookoii.github.io/mj2-peran-administrator-jaringan/)**
@@ -14,7 +20,7 @@
 ---
 
 
-## Tugas Aset Digital
+## Semester4 - Tugas Aset Digital
 
 1. **[Pengenalan Blockchain dan Keamanan](https://kimookoii.github.io/ad2-pengenalan-blockchain-dan-keamanan/)**
 2. **[Teknik Hashing Blockchain](https://kimookoii.github.io/ad3-teknik-hashing-blockchain)**
@@ -29,7 +35,7 @@
 
 ---
 
-## Tugas Cloud Computing
+## Semester4 - Tugas Cloud Computing
 
 1. **[Dasar DevOps](https://kimookoii.github.io/cc2-dasar-devops)**
 2. **[Git for Devops](https://kimookoii.github.io/cc3-git-for-devops)**
