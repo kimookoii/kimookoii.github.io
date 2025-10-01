@@ -5,6 +5,7 @@
 ## Semester5 - Development Security Operation
 
 1. **[Pengantar DevSecOps](https://kimookoii.github.io/dso1-pengantar/)**
+2. **[Secure SDLC - Shift Left Security](https://kimookoii.github.io/dso2-secure-sdlc/)**
 
 ---
 
