@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps: Menghubungkan Dua Dunia untuk Perangkat Lunak Tanpa Batas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <button class="back-button" onclick="window.history.back();">&#8592; Back</button>
+            <h1>88032023006  |  ZICO</h1>
+            <p>...</p>
+        </div>
+    </header>
+
+    <title1>
+        <div class="title1-container">
+            <h1>Praktik Minggu 3 DevSecOps</h1>
+            <h2>Implementasi CI/CD Pipeline Menggunakan GitHub Actions dan Jenkins dalam DevSecOps</h2>
+        </div>
+    </title1>
+
+    <main>
+        <section class="content">
+            
+            <!-- img src="assets/dso-1.webp" alt="Image1" class="article-image" -->
+
+
+            <article>
+              <h2><strong>1. Pengantar CI/CD dan DevSecOps</strong></h2>
+              <p><strong>CI/CD (Continuous Integration/Continuous Deployment)</strong> adalah pendekatan modern dalam pengembangan perangkat lunak yang memungkinkan proses build, test, security scan, dan deployment dilakukan secara otomatis setiap kali ada perubahan kode.</p>
+              <ul>
+                <li><strong>Continuous Integration (CI)</strong> → fokus pada proses integrasi kode secara otomatis setelah push ke repository.</li>
+                <li><strong>Continuous Deployment (CD)</strong> → proses otomatis untuk merilis aplikasi ke lingkungan staging atau production.</li>
+              </ul>
+              <p><strong>Dalam konteks DevSecOps,</strong> CI/CD bukan hanya soal otomatisasi, tetapi juga menyisipkan proses <strong>security scanning</strong> di dalam pipeline sehingga kerentanan dapat terdeteksi lebih awal.</p>
+            </article>
+
+
+            <article>
+              <h2><strong>2. Implementasi CI/CD Menggunakan GitHub Actions</strong></h2>
+              <p><strong>a. Struktur File</strong></p>
+              <p>Buat file baru:</p>
+              <textarea id="markdown-input" rows="0" cols="0">
+.github/workflows/cicd.yml
+              </textarea>
+              <p><strong>b. Isi File cicd.yml</strong></p>
+              <textarea id="markdown-input2" rows="0" cols="0">
+name: DevSecOps CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest bandit
+
+      - name: Run Unit Tests
+        run: pytest
+
+      - name: Security Scan
+        run: bandit -r src
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Simulate Deployment
+        run: echo "Deploying application to staging..."
+              </textarea>
+              <p><strong>c. Penjelasan Tahapan</strong></p>
+              <ol>
+                <li><strong>Checkout:</strong> mengambil source code dari repository.</li>
+                <li><strong>Build & Test:</strong> dependensi dan menjalankan unit test otomatis.</li>
+                <li><strong>Security Scan:</strong> Bandit untuk mendeteksi kerentanan kode Python.</li>
+                <li><strong>Deploy:</strong> simulasi proses deployment ke staging.</li>
+              </ol>
+              <p><strong>d. Hasil Eksekusi</strong></p>
+              <ul>
+                <li>Ketika melakukan push ke branch main, pipeline akan otomatis berjalan.</li>
+                <li>Jika semua tahap sukses ✅, status pipeline akan <strong>“passed”.</strong></li>
+              </ul>
+            </article>
+
+
+            <article>
+              <h2><strong>mplementasi CI/CD Menggunakan Jenkins</strong></h2>
+              <p><strong>a. Instalasi Jenkins (opsional via Docker)</strong></p>
+              <textarea id="markdown-input3" rows="0" cols="0">
+docker run -d \
+ --name jenkins \
+ -p 8080:8080 -p 50000:50000 \
+ -v jenkins_home:/var/jenkins_home \
+ jenkins/jenkins:lts
+              </textarea>
+              <p><strong>b. Akses Jenkins</strong></p>
+              <ol>
+                <li>Buka browser → http://localhost:8080</li>
+                <li>Ikuti wizard setup dan install plugin <strong>Git</strong> dan <strong>Pipeline</strong>.</li>
+              </ol>
+              <p><strong>c. Buat Pipeline Baru</strong></p>
+              <ul>
+                <li>Klik <strong>New Item</strong> → pilih <strong>Pipeline</strong>.</li>
+                <li>Masukkan Jenkinsfile (atau tulis langsung di pipeline script).</li>
+              </ul>
+              <p><strong>d. Contoh Jenkinsfile</strong></p>
+              <textarea id="markdown-input4" rows="0" cols="0">
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/username/repository.git'
+            }
+        }
+
+        stage('Build & Test') {
+            steps {
+                sh '''
+                pip install -r requirements.txt
+                pip install pytest bandit
+                pytest
+                '''
+            }
+        }
+
+        stage('Security Scan') {
+            steps {
+                sh 'bandit -r src'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application to staging...'
+            }
+        }
+    }
+}
+              </textarea>
+              <p><strong>e. Integrasi dengan GitHub</strong></p>
+              <ul>
+                <li>Masukkan URL repository GitHub.</li>
+                <li>Tambahkan webhook pada pengaturan GitHub untuk trigger otomatis setiap push. (Settings → Webhooks → Add webhook → arahkan ke URL Jenkins Anda).</li>
+              </ul>
+              <p>Screenshot pipeline sukses Jenkins</p>
+            </article>
+
+
+            <article>
+              <p><strong>4. Perbandingan GitHub Actions vs Jenkins</strong></p>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Aspek</th>
+                    <th scope="col">GitHub Actions</th>
+                    <th scope="col">Jenkins</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Instalasi</th>
+                    <td>Tidak perlu (cloud native)</td>
+                    <td>Perlu server sendiri atau Docker</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Kemudahan Setup</th>
+                    <td>Sangat mudah, langsung di repo</td>
+                    <td>Perlu konfigurasi manual</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Skalabilitas</th>
+                    <td>Terbatas oleh GitHub</td>
+                    <td>Fleksibel, bisa integrasi ke banyak tools</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Cost</th>
+                    <td>Gratis untuk repo publik</td>
+                    <td>Gratis (self-host), tapi perlu infrastruktur</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Integrasi Security Scan</th>
+                    <td>Native di workflow YAML</td>
+                    <td>Bisa pakai plugin dan script custom</td>
+                  </tr>
+                </tbody>
+              </table>
+            </article>
+
+
+            <article>
+              <p><strong>5. Refleksi: CI/CD dalam SSDLC</strong></p>
+              <p>Penerapan CI/CD menjadi bagian penting dari Secure Software Development Life Cycle (SSDLC) karena:</p>
+              <ul>
+                <li>Mendeteksi bug dan kerentanan lebih awal.</li>
+                <li>Meningkatkan kecepatan rilis tanpa mengorbankan keamanan.</li>
+                <li>Menjamin konsistensi build dan deployment.</li>
+                <li>Membantu tim DevOps dan Security bekerja lebih kolaboratif.</li>
+              </ul>
+              <p>Dengan memasukkan <strong>proses security scanning</strong> otomatis seperti Bandit ke dalam pipeline, organisasi dapat menghemat biaya perbaikan bug keamanan di tahap akhir.</p>
+            </article>
+
+
+            <article>
+              <h2>Kesimpulan</h2>
+              <p>Implementasi CI/CD dengan GitHub Actions cocok untuk tim kecil atau proyek open-source karena mudah digunakan dan tidak memerlukan infrastruktur tambahan. Sementara Jenkins cocok untuk tim besar yang membutuhkan fleksibilitas tinggi dan kendali penuh atas pipeline.</p>
+              <p>Keduanya berperan penting dalam mendukung prinsip <strong>DevSecOps</strong> dan meningkatkan keamanan aplikasi sejak awal siklus pengembangan.</p>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 | made with love -zico</p>
+    </footer>
+</body>
+</html>
