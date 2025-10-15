@@ -7,6 +7,7 @@
 1. **[Pengantar DevSecOps](https://kimookoii.github.io/dso1-pengantar/)**
 2. **[Secure SDLC - Shift Left Security](https://kimookoii.github.io/dso2-secure-sdlc/)**
 3. **[Konsep CI/CD](https://kimookoii.github.io/dso3-konsep-ci-cd/)**
+4. **[Threat Modeling](https://kimookoii.github.io/dso4-threat-modeling/)** x
 
 ---
 
