@@ -8,6 +8,7 @@
 2. **[Secure SDLC - Shift Left Security](https://kimookoii.github.io/dso2-secure-sdlc/)**
 3. **[Konsep CI/CD](https://kimookoii.github.io/dso3-konsep-ci-cd/)**
 4. **[Threat Modeling](https://kimookoii.github.io/dso4-threat-modeling/)** x
+5. **[Sast & Dast](https://kimookoii.github.io/dso5-sast-dast/)** x
 
 ---
 
@@ -17,6 +18,7 @@
 2. **[Arsitektur Android dan IOS](https://kimookoii.github.io/pm2-arsitektur-android-dan-ios/)** x
 3. **[Tools Pentest Mobile](https://kimookoii.github.io/pm3-tools-pentest-mobile/)** x
 4. **[Environment Pentest Mobile](https://kimookoii.github.io/pm4-environment-pentest-mobile/)** x
+5. **[Decompile APK & Static Analysis](https://kimookoii.github.io/ppm5-decompile-apk-static-analysis/)** x
 
 ---
 
