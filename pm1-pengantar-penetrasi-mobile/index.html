@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Under Maintenance</title>
+    <title>Praktik Minggu 1 Penetrasi Mobile</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -12,33 +12,149 @@
         <div class="header-container">
             <button class="back-button" onclick="window.history.back();">&#8592; Back</button>
             <h1>88032023006  |  ZICO</h1>
+            <p>...</p>
         </div>
     </header>
 
     <title1>
         <div class="title1-container">
-            <h1>🚧 Website Sedang Dalam Pemeliharaan 🚧</h1>
-            <h2>Kami akan segera kembali!</h2>
+            <h1>Pengantar Penetrasi Mobile</h1>
+            <h2>Instalasi ADB di Kali Linux</h2>
         </div>
     </title1>
 
     <main>
         <section class="content">
-            <article>
-                <p>
-                    Saat ini situs sedang dalam proses pemeliharaan untuk peningkatan sistem dan performa.
-                    Kami mohon maaf atas ketidaknyamanan ini.
-                </p>
-            </article>
+            
+            <img src="assets/pm-1.webp" alt="Image1" class="article-image">
+
 
             <article>
-                <h2>Informasi</h2>
+                <p>p</p>
+            </article>
+
+
+            <article>
+                <h2>1. Proses instalasi ADB (Kali Linux)</h2>
+                <textarea id="markdown-input" rows="25" cols="200">
+# 1. Update repositori & upgrade paket
+sudo apt update && sudo apt upgrade -y
+
+# 2. Install paket adb & fastboot
+sudo apt install android-tools-adb android-tools-fastboot -y
+
+# 3. Verifikasi instalasi
+adb version
+                </textarea>
+                <p>Contoh output verifikasi:</p>
+                <textarea id="markdown-input" rows="25" cols="200">
+Android Debug Bridge version 1.0.41
+Version 33.0.3-5949299
+                </textarea>
+                <p>Catatan penting:</p>
                 <ul>
-                    <li>Waktu maintenance: sementara</li>
-                    <li>Layanan akan aktif kembali dalam waktu dekat</li>
-                    <li>Terima kasih atas kesabaran Anda 🙏</li>
+                    <li>Jika adb tidak ditemukan setelah instalasi, pastikan /usr/bin/adb ada atau logout/login kembali.</li>
+                    <li>Untuk akses USB di Linux tanpa sudo, buat aturan udev (opsional tapi disarankan). Contoh minimal /etc/udev/rules.d/51-android.rules:</li>
                 </ul>
-                <p>Silakan coba akses kembali beberapa saat lagi.</p>
+                <textarea id="markdown-input" rows="25" cols="200">
+SUBSYSTEM=="usb", ATTR{idVendor}=="18d1", MODE="0666", GROUP="plugdev"
+                </textarea>
+                <p>(ganti idVendor sesuai vendor device; setelah membuat rule, reload udev: sudo udevadm control --reload-rules && sudo udevadm trigger)</p>
+            </article>
+
+
+            <article>
+                <h2>2. Hasil koneksi — Emulator & Device</h2>
+                <h3>A. Koneksi ke Emulator (AVD / Android Studio)</h3>
+                <ol>
+                    <li>Jalankan Android Studio → AVD Manager → Start emulator (mis. Pixel_API_30).</li>
+                    <li>Di Kali Linux (atau VM) aktifkan port forwarding emulator ke host jika perlu (Android Studio biasanya expose port 5555).</li>
+                    <li>Sambungkan ke emulator via TCP:</li>
+                </ol>
+                <textarea id="markdown-input" rows="25" cols="200">
+adb connect 127.0.0.1:5555
+adb devices
+                </textarea>
+                <p>Contoh output:</p>
+                <textarea id="markdown-input" rows="25" cols="200">
+* daemon not running; starting now at tcp:5037
+* daemon started successfully
+connected to 127.0.0.1:5555
+List of devices attached
+emulator-5554   device
+                </textarea>
+                <h3>B. Koneksi ke Smartphone Android (via USB dalam VirtualBox)</h3>
+                <p>Langkah umum:</p>
+                <ol>
+                    <li>Aktifkan Developer options pada Android → aktifkan USB debugging.</li>
+                    <li>Di VirtualBox (VM Kali), buka Settings → USB → aktifkan USB Controller (USB 2.0 atau 3.0 sesuai device).</li>
+                    <li>Tambahkan USB Filter untuk smartphone agar VM menangkap device langsung.</li>
+                    <li>Sambungkan kabel USB ke host → jalankan lsusb di Kali untuk verifikasi:</li>
+                    <textarea id="markdown-input" rows="25" cols="200">
+lsusb
+                    </textarea>
+                    <p>Contoh output (bagian smartphone):</p>
+                    <textarea id="markdown-input" rows="25" cols="200">
+Bus 001 Device 012: ID 18d1:4ee7 Google Inc.
+                    </textarea>
+                    <li>Cek dengan ADB:</li>
+                    <textarea id="markdown-input" rows="25" cols="200">
+adb devices
+                    </textarea>
+                    <p>Jika pertama kali:</p>
+                    <textarea id="markdown-input" rows="25" cols="200">
+List of devices attached
+0123456789ABCDEF    unauthorized
+                    </textarea>
+                    <p>Perhatikan layar smartphone — akan muncul dialog “Allow USB debugging?” — pilih Allow. Kemudian ulangi:</p>
+                    <textarea id="markdown-input" rows="25" cols="200">
+List of devices attached
+0123456789ABCDEF    device
+                    </textarea>
+                </ol>
+                <p>Troubleshoot singkat:</p>
+                <ul>
+                    <li>Jika tetap unauthorized, cabut-cabut ulang kabel, cek dialog di device, atau hapus kunci RSA sebelumnya (Settings → Developer → Revoke USB debugging authorizations) lalu coba lagi.</li>
+                    <li>Jika no permissions di Linux, cek udev rules.</li>
+                </ul>
+            </article>
+
+
+            <article>
+                <h2>3. Dokumentasi Perintah Dasar ADB (Ringkas & Praktis)</h2>
+                <p>Gunakan adb -s <serial> jika ada lebih dari satu device.</p>
+                <p>Perintah koneksi & manajemen</p>
+                <ul>
+                    <li>adb start-server — jalankan daemon ADB.</li>
+                    <li>adb kill-server — hentikan daemon.</li>
+                    <li>adb devices — daftar device connected.</li>
+                    <li>adb connect <ip>:<port> — koneksi TCP/IP ke device/emulator.</li>
+                    <li>adb tcpip 5555 — aktifkan mode TCP pada device (jalankan dulu via USB).</li>
+                </ul>
+                <p>Akses shell & file</p>
+                <ul>
+                    <li>adb shell — masuk ke shell di device. Contoh: adb shell getprop ro.build.version.release</li>
+                    <li>adb push <local> <remote> — kirim file ke device. Contoh: adb push app-debug.apk /sdcard/Download/</li>
+                    <li>adb pull <remote> <local> — ambil file dari device. Contoh: adb pull /data/data/com.example.app/databases/app.db ~/Desktop/</li>
+                    <li>adb install <apk> — install APK. Opsi: -r (reinstall), -d (allow version downgrade).</li>
+                    <li>adb uninstall <package> — hapus aplikasi.</li>
+                </ul>
+                <p>Debug & logging</p>
+                <ul>
+                    <li>adb logcat — real-time log sistem & aplikasi. Contoh filter: adb logcat -s MyAppTag:D *:S</li>
+                    <li>adb bugreport — generate laporan bug lengkap.</li>
+                    <li>adb shell dumpsys — banyak informasi sistem (battery, activity, package, dll).</li>
+                </ul>
+                <p>Utility & advanced</p>
+                <ul>
+                    <li>adb forward tcp:<local> tcp:<remote> — port forwarding (PC → device). Berguna untuk proxying lokal. Contoh: adb forward tcp:8080 tcp:8080</li>
+                    <li>adb shell pm list packages — list semua package.</li>
+                    <li>adb shell pm path <package> — path APK.</li>
+                    <li>adb root — restart adbd sebagai root (hanya emulator / device permissive).</li>
+                    <li>adb remount — remount filesystem (hanya pada device yang di-root atau emulator).</li>
+                    <li>adb screenrecord /sdcard/example.mp4 — rekam layar device.</li>
+                    <li>adb shell am start -n <package>/<activity> — mulai activity spesifik.</li>
+                </ul>
             </article>
         </section>
     </main>
