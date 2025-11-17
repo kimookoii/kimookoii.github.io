@@ -8,7 +8,7 @@
 2. **[Secure SDLC - Shift Left Security](https://kimookoii.github.io/dso2-secure-sdlc/)**
 3. **[Konsep CI/CD](https://kimookoii.github.io/dso3-konsep-ci-cd/)**
 4. **[Threat Modeling](https://kimookoii.github.io/dso4-threat-modeling/)**
-5. **[Sast & Dast](https://kimookoii.github.io/dso5-sast-dast/)** x
+5. **[Sast & Dast](https://kimookoii.github.io/dso5-sast-dast/)**
 
 ---
 

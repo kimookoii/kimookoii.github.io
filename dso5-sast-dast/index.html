@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Under Maintenance</title>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <title>Praktik Minggu 4 DevSecOps</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -12,34 +11,248 @@
         <div class="header-container">
             <button class="back-button" onclick="window.history.back();">&#8592; Back</button>
             <h1>88032023006  |  ZICO</h1>
+            <p>...</p>
         </div>
     </header>
 
     <title1>
         <div class="title1-container">
-            <h1>🚧 Website Sedang Dalam Pemeliharaan 🚧</h1>
-            <h2>Kami akan segera kembali!</h2>
+            <h1>Praktik Minggu 5 DevSecOps</h1>
+            <h2>Menggunakan SAST & DAST dalam Praktik DevSecOps</h2>
         </div>
     </title1>
 
     <main>
         <section class="content">
+
             <article>
+                <h2>1. Konsep Dasar SAST & DAST</h2>
                 <p>
-                    Saat ini situs sedang dalam proses pemeliharaan untuk peningkatan sistem dan performa.
-                    Kami mohon maaf atas ketidaknyamanan ini.
+                    <strong>SAST</strong> (Static Application Security Testing) adalah metode pengujian keamanan yang dilakukan 
+                    tanpa menjalankan aplikasi. Pengujian fokus pada kode sumber, bytecode, atau binary untuk mencari kerentanan 
+                    seperti SQL Injection, buffer overflow, hardcoded secrets, dan kesalahan logika.
+                </p>
+                <ul><strong>Karakteristik:</strong>
+                    <li>Dilakukan sebelum aplikasi berjalan</li>
+                    <li>Bersifat white-box testing</li>
+                    <li>Mendeteksi bug lebih awal (shift-left security)</li>
+                    <li>Tools umum: SonarQube, Bandit, Checkmarx</li>
+                </ul>
+                <p>
+                    <strong>DAST</strong> (Dynamic Application Security Testing) adalah metode pengujian yang 
+                    dilakukan pada aplikasi yang sedang berjalan untuk melihat bagaimana sistem merespons
+                    input dan serangan dari luar.
+                </p>
+                <ul><strong>Karakteristik:</strong>
+                    <li>Dilakukan saat aplikasi aktif</li>
+                    <li>Bersifat black-box testing</li>
+                    <li>Mendeteksi celah runtime seperti XSS, SQL Injection, CSRF</li>
+                    <li>Tools umum: OWASP ZAP, Burp Suite, Nikto</li>
+                </ul>
+            </article>
+
+
+            <article>
+                <h2>2. Mengapa SAST & DAST Penting</h2>
+                <p>Penerapan kedua metode ini mendukung prinsip DevSecOps:</p>
+                <ul>
+                    <li>Shift-left security — menemukan bug lebih awal.</li>
+                    <li>Continuous security — pengujian otomatis setiap commit.</li>
+                    <li>Security gate — build pipeline bisa dihentikan saat ada vulnerability kritis.</li>
+                    <li>Meningkatkan kualitas kode dan keamanan secara keseluruhan.</li>
+                </ul>
+            </article>
+
+
+            <article>
+                <h2>3. Pipeline DevSecOps dengan SAST & DAST</h2>
+                <p>Pipeline umum:</p>
+                <ol>
+                    <li>Developer melakukan commit kode</li>
+                    <li>Unit test berjalan</li>
+                    <li>SAST dengan SonarQube</li>
+                    <li>Build dan deploy ke staging</li>
+                    <li>DAST menggunakan OWASP ZAP</li>
+                    <li>Deployment ke production setelah lulus security gate</li>
+                </ol>
+                <p>Pendekatan ini memastikan aplikasi diuji secara menyeluruh — baik dari sisi kode maupun sisi perilaku aplikasi.</p>
+            </article>
+
+
+            <article>
+                <h2>4. Menjalankan SAST Menggunakan SonarQube</h2>
+                <p>Berikut langkah-langkah menjalankan analisis statis menggunakan SonarQube.</p>
+                <ol>
+                    <li><strong>Menjalankan SonarQube via Docker</strong></li>
+                    <textarea id="markdown-input" rows="0" cols="0">
+docker run -d --name sonarqube -p 9000:9000 sonarqube:lts-community
+                    </textarea>
+                    <img src="assets/dso-1.png" alt="Image1" class="article-image">
+                    <p>Akses melalui browser: <a href="http://localhost:9000">http://localhost:9000</a></p>
+                    <p>Login default: admin / admin</p>
+                    <p></p>
+
+                    <li><strong>Install Sonar Scanner</strong></li>
+                    <p>Sonar Scanner diperlukan untuk mengirimkan kode ke SonarQube untuk dianalisis.</p>
+                    <textarea id="markdown-input2" rows="0" cols="0">
+sudo apt install openjdk-17-jdk -y
+sudo apt install unzip
+wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli.zip
+unzip sonar-scanner-cli.zip
+sudo mv sonar-scanner... /opt/sonar-scanner
+export PATH=$PATH:/opt/sonar-scanner/bin
+                    </textarea>
+
+                    <li><strong>Membuat file konfigurasi sonar-project.properties</strong></li>
+                    <p>Dalam root project:</p>
+                    <textarea id="markdown-input3" rows="0" cols="0">
+sonar.projectKey=devsecops-demo
+sonar.projectName=DevSecOps Demo
+sonar.sources=src
+sonar.host.url=http://localhost:9000
+sonar.login=<TOKEN_SONARQUBE>
+                    </textarea>
+
+                    <li><strong>Menjalankan analisis</strong></li>
+                    <textarea id="markdown-input" rows="0" cols="0">
+sonar-scanner
+                    </textarea>
+                    <p>Setelah selesai, hasil scan akan terlihat pada dashboard proyek di SonarQube.</p>
+                </ol>
+            </article>
+
+
+            <article>
+                <h2>5. Menjalankan DAST Menggunakan OWASP ZAP</h2>
+                <p>OWASP ZAP digunakan untuk menguji kerentanan runtime.</p>
+                <ol>
+                    <li><strong>Menjalankan aplikasi target</strong></li>
+                    <p>Contoh: aplikasi antrian di <a href="http://localhost:8080">http://localhost:8080</a></p>
+                    
+                    <li><strong>Menjalankan ZAP Baseline Scan via Docker</strong></li>
+                    <textarea id="markdown-input4" rows="0" cols="0">
+docker run -t owasp/zap2docker-stable zap-baseline.py \
+  -t http://host.docker.internal:8080 \
+  -r zap_report.html
+                    </textarea>
+
+                    <li><strong>Output</strong></li>
+                    <ul>
+                        <li>High Risk: SQL Injection, XSS</li>
+                        <li>Medium Risk: directory browsing</li>
+                        <li>Low Risk: missing security headers</li>
+                    </ul>
+
+                </ol>
+            </article>
+
+
+            <article>
+                <h2>6. Integrasi CI/CD</h2>
+                <p>
+                    Kedua tools dapat diintegrasikan ke dalam GitHub Actions atau Jenkins
+                    untuk mengotomatisasi proses SAST dan DAST. Pipeline ini membuat setiap commit diuji
+                    keamanannya secara otomatis.
+                </p>
+                <p><strong>Contoh Github Action:</strong></p>
+                <textarea id="markdown-input5" rows="0" cols="0">
+name: CI - SAST & DAST
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  security-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      # SAST
+      - name: Run SonarQube Scanner
+        uses: sonarsource/sonarqube-scan-action@v2
+        with:
+          args: >
+            -Dsonar.projectKey=devsecops-demo
+            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+
+      # DAST
+      - name: Run OWASP ZAP Baseline Scan
+        run: |
+          docker run -v $(pwd):/zap/wrk/:rw --network="host" \
+          owasp/zap2docker-stable zap-baseline.py \
+          -t http://localhost:8080 -r zap_report.html || true
+
+      - name: Upload ZAP Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-report
+          path: zap_report.html
+                </textarea>
+                <p><strong>Contoh Jenkinsfile:</strong></p>
+                <textarea id="markdown-input6" rows="0" cols="0">
+pipeline {
+  agent any
+  stages {
+    stage('SAST - SonarQube') {
+      steps {
+        withSonarQubeEnv('SonarQubeServer') {
+          sh 'sonar-scanner'
+        }
+      }
+    }
+    stage('DAST - OWASP ZAP') {
+      steps {
+        sh '''
+          docker run -v ${WORKSPACE}:/zap/wrk/:rw --network="host" \
+          owasp/zap2docker-stable zap-baseline.py \
+          -t http://localhost:8080 -r zap_report.html || true
+        '''
+      }
+    }
+  }
+}
+                </textarea>
+            </article>
+
+
+            <article>
+                <h2>7. Interpretasi Hasil</h2>
+                <p><strong>SonarQube:</strong></p>
+                <ul>
+                    <li>Bugs: logic errors → perbaiki flow program</li>
+                    <li>Vulnerabilities: misalnya improper input validation → lakukan sanitasi input</li>
+                    <li>Security Hotspots: perlu review manual, misalnya penggunaan crypto library</li>
+                </ul>
+
+                <p><strong>OWASP ZAP:</strong></p>
+                <ul>Temuan umum:
+                    <li>XSS → gunakan escaping & Content Security Policy</li>
+                    <li>SQL Injection → gunakan prepared statement</li>
+                    <li>Missing Security Headers → tambahkan HSTS, X-Frame-Options</li>
+                    <li>Directory listing → matikan autoindex pada server</li>
+                </ul>
+                <ul>Untuk setiap kerentanan, pastikan dilakukan:
+                    <li>Validasi input</li>
+                    <li>Sanitasi output</li>
+                    <li>Penerapan prinsip least privilege</li>
+                    <li>Hardening aplikasi & server</li>
+                </ul>
+            </article>
+
+
+            <article>
+                <h2>8. Kesimpulan</h2>
+                <p>
+                    SAST dan DAST adalah dua pendekatan penting untuk menjaga keamanan aplikasi dalam DevSecOps.
+                    SAST membantu mendeteksi kerentanan pada tahap awal, sedangkan DAST memastikan aplikasi aman
+                    saat dijalankan. Integrasi keduanya ke pipeline otomatis membuat proses pengembangan lebih aman,
+                    cepat, dan efisien.
                 </p>
             </article>
 
-            <article>
-                <h2>Informasi</h2>
-                <ul>
-                    <li>Waktu maintenance: sementara</li>
-                    <li>Layanan akan aktif kembali dalam waktu dekat</li>
-                    <li>Terima kasih atas kesabaran Anda 🙏</li>
-                </ul>
-                <p>Silakan coba akses kembali beberapa saat lagi.</p>
-            </article>
+
         </section>
     </main>
 
