@@ -111,6 +111,18 @@ article {
 
 
 
+article ol, article ul {
+  padding-left: 0;
+  margin-left: 0;
+}
+
+article li {
+  list-style-position: inside;
+}
+
+
+
+
 /* Mengatur jarak kanan dan kiri konten */
 .content {
     padding-left: 15px;

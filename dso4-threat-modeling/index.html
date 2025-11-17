@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Under Maintenance</title>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <title>Praktik Minggu 4 DevSecOps</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -12,33 +11,60 @@
         <div class="header-container">
             <button class="back-button" onclick="window.history.back();">&#8592; Back</button>
             <h1>88032023006  |  ZICO</h1>
+            <p>...</p>
         </div>
     </header>
 
     <title1>
         <div class="title1-container">
-            <h1>🚧 Website Sedang Dalam Pemeliharaan 🚧</h1>
-            <h2>Kami akan segera kembali!</h2>
+            <h1>Praktik Minggu 4 DevSecOps</h1>
+            <h2>Threat Modeling: Aplikasi Antrian</h2>
         </div>
     </title1>
 
     <main>
         <section class="content">
-            <article>
-                <p>
-                    Saat ini situs sedang dalam proses pemeliharaan untuk peningkatan sistem dan performa.
-                    Kami mohon maaf atas ketidaknyamanan ini.
-                </p>
-            </article>
+            
+            <!-- img src="assets/dso-1.webp" alt="Image1" class="article-image" -->
+
 
             <article>
-                <h2>Informasi</h2>
-                <ul>
-                    <li>Waktu maintenance: sementara</li>
-                    <li>Layanan akan aktif kembali dalam waktu dekat</li>
-                    <li>Terima kasih atas kesabaran Anda 🙏</li>
-                </ul>
-                <p>Silakan coba akses kembali beberapa saat lagi.</p>
+              <h2><strong>Pendahuluan</strong></h2>
+              <p>Threat modeling adalah metode terstruktur untuk mengenali, menilai, dan memitigasi potensi ancaman keamanan pada sebuah sistem. Tujuannya adalah menemukan titik-titik rentan sejak awal—seperti autentikasi tidak aman, kebocoran data, atau kemungkinan eskalasi hak akses—lalu menyusun langkah pencegahan baik secara teknis maupun prosedural. Pada artikel ini, proses threat modeling diterapkan pada aplikasi antrian berbasis PHP + MySQL dari repository galihap76/antrian sebagai contoh studi kasus.</p>
+            </article>
+
+
+            <article>
+              <h2><strong>Persiapan</strong></h2>
+              <p><strong>1. Instalasi Server</strong></p>
+              <ol>
+                <li>Unduh XAMPP melalui situs resmi: <a href="https://www.apachefriends.org/">https://www.apachefriends.org/</a></li>
+                <li>Jalankan layanan Apache dan MySQL dari XAMPP Control Panel.</li>
+                <li>Cek apakah server aktif dengan membuka: <a href="http://localhost">http://localhost</a>. Jika dashboard XAMPP muncul, berarti server sudah berjalan.</li>
+              </ol>
+              <img src="assets/dso-1.png" alt="Image1" class="article-image">
+
+              <p><strong>2. Instalasi Aplikasi Antrian</strong></p>
+              <ol>
+                <li>Buka terminal dan masuk ke direktori web server (XAMPP/htdocs).</li>
+                <li>Clone repository aplikasi:</li>
+              </ol>
+              <textarea id="markdown-input" rows="0" cols="0">
+git clone https://github.com/galihap76/antrian.git
+              <img src="assets/dso-2.png" alt="Image1" class="article-image">
+              </textarea>
+
+              <p><strong>3. Import Database</strong></p>
+              <ol>
+                <li>Masuk ke phpMyAdmin dan buat database baru bernama antrian.</li>
+                <img src="assets/dso-3.png" alt="Image1" class="article-image">
+                <li>Import file SQL yang berada di: antrian/assets/db_antrian.sql.</li>
+                <li>Jika proses impor berhasil, database siap digunakan.</li>
+              </ol>
+
+              <p><strong>4. Menjalankan Aplikasi</strong></p>
+              <p>Akses aplikasi melalui browser: <a href="http://localhost/antrian">http://localhost/antrian</a></p>
+
             </article>
         </section>
     </main>
