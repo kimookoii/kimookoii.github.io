@@ -26,7 +26,7 @@
         <section class="content">
 
             <article>
-                <h2>1. Konsep Dasar SAST & DAST</h2>
+                <h2>Konsep Dasar SAST & DAST</h2>
                 <p>
                     <strong>SAST</strong> (Static Application Security Testing) adalah metode pengujian keamanan yang dilakukan 
                     tanpa menjalankan aplikasi. Pengujian fokus pada kode sumber, bytecode, atau binary untuk mencari kerentanan 
@@ -53,7 +53,7 @@
 
 
             <article>
-                <h2>2. Mengapa SAST & DAST Penting</h2>
+                <h2>Mengapa SAST & DAST Penting</h2>
                 <p>Penerapan kedua metode ini mendukung prinsip DevSecOps:</p>
                 <ul>
                     <li>Shift-left security — menemukan bug lebih awal.</li>
@@ -65,7 +65,7 @@
 
 
             <article>
-                <h2>3. Pipeline DevSecOps dengan SAST & DAST</h2>
+                <h2>Pipeline DevSecOps dengan SAST & DAST</h2>
                 <p>Pipeline umum:</p>
                 <ol>
                     <li>Developer melakukan commit kode</li>
@@ -80,7 +80,7 @@
 
 
             <article>
-                <h2>4. Menjalankan SAST Menggunakan SonarQube</h2>
+                <h2>Menjalankan SAST Menggunakan SonarQube</h2>
                 <p>Berikut langkah-langkah menjalankan analisis statis menggunakan SonarQube.</p>
                 <ol>
                     <li><strong>Menjalankan SonarQube via Docker</strong></li>
@@ -90,9 +90,75 @@ docker run -d --name sonarqube -p 9000:9000 sonarqube:lts-community
                     <img src="assets/dso-1.png" alt="Image1" class="article-image">
                     <p>Akses melalui browser: <a href="http://localhost:9000">http://localhost:9000</a></p>
                     <p>Login default: admin / admin</p>
+                    <img src="assets/dso-2.png" alt="Image1" class="article-image">
+                    <img src="assets/dso-3.png" alt="Image1" class="article-image">
                     <p></p>
 
-                    <li><strong>Install Sonar Scanner</strong></li>
+                    <li><strong>Install Sonar Scanner (Windows)</strong></li>
+                    <p><strong>1. Download Sonar Scanner</strong></p>
+                    <ol>
+                        <li>Buka website resmi: <a href="https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/scanners/sonarscanner/">https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/scanners/sonarscanner/</a></li>
+                        <li>Cari bagian <strong>SonarScanner for Windows</strong></li>
+                        <li>Download file ZIP: <a href="https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-7.3.0.5189-windows-x64.zip">sonar-scanner-cli-7.3.0.5189-windows-x64.zip</a></li>
+                        <img src="assets/dso-4.png" alt="Image1" class="article-image">
+                    </ol>
+
+                    <p><strong>2. Extract ZIP</strong></p>
+                    <ol>
+                        <li>Setelah di-download, klik kanan → Extract All</li>
+                        <li>Pindahkan folder hasil extract ke lokasi permanen, misalnya:</li>
+                        <textarea id="markdown-input" rows="0" cols="0">
+C:\sonar-scanner\
+                        </textarea>
+                        <li>Di dalamnya akan ada folder seperti:</li>
+                        <textarea id="markdown-input" rows="0" cols="0">
+C:\sonar-scanner-7.3.0.5189-windows-x64
+                        </textarea>
+                        <img src="assets/dso-5.png" alt="Image1" class="article-image">
+                    </ol>
+                    
+                    <p><strong>3. Tambahkan ke PATH Windows</strong></p>
+                    <p>Agar bisa menjalankan sonar-scanner di Command Prompt / PowerShell.</p>
+                    <ol>Langkah-langkah:
+                        <li>Tekan Start → ketik Edit the system environment variables</li>
+                        <li>Klik Environment Variables</li>
+                        <li>Pada “System variables”, cari Path → klik Edit</li>
+                        <img src="assets/dso-7.png" alt="Image1" class="article-image">
+                        <li>Klik New</li>
+                        <li>Masukkan path:</li>
+                        <textarea id="markdown-input" rows="0" cols="0">
+C:\sonar-scanner-7.3.0.5189-windows-x64\bin
+                        </textarea>
+                        <img src="assets/dso-8.png" alt="Image1" class="article-image">
+                        <li>Klik OK sampai selesai</li>
+                    </ol>
+                    
+                    <p><strong>4. Cek instalasi</strong></p>
+                    <p>Buka Command Prompt atau PowerShell, kemudian jalankan:</p>
+                    <textarea id="markdown-input" rows="0" cols="0">
+sonar-scanner --version
+                    </textarea>
+                    <p>Jika berhasil, akan muncul informasi versi.</p>
+                    <img src="assets/dso-9.png" alt="Image1" class="article-image">
+                    
+                    <p><strong>5. Konfigurasi file sonar-project.properties</strong></p>
+                    <p>Di dalam folder project kamu, buat file:</p>
+                    <textarea id="markdown-input" rows="0" cols="0">
+sonar-project.properties
+                    </textarea>
+                    <p>Isinya contoh:</p>
+
+
+
+
+
+
+
+
+
+
+
+
                     <p>Sonar Scanner diperlukan untuk mengirimkan kode ke SonarQube untuk dianalisis.</p>
                     <textarea id="markdown-input2" rows="0" cols="0">
 sudo apt install openjdk-17-jdk -y
@@ -123,7 +189,7 @@ sonar-scanner
 
 
             <article>
-                <h2>5. Menjalankan DAST Menggunakan OWASP ZAP</h2>
+                <h2>Menjalankan DAST Menggunakan OWASP ZAP</h2>
                 <p>OWASP ZAP digunakan untuk menguji kerentanan runtime.</p>
                 <ol>
                     <li><strong>Menjalankan aplikasi target</strong></li>
@@ -148,7 +214,7 @@ docker run -t owasp/zap2docker-stable zap-baseline.py \
 
 
             <article>
-                <h2>6. Integrasi CI/CD</h2>
+                <h2>Integrasi CI/CD</h2>
                 <p>
                     Kedua tools dapat diintegrasikan ke dalam GitHub Actions atau Jenkins
                     untuk mengotomatisasi proses SAST dan DAST. Pipeline ini membuat setiap commit diuji
@@ -218,7 +284,7 @@ pipeline {
 
 
             <article>
-                <h2>7. Interpretasi Hasil</h2>
+                <h2>Interpretasi Hasil</h2>
                 <p><strong>SonarQube:</strong></p>
                 <ul>
                     <li>Bugs: logic errors → perbaiki flow program</li>
@@ -243,7 +309,7 @@ pipeline {
 
 
             <article>
-                <h2>8. Kesimpulan</h2>
+                <h2>Kesimpulan</h2>
                 <p>
                     SAST dan DAST adalah dua pendekatan penting untuk menjaga keamanan aplikasi dalam DevSecOps.
                     SAST membantu mendeteksi kerentanan pada tahap awal, sedangkan DAST memastikan aplikasi aman
