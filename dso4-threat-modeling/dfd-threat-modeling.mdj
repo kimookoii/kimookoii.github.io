@@ -1,0 +1,932 @@
+{
+	"_type": "Project",
+	"_id": "AAAAAAFF+h6SjaM2Hec=",
+	"name": "Untitled",
+	"ownedElements": [
+		{
+			"_type": "UMLModel",
+			"_id": "AAAAAAFF+qBWK6M3Z8Y=",
+			"_parent": {
+				"$ref": "AAAAAAFF+h6SjaM2Hec="
+			},
+			"name": "Model",
+			"ownedElements": [
+				{
+					"_type": "UMLClassDiagram",
+					"_id": "AAAAAAFF+qBtyKM79qY=",
+					"_parent": {
+						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
+					},
+					"name": "Main",
+					"defaultDiagram": true
+				}
+			]
+		},
+		{
+			"_type": "DFDDataFlowModel",
+			"_id": "AAAAAAGaj8JRWvD7Za0=",
+			"_parent": {
+				"$ref": "AAAAAAFF+h6SjaM2Hec="
+			},
+			"name": "DataFlowModel1",
+			"ownedElements": [
+				{
+					"_type": "DFDDiagram",
+					"_id": "AAAAAAGaj8JRWvD8aso=",
+					"_parent": {
+						"$ref": "AAAAAAGaj8JRWvD7Za0="
+					},
+					"name": "DFDDiagram1",
+					"ownedViews": [
+						{
+							"_type": "DFDExternalEntityView",
+							"_id": "AAAAAAGaj8J3X/ECxn8=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8JRWvD8aso="
+							},
+							"model": {
+								"$ref": "AAAAAAGaj8J3XfEA4yU="
+							},
+							"subViews": [
+								{
+									"_type": "LabelView",
+									"_id": "AAAAAAGaj8J3YvEIeSQ=",
+									"_parent": {
+										"$ref": "AAAAAAGaj8J3X/ECxn8="
+									},
+									"font": "Arial;13;0",
+									"parentStyle": true,
+									"left": 58,
+									"top": 181,
+									"width": 108,
+									"height": 13
+								},
+								{
+									"_type": "LabelView",
+									"_id": "AAAAAAGaj8J3YPEDP+Q=",
+									"_parent": {
+										"$ref": "AAAAAAGaj8J3X/ECxn8="
+									},
+									"font": "Arial;13;0",
+									"parentStyle": true,
+									"left": 58,
+									"top": 186,
+									"width": 108,
+									"height": 13,
+									"text": "User",
+									"wordWrap": true
+								},
+								{
+									"_type": "LabelView",
+									"_id": "AAAAAAGaj8J3YPEEVCo=",
+									"_parent": {
+										"$ref": "AAAAAAGaj8J3X/ECxn8="
+									},
+									"font": "Arial;13;0",
+									"parentStyle": true,
+									"left": -136,
+									"top": -152,
+									"height": 13
+								}
+							],
+							"font": "Arial;13;0",
+							"parentStyle": false,
+							"left": 48,
+							"top": 176,
+							"width": 128,
+							"height": 80,
+							"nameLabel": {
+								"$ref": "AAAAAAGaj8J3YPEDP+Q="
+							}
+						},
+						{
+							"_type": "DFDExternalEntityView",
+							"_id": "AAAAAAGaj8KLPfEO2yk=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8JRWvD8aso="
+							},
+							"model": {
+								"$ref": "AAAAAAGaj8KLPfEMTuE="
+							},
+							"subViews": [
+								{
+									"_type": "LabelView",
+									"_id": "AAAAAAGaj8KLPvEUXv4=",
+									"_parent": {
+										"$ref": "AAAAAAGaj8KLPfEO2yk="
+									},
+									"font": "Arial;13;0",
+									"parentStyle": true,
+									"left": 314,
+									"top": 341,
+									"width": 108,
+									"height": 13
+								},
+								{
+									"_type": "LabelView",
+									"_id": "AAAAAAGaj8KLPfEPQho=",
+									"_parent": {
+										"$ref": "AAAAAAGaj8KLPfEO2yk="
+									},
+									"font": "Arial;13;0",
+									"parentStyle": true,
+									"left": 314,
+									"top": 346,
+									"width": 108,
+									"height": 13,
+									"text": "Petugas",
+									"wordWrap": true
+								},
+								{
+									"_type": "LabelView",
+									"_id": "AAAAAAGaj8KLPfEQzug=",
+									"_parent": {
+										"$ref": "AAAAAAGaj8KLPfEO2yk="
+									},
+									"font": "Arial;13;0",
+									"parentStyle": true,
+									"left": 56,
+									"top": -88,
+									"height": 13
+								}
+							],
+							"font": "Arial;13;0",
+							"parentStyle": false,
+							"left": 304,
+							"top": 336,
+							"width": 128,
+							"height": 80,
+							"nameLabel": {
+								"$ref": "AAAAAAGaj8KLPfEPQho="
+							}
+						},
+						{
+							"_type": "DFDDataStoreView",
+							"_id": "AAAAAAGaj8LX8/EarXU=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8JRWvD8aso="
+							},
+							"model": {
+								"$ref": "AAAAAAGaj8LX8vEYbwQ="
+							},
+							"subViews": [
+								{
+									"_type": "LabelView",
+									"_id": "AAAAAAGaj8LX9PEbeJU=",
+									"_parent": {
+										"$ref": "AAAAAAGaj8LX8/EarXU="
+									},
+									"font": "Arial;13;0",
+									"parentStyle": true,
+									"left": 580,
+									"top": 186,
+									"width": 98,
+									"height": 26,
+									"text": "Database Antrian",
+									"wordWrap": true
+								},
+								{
+									"_type": "LabelView",
+									"_id": "AAAAAAGaj8LX9PEckBA=",
+									"_parent": {
+										"$ref": "AAAAAAGaj8LX8/EarXU="
+									},
+									"font": "Arial;13;0",
+									"parentStyle": true,
+									"left": 565,
+									"top": 186,
+									"height": 13
+								}
+							],
+							"font": "Arial;13;0",
+							"parentStyle": false,
+							"left": 560,
+							"top": 176,
+							"width": 128,
+							"height": 80,
+							"nameLabel": {
+								"$ref": "AAAAAAGaj8LX9PEbeJU="
+							},
+							"idLabel": {
+								"$ref": "AAAAAAGaj8LX9PEckBA="
+							}
+						},
+						{
+							"_type": "DFDProcessView",
+							"_id": "AAAAAAGaj8L44vEmwB8=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8JRWvD8aso="
+							},
+							"model": {
+								"$ref": "AAAAAAGaj8L44fEkXEU="
+							},
+							"subViews": [
+								{
+									"_type": "LabelView",
+									"_id": "AAAAAAGaj8L44vEnRtI=",
+									"_parent": {
+										"$ref": "AAAAAAGaj8L44vEmwB8="
+									},
+									"font": "Arial;13;0",
+									"parentStyle": true,
+									"left": 314,
+									"top": 209,
+									"width": 108,
+									"height": 26,
+									"text": "Sistem Aplikasi Antrian",
+									"wordWrap": true
+								},
+								{
+									"_type": "LabelView",
+									"_id": "AAAAAAGaj8L44vEoarA=",
+									"_parent": {
+										"$ref": "AAAAAAGaj8L44vEmwB8="
+									},
+									"font": "Arial;13;0",
+									"parentStyle": true,
+									"left": 314,
+									"top": 181,
+									"width": 108,
+									"height": 13
+								}
+							],
+							"font": "Arial;13;0",
+							"parentStyle": false,
+							"left": 304,
+							"top": 176,
+							"width": 128,
+							"height": 82,
+							"nameLabel": {
+								"$ref": "AAAAAAGaj8L44vEnRtI="
+							},
+							"idLabel": {
+								"$ref": "AAAAAAGaj8L44vEoarA="
+							}
+						},
+						{
+							"_type": "DFDDataFlowView",
+							"_id": "AAAAAAGaj8XE6vFKo/g=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8JRWvD8aso="
+							},
+							"model": {
+								"$ref": "AAAAAAGaj8XE6fFIEvs="
+							},
+							"subViews": [
+								{
+									"_type": "EdgeLabelView",
+									"_id": "AAAAAAGaj8XE6/FLnhM=",
+									"_parent": {
+										"$ref": "AAAAAAGaj8XE6vFKo/g="
+									},
+									"model": {
+										"$ref": "AAAAAAGaj8XE6fFIEvs="
+									},
+									"font": "Arial;13;0",
+									"parentStyle": false,
+									"left": 209,
+									"top": 179,
+									"width": 62.8671875,
+									"height": 13,
+									"alpha": 1.5707963267948966,
+									"distance": 15,
+									"hostEdge": {
+										"$ref": "AAAAAAGaj8XE6vFKo/g="
+									},
+									"edgePosition": 1,
+									"text": "Login User"
+								}
+							],
+							"font": "Arial;13;0",
+							"parentStyle": false,
+							"head": {
+								"$ref": "AAAAAAGaj8L44vEmwB8="
+							},
+							"tail": {
+								"$ref": "AAAAAAGaj8J3X/ECxn8="
+							},
+							"lineStyle": 2,
+							"points": "176:200;304:200",
+							"nameLabel": {
+								"$ref": "AAAAAAGaj8XE6/FLnhM="
+							}
+						},
+						{
+							"_type": "DFDDataFlowView",
+							"_id": "AAAAAAGaj8X2wPFULZ4=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8JRWvD8aso="
+							},
+							"model": {
+								"$ref": "AAAAAAGaj8X2v/FSXuI="
+							},
+							"subViews": [
+								{
+									"_type": "EdgeLabelView",
+									"_id": "AAAAAAGaj8X2wPFV5Hc=",
+									"_parent": {
+										"$ref": "AAAAAAGaj8X2wPFULZ4="
+									},
+									"model": {
+										"$ref": "AAAAAAGaj8X2v/FSXuI="
+									},
+									"font": "Arial;13;0",
+									"parentStyle": false,
+									"left": 159,
+									"top": 239,
+									"width": 163.30615234375,
+									"height": 13,
+									"alpha": -1.5707956125091824,
+									"distance": 14,
+									"hostEdge": {
+										"$ref": "AAAAAAGaj8X2wPFULZ4="
+									},
+									"edgePosition": 1,
+									"text": "Permintaan Nomor Antrian"
+								}
+							],
+							"font": "Arial;13;0",
+							"parentStyle": false,
+							"head": {
+								"$ref": "AAAAAAGaj8L44vEmwB8="
+							},
+							"tail": {
+								"$ref": "AAAAAAGaj8J3X/ECxn8="
+							},
+							"lineStyle": 2,
+							"points": "176:232;304:232",
+							"nameLabel": {
+								"$ref": "AAAAAAGaj8X2wPFV5Hc="
+							}
+						},
+						{
+							"_type": "DFDDataFlowView",
+							"_id": "AAAAAAGaj8aYwPFfxdQ=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8JRWvD8aso="
+							},
+							"model": {
+								"$ref": "AAAAAAGaj8aYwPFd/Zk="
+							},
+							"subViews": [
+								{
+									"_type": "EdgeLabelView",
+									"_id": "AAAAAAGaj8aYwPFg0z0=",
+									"_parent": {
+										"$ref": "AAAAAAGaj8aYwPFfxdQ="
+									},
+									"model": {
+										"$ref": "AAAAAAGaj8aYwPFd/Zk="
+									},
+									"font": "Arial;13;0",
+									"parentStyle": false,
+									"left": 470,
+									"top": 239,
+									"width": 52.01904296875,
+									"height": 13,
+									"alpha": -1.5707956125091824,
+									"distance": 14,
+									"hostEdge": {
+										"$ref": "AAAAAAGaj8aYwPFfxdQ="
+									},
+									"edgePosition": 1,
+									"text": "Verifikasi"
+								}
+							],
+							"font": "Arial;13;0",
+							"parentStyle": false,
+							"head": {
+								"$ref": "AAAAAAGaj8LX8/EarXU="
+							},
+							"tail": {
+								"$ref": "AAAAAAGaj8L44vEmwB8="
+							},
+							"lineStyle": 2,
+							"points": "432:232;560:232",
+							"nameLabel": {
+								"$ref": "AAAAAAGaj8aYwPFg0z0="
+							}
+						},
+						{
+							"_type": "DFDDataFlowView",
+							"_id": "AAAAAAGaj8biQvFpF/M=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8JRWvD8aso="
+							},
+							"model": {
+								"$ref": "AAAAAAGaj8biQvFnALk="
+							},
+							"subViews": [
+								{
+									"_type": "EdgeLabelView",
+									"_id": "AAAAAAGaj8biQ/Fqhp0=",
+									"_parent": {
+										"$ref": "AAAAAAGaj8biQvFpF/M="
+									},
+									"model": {
+										"$ref": "AAAAAAGaj8biQvFnALk="
+									},
+									"font": "Arial;13;0",
+									"parentStyle": false,
+									"left": 456,
+									"top": 184,
+									"width": 84.55078125,
+									"height": 13,
+									"alpha": 4.514992458996533,
+									"distance": 10.198039027185569,
+									"hostEdge": {
+										"$ref": "AAAAAAGaj8biQvFpF/M="
+									},
+									"edgePosition": 1,
+									"text": "Token Session"
+								}
+							],
+							"font": "Arial;13;0",
+							"parentStyle": false,
+							"head": {
+								"$ref": "AAAAAAGaj8L44vEmwB8="
+							},
+							"tail": {
+								"$ref": "AAAAAAGaj8LX8/EarXU="
+							},
+							"lineStyle": 2,
+							"points": "560:200;432:200",
+							"nameLabel": {
+								"$ref": "AAAAAAGaj8biQ/Fqhp0="
+							}
+						},
+						{
+							"_type": "DFDDataFlowView",
+							"_id": "AAAAAAGaj8g7lvGDVUU=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8JRWvD8aso="
+							},
+							"model": {
+								"$ref": "AAAAAAGaj8g7lfGB4RM="
+							},
+							"subViews": [
+								{
+									"_type": "EdgeLabelView",
+									"_id": "AAAAAAGaj8g7lvGEn/U=",
+									"_parent": {
+										"$ref": "AAAAAAGaj8g7lvGDVUU="
+									},
+									"model": {
+										"$ref": "AAAAAAGaj8g7lfGB4RM="
+									},
+									"font": "Arial;13;0",
+									"parentStyle": false,
+									"left": 189,
+									"top": 127,
+									"width": 84.55078125,
+									"height": 13,
+									"alpha": -1.4711286644028423,
+									"distance": 10.04987562112089,
+									"hostEdge": {
+										"$ref": "AAAAAAGaj8g7lvGDVUU="
+									},
+									"edgePosition": 1,
+									"text": "Token Session"
+								}
+							],
+							"font": "Arial;13;0",
+							"parentStyle": false,
+							"head": {
+								"$ref": "AAAAAAGaj8J3X/ECxn8="
+							},
+							"tail": {
+								"$ref": "AAAAAAGaj8L44vEmwB8="
+							},
+							"lineStyle": 2,
+							"points": "352:176;352:144;112:144;112:176",
+							"nameLabel": {
+								"$ref": "AAAAAAGaj8g7lvGEn/U="
+							}
+						},
+						{
+							"_type": "DFDDataFlowView",
+							"_id": "AAAAAAGaj8lFv/GVrEk=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8JRWvD8aso="
+							},
+							"model": {
+								"$ref": "AAAAAAGaj8lFvvGTOfY="
+							},
+							"subViews": [
+								{
+									"_type": "EdgeLabelView",
+									"_id": "AAAAAAGaj8lFv/GW/C4=",
+									"_parent": {
+										"$ref": "AAAAAAGaj8lFv/GVrEk="
+									},
+									"model": {
+										"$ref": "AAAAAAGaj8lFvvGTOfY="
+									},
+									"font": "Arial;13;0",
+									"parentStyle": false,
+									"left": 391,
+									"top": 304,
+									"width": 163.30615234375,
+									"height": 13,
+									"alpha": 1.425754388127254,
+									"distance": 89.94442728707543,
+									"hostEdge": {
+										"$ref": "AAAAAAGaj8lFv/GVrEk="
+									},
+									"edgePosition": 1,
+									"text": "Pengambilan Nomor Antrian"
+								}
+							],
+							"font": "Arial;13;0",
+							"parentStyle": false,
+							"head": {
+								"$ref": "AAAAAAGaj8KLPfEO2yk="
+							},
+							"tail": {
+								"$ref": "AAAAAAGaj8L44vEmwB8="
+							},
+							"lineStyle": 2,
+							"points": "384:258;384:336",
+							"nameLabel": {
+								"$ref": "AAAAAAGaj8lFv/GW/C4="
+							}
+						},
+						{
+							"_type": "DFDDataFlowView",
+							"_id": "AAAAAAGaj8mH9PGf4hk=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8JRWvD8aso="
+							},
+							"model": {
+								"$ref": "AAAAAAGaj8mH9PGdDOo="
+							},
+							"subViews": [
+								{
+									"_type": "EdgeLabelView",
+									"_id": "AAAAAAGaj8mH9fGgCHg=",
+									"_parent": {
+										"$ref": "AAAAAAGaj8mH9PGf4hk="
+									},
+									"model": {
+										"$ref": "AAAAAAGaj8mH9PGdDOo="
+									},
+									"font": "Arial;13;0",
+									"parentStyle": false,
+									"left": 255,
+									"top": 304,
+									"width": 88.1689453125,
+									"height": 13,
+									"alpha": -4.471854432375062,
+									"distance": 54.57105459856901,
+									"hostEdge": {
+										"$ref": "AAAAAAGaj8mH9PGf4hk="
+									},
+									"edgePosition": 1,
+									"text": "Panggil Antrian"
+								}
+							],
+							"font": "Arial;13;0",
+							"parentStyle": false,
+							"head": {
+								"$ref": "AAAAAAGaj8L44vEmwB8="
+							},
+							"tail": {
+								"$ref": "AAAAAAGaj8KLPfEO2yk="
+							},
+							"lineStyle": 2,
+							"points": "352:336;352:258",
+							"nameLabel": {
+								"$ref": "AAAAAAGaj8mH9fGgCHg="
+							}
+						},
+						{
+							"_type": "DFDDataFlowView",
+							"_id": "AAAAAAGaj8rtlPGw2ww=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8JRWvD8aso="
+							},
+							"model": {
+								"$ref": "AAAAAAGaj8rtk/GuCII="
+							},
+							"subViews": [
+								{
+									"_type": "EdgeLabelView",
+									"_id": "AAAAAAGaj8rtlPGx6i0=",
+									"_parent": {
+										"$ref": "AAAAAAGaj8rtlPGw2ww="
+									},
+									"model": {
+										"$ref": "AAAAAAGaj8rtk/GuCII="
+									},
+									"font": "Arial;13;0",
+									"parentStyle": false,
+									"left": 130,
+									"top": 271,
+									"width": 170.5361328125,
+									"height": 13,
+									"alpha": -1.4711286644028423,
+									"distance": 10.04987562112089,
+									"hostEdge": {
+										"$ref": "AAAAAAGaj8rtlPGw2ww="
+									},
+									"edgePosition": 1,
+									"text": "Pengembalian Nomor Antrian"
+								}
+							],
+							"font": "Arial;13;0",
+							"parentStyle": false,
+							"head": {
+								"$ref": "AAAAAAGaj8J3X/ECxn8="
+							},
+							"tail": {
+								"$ref": "AAAAAAGaj8L44vEmwB8="
+							},
+							"lineStyle": 2,
+							"points": "320:258;320:288;112:288;112:256",
+							"nameLabel": {
+								"$ref": "AAAAAAGaj8rtlPGx6i0="
+							}
+						},
+						{
+							"_type": "DFDDataFlowView",
+							"_id": "AAAAAAGaj8yPivHI3Vs=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8JRWvD8aso="
+							},
+							"model": {
+								"$ref": "AAAAAAGaj8yPivHGcI8="
+							},
+							"subViews": [
+								{
+									"_type": "EdgeLabelView",
+									"_id": "AAAAAAGaj8yPivHJWOo=",
+									"_parent": {
+										"$ref": "AAAAAAGaj8yPivHI3Vs="
+									},
+									"model": {
+										"$ref": "AAAAAAGaj8yPivHGcI8="
+									},
+									"font": "Arial;13;0",
+									"parentStyle": false,
+									"left": 404,
+									"top": 128,
+									"width": 200.14794921875,
+									"height": 13,
+									"alpha": 1.5707953267948966,
+									"distance": 10,
+									"hostEdge": {
+										"$ref": "AAAAAAGaj8yPivHI3Vs="
+									},
+									"edgePosition": 1,
+									"text": "Ambil Data dan Memperbarui Data"
+								}
+							],
+							"font": "Arial;13;0",
+							"parentStyle": false,
+							"head": {
+								"$ref": "AAAAAAGaj8LX8/EarXU="
+							},
+							"tail": {
+								"$ref": "AAAAAAGaj8L44vEmwB8="
+							},
+							"lineStyle": 2,
+							"points": "384:176;384:144;624:144;624:176",
+							"nameLabel": {
+								"$ref": "AAAAAAGaj8yPivHJWOo="
+							}
+						},
+						{
+							"_type": "DFDDataFlowView",
+							"_id": "AAAAAAGaj9BP9fHc8G0=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8JRWvD8aso="
+							},
+							"model": {
+								"$ref": "AAAAAAGaj9BP9PHah6o="
+							},
+							"subViews": [
+								{
+									"_type": "EdgeLabelView",
+									"_id": "AAAAAAGaj9BP9fHd++s=",
+									"_parent": {
+										"$ref": "AAAAAAGaj9BP9fHc8G0="
+									},
+									"model": {
+										"$ref": "AAAAAAGaj9BP9PHah6o="
+									},
+									"font": "Arial;13;0",
+									"parentStyle": false,
+									"left": 434,
+									"top": 271,
+									"width": 170.5361328125,
+									"height": 13,
+									"alpha": -1.4711286644028423,
+									"distance": 10.04987562112089,
+									"hostEdge": {
+										"$ref": "AAAAAAGaj9BP9fHc8G0="
+									},
+									"edgePosition": 1,
+									"text": "Pengembalian Nomor Antrian"
+								}
+							],
+							"font": "Arial;13;0",
+							"parentStyle": false,
+							"head": {
+								"$ref": "AAAAAAGaj8L44vEmwB8="
+							},
+							"tail": {
+								"$ref": "AAAAAAGaj8LX8/EarXU="
+							},
+							"lineStyle": 2,
+							"points": "624:256;624:288;416:288;416:258",
+							"nameLabel": {
+								"$ref": "AAAAAAGaj9BP9fHd++s="
+							}
+						}
+					]
+				},
+				{
+					"_type": "DFDExternalEntity",
+					"_id": "AAAAAAGaj8J3XfEA4yU=",
+					"_parent": {
+						"$ref": "AAAAAAGaj8JRWvD7Za0="
+					},
+					"name": "User",
+					"ownedElements": [
+						{
+							"_type": "DFDDataFlow",
+							"_id": "AAAAAAGaj8XE6fFIEvs=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8J3XfEA4yU="
+							},
+							"name": "Login User",
+							"source": {
+								"$ref": "AAAAAAGaj8J3XfEA4yU="
+							},
+							"target": {
+								"$ref": "AAAAAAGaj8L44fEkXEU="
+							}
+						},
+						{
+							"_type": "DFDDataFlow",
+							"_id": "AAAAAAGaj8X2v/FSXuI=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8J3XfEA4yU="
+							},
+							"name": "Permintaan Nomor Antrian",
+							"source": {
+								"$ref": "AAAAAAGaj8J3XfEA4yU="
+							},
+							"target": {
+								"$ref": "AAAAAAGaj8L44fEkXEU="
+							}
+						}
+					]
+				},
+				{
+					"_type": "DFDExternalEntity",
+					"_id": "AAAAAAGaj8KLPfEMTuE=",
+					"_parent": {
+						"$ref": "AAAAAAGaj8JRWvD7Za0="
+					},
+					"name": "Petugas",
+					"ownedElements": [
+						{
+							"_type": "DFDDataFlow",
+							"_id": "AAAAAAGaj8mH9PGdDOo=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8KLPfEMTuE="
+							},
+							"name": "Panggil Antrian",
+							"source": {
+								"$ref": "AAAAAAGaj8KLPfEMTuE="
+							},
+							"target": {
+								"$ref": "AAAAAAGaj8L44fEkXEU="
+							}
+						}
+					]
+				},
+				{
+					"_type": "DFDDataStore",
+					"_id": "AAAAAAGaj8LX8vEYbwQ=",
+					"_parent": {
+						"$ref": "AAAAAAGaj8JRWvD7Za0="
+					},
+					"name": "Database Antrian",
+					"ownedElements": [
+						{
+							"_type": "DFDDataFlow",
+							"_id": "AAAAAAGaj8biQvFnALk=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8LX8vEYbwQ="
+							},
+							"name": "Token Session",
+							"source": {
+								"$ref": "AAAAAAGaj8LX8vEYbwQ="
+							},
+							"target": {
+								"$ref": "AAAAAAGaj8L44fEkXEU="
+							}
+						},
+						{
+							"_type": "DFDDataFlow",
+							"_id": "AAAAAAGaj9BP9PHah6o=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8LX8vEYbwQ="
+							},
+							"name": "Pengembalian Nomor Antrian",
+							"source": {
+								"$ref": "AAAAAAGaj8LX8vEYbwQ="
+							},
+							"target": {
+								"$ref": "AAAAAAGaj8L44fEkXEU="
+							}
+						}
+					]
+				},
+				{
+					"_type": "DFDProcess",
+					"_id": "AAAAAAGaj8L44fEkXEU=",
+					"_parent": {
+						"$ref": "AAAAAAGaj8JRWvD7Za0="
+					},
+					"name": "Sistem Aplikasi Antrian",
+					"ownedElements": [
+						{
+							"_type": "DFDDataFlow",
+							"_id": "AAAAAAGaj8aYwPFd/Zk=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8L44fEkXEU="
+							},
+							"name": "Verifikasi",
+							"source": {
+								"$ref": "AAAAAAGaj8L44fEkXEU="
+							},
+							"target": {
+								"$ref": "AAAAAAGaj8LX8vEYbwQ="
+							}
+						},
+						{
+							"_type": "DFDDataFlow",
+							"_id": "AAAAAAGaj8g7lfGB4RM=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8L44fEkXEU="
+							},
+							"name": "Token Session",
+							"source": {
+								"$ref": "AAAAAAGaj8L44fEkXEU="
+							},
+							"target": {
+								"$ref": "AAAAAAGaj8J3XfEA4yU="
+							}
+						},
+						{
+							"_type": "DFDDataFlow",
+							"_id": "AAAAAAGaj8lFvvGTOfY=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8L44fEkXEU="
+							},
+							"name": "Pengambilan Nomor Antrian",
+							"source": {
+								"$ref": "AAAAAAGaj8L44fEkXEU="
+							},
+							"target": {
+								"$ref": "AAAAAAGaj8KLPfEMTuE="
+							}
+						},
+						{
+							"_type": "DFDDataFlow",
+							"_id": "AAAAAAGaj8rtk/GuCII=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8L44fEkXEU="
+							},
+							"name": "Pengembalian Nomor Antrian",
+							"source": {
+								"$ref": "AAAAAAGaj8L44fEkXEU="
+							},
+							"target": {
+								"$ref": "AAAAAAGaj8J3XfEA4yU="
+							}
+						},
+						{
+							"_type": "DFDDataFlow",
+							"_id": "AAAAAAGaj8yPivHGcI8=",
+							"_parent": {
+								"$ref": "AAAAAAGaj8L44fEkXEU="
+							},
+							"name": "Ambil Data dan Memperbarui Data",
+							"source": {
+								"$ref": "AAAAAAGaj8L44fEkXEU="
+							},
+							"target": {
+								"$ref": "AAAAAAGaj8LX8vEYbwQ="
+							}
+						}
+					]
+				}
+			]
+		}
+	],
+	"documentVersion": 1
+}

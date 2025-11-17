@@ -59,13 +59,92 @@ git clone https://github.com/galihap76/antrian.git
                 <li>Masuk ke phpMyAdmin dan buat database baru bernama antrian.</li>
                 <img src="assets/dso-3.png" alt="Image1" class="article-image">
                 <li>Import file SQL yang berada di: antrian/assets/db_antrian.sql.</li>
+                <img src="assets/dso-4.png" alt="Image1" class="article-image">
                 <li>Jika proses impor berhasil, database siap digunakan.</li>
               </ol>
 
               <p><strong>4. Menjalankan Aplikasi</strong></p>
               <p>Akses aplikasi melalui browser: <a href="http://localhost/antrian">http://localhost/antrian</a></p>
-
+              <img src="assets/dso-5.png" alt="Image1" class="article-image">
             </article>
+
+            <article>
+              <h2><strong>Data Flow Diagram (DFD)</strong></h2>
+              <p>Diagram alur data menggambarkan bagaimana informasi mengalir dalam aplikasi antrian—mulai dari proses login, pengambilan nomor, hingga pemanggilan antrian oleh petugas. DFD memvisualisasikan hubungan antara pengguna, petugas, aplikasi, dan database.</p>
+              <img src="assets/dso-6.png" alt="Image1" class="article-image">
+            </article>
+
+            <article>
+              <h2><strong>Penjelasan Komponen Sistem</strong></h2>
+              <p><strong>1. User (Entitas Eksternal)</strong></p>
+              <p>Pengguna umum yang mengambil nomor antrian dan melihat perkembangannya.</p>
+              <ul>Interaksi:
+                <li>Mengirim data login.</li>
+                <li>Meminta nomor antrian.</li>
+                <li>Menerima session token setelah berhasil login.</li>
+                <li>Melihat status antrian terbaru.</li>
+              </ul>
+              
+              <p><strong>2. Petugas (Entitas Eksternal)</strong></p>
+              <p>Operator yang mengelola proses pemanggilan antrian.</p>
+              <ul>Interaksi:
+                <li>Mengirim perintah untuk memanggil nomor berikutnya.</li>
+                <li>Melihat daftar antrian aktif.</li>
+                <li>Menerima hasil pembaruan data antrian.</li>
+              </ul>
+              
+              <p><strong>3. Sistem Aplikasi Antrian (Proses Utama)</strong></p>
+              <p>Berfungsi memproses seluruh permintaan dari user dan petugas.</p>
+              <ul>Kemampuan:
+                <li>Memverifikasi login.</li>
+                <li>Menghasilkan token session.</li>
+                <li>Menambah, mengubah, dan membaca data antrian.</li>
+                <li>Memberi status antrian terkini ke klien.</li>
+              </ul>
+              
+              <p><strong>4. Database Antrian (Penyimpanan Data)</strong></p>
+              <ul>Menyimpan data penting, antara lain:
+                <li><strong>User:</strong> username, password terenkripsi, role.</li>
+                <li><strong>Antrian:</strong> nomor antrian, waktu pembuatan, status (menunggu/dipanggil/selesai).</li>
+                <li><strong>Token/Session:</strong> token autentikasi.</li>
+              </ul>
+            </article>
+
+            <article>
+              <h2><strong>Alur Proses Sistem</strong></h2>
+              <p><strong>1. Login User</strong></p>
+              <ul>
+                <li>User mengirim username dan password.</li>
+                <li>Sistem memverifikasi ke database.</li>
+                <li>Jika berhasil, sistem mengembalikan token session.</li>
+              </ul>
+              
+              <p><strong>2. Pengambilan Nomor Antrian</strong></p>
+              <ul>
+                <li>User mengajukan permintaan ambil nomor.</li>
+                <li>Sistem mencatat nomor baru ke database.</li>
+                <li>Nomor antrian dikirimkan kembali ke user.</li>
+              </ul>
+              
+              <p><strong>3. Pemanggilan Antrian oleh Petugas</strong></p>
+              <ul>
+                <li>Petugas meminta pemanggilan nomor selanjutnya.</li>
+                <li>Sistem mengambil data dari database dan memperbarui status antrian.</li>
+                <li>Status dikirim ke petugas.</li>
+              </ul>
+              
+              <p><strong>4. Database Antrian (Penyimpanan Data)</strong></p>
+              <ul>
+                <li>Setiap perubahan status dicatat di database.</li>
+                <li>Informasi terbaru dikirimkan kepada user untuk mengetahui posisi antrian.</li>
+              </ul>
+            </article>
+
+            <article>
+                <h2><strong>Kesimpulan</strong></h2>
+                <p>Threat modeling pada aplikasi antrian berbasis PHP dan MySQL membantu mengidentifikasi potensi celah keamanan sejak tahap awal pengembangan. Melalui pemahaman alur sistem, pembuatan DFD, serta analisis menggunakan pendekatan STRIDE dan penilaian risiko DREAD, dapat terlihat area-area kritis seperti autentikasi, manajemen session, validasi input, dan integritas data antrian. Dengan menerapkan langkah mitigasi yang tepat—misalnya penguatan kontrol akses, enkripsi, sanitasi input, dan hardening server—risiko keamanan dapat ditekan secara signifikan. Proses ini memastikan aplikasi antrian tidak hanya berfungsi sesuai kebutuhan, tetapi juga aman, andal, serta lebih siap menghadapi ancaman dunia nyata.</p>
+            </article>
+
         </section>
     </main>
 
