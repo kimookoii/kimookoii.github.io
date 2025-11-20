@@ -9,6 +9,8 @@
 3. **[Konsep CI/CD](https://kimookoii.github.io/dso3-konsep-ci-cd/)**
 4. **[Threat Modeling](https://kimookoii.github.io/dso4-threat-modeling/)**
 5. **[Sast & Dast](https://kimookoii.github.io/dso5-sast-dast/)**
+5. **[Software Composition Analysis](https://kimookoii.github.io/dso6-software-composition-analysis/)** x
+5. **[Docker Security dengan Trivy](https://kimookoii.github.io/dso7-docker-security-dengan-trivy/)** x
 
 ---
 
@@ -19,6 +21,8 @@
 3. **[Tools Pentest Mobile](https://kimookoii.github.io/pm3-tools-pentest-mobile/)** x
 4. **[Environment Pentest Mobile](https://kimookoii.github.io/pm4-environment-pentest-mobile/)** x
 5. **[Decompile APK & Static Analysis](https://kimookoii.github.io/pm5-decompile-apk-static-analysis/)** x
+5. **[Dynamic Analysis & Hooking](https://kimookoii.github.io/pm6-dynamic-analysis-hooking/)** x
+5. **[Reverse Engineering Mobile App](https://kimookoii.github.io/pm7-reverse-engineering-mobile-app/)** x
 
 ---
 
