@@ -177,24 +177,68 @@ sonar-scanner
                 <h2>Menjalankan DAST Menggunakan OWASP ZAP</h2>
                 <p>OWASP ZAP digunakan untuk menguji kerentanan runtime.</p>
                 <ol>
-                    <li><strong>Menjalankan aplikasi target</strong></li>
-                    <p>Contoh: aplikasi antrian di <a href="http://localhost:8080">http://localhost:8080</a></p>
-                    
-                    <li><strong>Menjalankan ZAP Baseline Scan via Docker</strong></li>
+                    <li>Buka Command Prompt (CMD) lalu masuk ke direktori proyek:</li>
                     <textarea id="markdown-input4" rows="0" cols="0">
-docker run -t owasp/zap2docker-stable zap-baseline.py \
-  -t http://host.docker.internal:8080 \
-  -r zap_report.html
+cd C:\xampp\htdocs\antrian
                     </textarea>
-
-                    <li><strong>Output</strong></li>
-                    <ul>
-                        <li>High Risk: SQL Injection, XSS</li>
-                        <li>Medium Risk: directory browsing</li>
-                        <li>Low Risk: missing security headers</li>
-                    </ul>
-
+                    <li>Jalankan OWASP ZAP Baseline Scan menggunakan perintah berikut:</li>
+                    <textarea id="markdown-input4" rows="0" cols="0">
+docker run --rm -v ${PWD}:/zap/wrk:rw ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://host.docker.internal/antrian -r zap_report.html
+                    </textarea>
+                    <li>Hasil Scan:</li>
+                    <p>Setelah proses selesai, buka laporan hasil pemindaian pada:</p>
+                    <p><a href="C:\xampp\htdocs\antrian\zap_report.html">C:\xampp\htdocs\antrian\zap_report.html</a></p>
+                    <img src="assets/dso-13.png" alt="Image1" class="article-image">
                 </ol>
+
+                <table>
+                    <tr>
+                        <th>High</th>
+                        <th>Medium</th>
+                        <th>Low</th>
+                        <th>Informational</th>
+                    </tr>
+
+                    <tr>
+                        <!-- High -->
+                        <td></td>
+
+                        <!-- Medium -->
+                        <td>
+                            • Content Security Policy (CSP) Header Not Set<br>
+                            • Missing Anti-clickjacking Header<br>
+                            • Source Code Disclosure - SQL<br>
+                            • Sub Resource Integrity Attribute Missing
+                        </td>
+
+                        <!-- Low -->
+                        <td>
+                            • Big Redirect Detected (Potential Sensitive Information Leak)<br>
+                            • Cookie No HttpOnly Flag<br>
+                            • Cookie without SameSite Attribute<br>
+                            • Cross-Domain JavaScript Source File Inclusion<br>
+                            • In Page Banner Information Leak<br>
+                            • Insufficient Site Isolation Against Spectre Vulnerability<br>
+                            • Permissions Policy Header Not Set<br>
+                            • Server Leaks Information via "X-Powered-By" Header<br>
+                            • Server Leaks Version Information via "Server" Header<br>
+                            • Timestamp Disclosure - Unix<br>
+                            • X-Content-Type-Options Header Missing
+                        </td>
+
+                        <!-- Informational -->
+                        <td>
+                            • Authentication Request Identified<br>
+                            • Information Disclosure - Suspicious Comments<br>
+                            • Modern Web Application<br>
+                            • Non-Storable Content<br>
+                            • Session Management Response Identified<br>
+                            • Storable and Cacheable Content<br>
+                            • User Controllable HTML Element Attribute (Potential XSS)
+                        </td>
+                    </tr>
+                </table>
+
             </article>
 
 
