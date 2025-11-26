@@ -82,109 +82,94 @@
             <article>
                 <h2>Menjalankan SAST Menggunakan SonarQube</h2>
                 <p>Berikut langkah-langkah menjalankan analisis statis menggunakan SonarQube.</p>
-                <ol>
-                    <li><strong>Menjalankan SonarQube via Docker</strong></li>
-                    <textarea id="markdown-input" rows="0" cols="0">
+
+                <h3>1. Menjalankan SonarQube via Docker</h3>
+                <textarea id="markdown-input" rows="0" cols="0">
 docker run -d --name sonarqube -p 9000:9000 sonarqube:lts-community
-                    </textarea>
-                    <img src="assets/dso-1.png" alt="Image1" class="article-image">
-                    <p>Akses melalui browser: <a href="http://localhost:9000">http://localhost:9000</a></p>
-                    <p>Login default: admin / admin</p>
-                    <img src="assets/dso-2.png" alt="Image1" class="article-image">
-                    <img src="assets/dso-3.png" alt="Image1" class="article-image">
-                    <p></p>
-
-                    <li><strong>Install Sonar Scanner (Windows)</strong></li>
-                    <p><strong>1. Download Sonar Scanner</strong></p>
-                    <ol>
-                        <li>Buka website resmi: <a href="https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/scanners/sonarscanner/">https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/scanners/sonarscanner/</a></li>
-                        <li>Cari bagian <strong>SonarScanner for Windows</strong></li>
-                        <li>Download file ZIP: <a href="https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-7.3.0.5189-windows-x64.zip">sonar-scanner-cli-7.3.0.5189-windows-x64.zip</a></li>
-                        <img src="assets/dso-4.png" alt="Image1" class="article-image">
-                    </ol>
-
-                    <p><strong>2. Extract ZIP</strong></p>
-                    <ol>
-                        <li>Setelah di-download, klik kanan → Extract All</li>
-                        <li>Pindahkan folder hasil extract ke lokasi permanen, misalnya:</li>
-                        <textarea id="markdown-input" rows="0" cols="0">
-C:\sonar-scanner\
-                        </textarea>
-                        <li>Di dalamnya akan ada folder seperti:</li>
-                        <textarea id="markdown-input" rows="0" cols="0">
-C:\sonar-scanner-7.3.0.5189-windows-x64
-                        </textarea>
-                        <img src="assets/dso-5.png" alt="Image1" class="article-image">
-                    </ol>
-                    
-                    <p><strong>3. Tambahkan ke PATH Windows</strong></p>
-                    <p>Agar bisa menjalankan sonar-scanner di Command Prompt / PowerShell.</p>
-                    <ol>Langkah-langkah:
-                        <li>Tekan Start → ketik Edit the system environment variables</li>
-                        <li>Klik Environment Variables</li>
-                        <li>Pada “System variables”, cari Path → klik Edit</li>
-                        <img src="assets/dso-7.png" alt="Image1" class="article-image">
-                        <li>Klik New</li>
-                        <li>Masukkan path:</li>
-                        <textarea id="markdown-input" rows="0" cols="0">
-C:\sonar-scanner-7.3.0.5189-windows-x64\bin
-                        </textarea>
-                        <img src="assets/dso-8.png" alt="Image1" class="article-image">
-                        <li>Klik OK sampai selesai</li>
-                    </ol>
-                    
-                    <p><strong>4. Cek instalasi</strong></p>
-                    <p>Buka Command Prompt atau PowerShell, kemudian jalankan:</p>
-                    <textarea id="markdown-input" rows="0" cols="0">
-sonar-scanner --version
-                    </textarea>
-                    <p>Jika berhasil, akan muncul informasi versi.</p>
-                    <img src="assets/dso-9.png" alt="Image1" class="article-image">
-                    
-                    <p><strong>5. Konfigurasi file sonar-project.properties</strong></p>
-                    <p>Di dalam folder project kamu, buat file:</p>
-                    <textarea id="markdown-input" rows="0" cols="0">
-sonar-project.properties
-                    </textarea>
-                    <p>Isinya contoh:</p>
+                </textarea>
+                <img src="assets/dso-1.png" alt="Image1" class="article-image">
+                <p>Akses melalui browser: <a href="http://localhost:9000">http://localhost:9000</a></p>
+                <p>Login default: admin / admin</p>
+                <img src="assets/dso-2.png" alt="Image1" class="article-image">
+                <img src="assets/dso-3.png" alt="Image1" class="article-image">
+                <p>Ambil token : My Account > Security > Generate Token</p>
+                <img src="assets/dso-10.png" alt="Image1" class="article-image">
 
 
-
-
-
-
-
-
-
-
-
-
-                    <p>Sonar Scanner diperlukan untuk mengirimkan kode ke SonarQube untuk dianalisis.</p>
-                    <textarea id="markdown-input2" rows="0" cols="0">
-sudo apt install openjdk-17-jdk -y
-sudo apt install unzip
-wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli.zip
-unzip sonar-scanner-cli.zip
-sudo mv sonar-scanner... /opt/sonar-scanner
-export PATH=$PATH:/opt/sonar-scanner/bin
-                    </textarea>
-
-                    <li><strong>Membuat file konfigurasi sonar-project.properties</strong></li>
-                    <p>Dalam root project:</p>
-                    <textarea id="markdown-input3" rows="0" cols="0">
-sonar.projectKey=devsecops-demo
-sonar.projectName=DevSecOps Demo
-sonar.sources=src
-sonar.host.url=http://localhost:9000
-sonar.login=<TOKEN_SONARQUBE>
-                    </textarea>
-
-                    <li><strong>Menjalankan analisis</strong></li>
-                    <textarea id="markdown-input" rows="0" cols="0">
-sonar-scanner
-                    </textarea>
-                    <p>Setelah selesai, hasil scan akan terlihat pada dashboard proyek di SonarQube.</p>
+                <h3>2. Install Sonar Scanner (Windows)</h3>
+                <h4>1. Download Sonar Scanner</h4>
+                <ol>
+                    <li>Buka website resmi: <a href="https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/scanners/sonarscanner/">https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/scanners/sonarscanner/</a></li>
+                    <li>Cari bagian <strong>SonarScanner for Windows</strong></li>
+                    <li>Download file ZIP: <a href="https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-7.3.0.5189-windows-x64.zip">sonar-scanner-cli-7.3.0.5189-windows-x64.zip</a></li>
+                    <img src="assets/dso-4.png" alt="Image1" class="article-image">
                 </ol>
+
+                <h4>2. Extract ZIP</h4>
+                <ol>
+                    <li>Setelah di-download, klik kanan → Extract All</li>
+                    <li>Pindahkan folder hasil extract ke lokasi permanen, misalnya:</li>
+                    <textarea id="markdown-input" rows="0" cols="0">
+C:\sonar-scanner\
+                    </textarea>
+                    <li>Di dalamnya akan ada folder seperti:</li>
+                    <textarea id="markdown-input" rows="0" cols="0">
+C:\sonar-scanner-7.3.0.5189-windows-x64
+                    </textarea>
+                    <img src="assets/dso-5.png" alt="Image1" class="article-image">
+                </ol>
+
+                <h4>3. Tambahkan ke PATH Windows</h4>
+                <p>Agar bisa menjalankan sonar-scanner di Command Prompt / PowerShell.</p>
+                <ol>Langkah-langkah:
+                    <li>Tekan Start → ketik Edit the system environment variables</li>
+                    <li>Klik Environment Variables</li>
+                    <li>Pada “System variables”, cari Path → klik Edit</li>
+                    <img src="assets/dso-7.png" alt="Image1" class="article-image">
+                    <li>Klik New</li>
+                    <li>Masukkan path:</li>
+                    <textarea id="markdown-input" rows="0" cols="0">
+C:\sonar-scanner-7.3.0.5189-windows-x64\bin
+                    </textarea>
+                    <img src="assets/dso-8.png" alt="Image1" class="article-image">
+                    <li>Klik OK sampai selesai</li>
+                </ol>
+
+                <h4>4. Cek instalasi</h4>
+                <p>Buka Command Prompt atau PowerShell, kemudian jalankan:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+sonar-scanner --version
+                </textarea>
+                <p>Jika berhasil, akan muncul informasi versi.</p>
+                <img src="assets/dso-9.png" alt="Image1" class="article-image">
+
+                <h4>5. Konfigurasi file sonar-project.properties</h4>    
+                <p>Di dalam folder project kamu, buat file:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+C:\xampp\htdocs\antrian\sonar-project.properties
+                </textarea>
+                <p>Isinya contoh:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+sonar.projectKey=antrian-app
+sonar.projectName=Aplikasi Antrian
+sonar.projectVersion=1.0
+
+sonar.sources=.
+sonar.sourceEncoding=UTF-8
+sonar.exclusions=vendor/**,assets/**,*.min.js
+
+sonar.host.url=http://localhost:9000
+sonar.login=MASUKKAN_TOKEN_SONAR_MILIKMU
+                </textarea>
+
+                <h4>6. Jalankan scan</h4>   
+                <p>Dari CMD/PowerShell di folder project:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+sonar-scanner
+                </textarea>
+                <img src="assets/dso-11.png" alt="Image1" class="article-image">
+                <p>Sonar Scanner akan mengirimkan analisis ke SonarQube di localhost:9000.</p>
+                <img src="assets/dso-12.png" alt="Image1" class="article-image">
             </article>
 
 
