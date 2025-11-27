@@ -168,7 +168,7 @@ sonar.login=MASUKKAN_TOKEN_SONAR_MILIKMU
 sonar-scanner
                 </textarea>
                 <img src="assets/dso-11.png" alt="Image1" class="article-image">
-                <p>Sonar Scanner akan mengirimkan analisis ke SonarQube di localhost:9000.</p>
+                <p>Sonar Scanner akan mengirimkan analisis ke SonarQube di <a href="https://localhost:9000">http://localhost:9000</a>.</p>
                 <img src="assets/dso-12.png" alt="Image1" class="article-image">
             </article>
 
@@ -257,9 +257,9 @@ docker run --rm -v ${PWD}:/zap/wrk:rw ghcr.io/zaproxy/zaproxy:stable zap-baselin
                     <li>Masuk ke GitHub: <a href="https://github.com">https://github.com</a></li>
                     <li>Klik tombol New repository</li>
                     <li>Isi:<ul>
-                        <li>Repository name: devsecops-week5</li>
-                        <li>Description: Repository untuk tugas DevSecOps — SAST & DAST</li>
-                        <li>Visibility: Public</li>
+                        <li>Repository name: <strong>devsecops-week5</strong></li>
+                        <li>Description: <strong>Repository untuk tugas DevSecOps — SAST & DAST</strong></li>
+                        <li>Visibility: <strong>Public</strong></li>
                     </ul></li>
                     <ul>Klik Create repository</ul>
                 </ol>
@@ -361,7 +361,11 @@ ci-security.yml
                     <li>Upload laporan</li>
                     <li>Optional: fail pipeline jika High Risk ditemukan</li>
                 </ul>
-                <p>.github/workflows/ci-security.yml</p>
+                <p>File yang telah dibuat:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+.github/workflows/ci-security.yml
+                </textarea>
+                <p>Isi:</p>
                 <textarea id="markdown-input8" rows="0" cols="0">
 name: CI - SAST & DAST
 
@@ -577,38 +581,207 @@ jobs:
                 ✔ Pull request ke main</p>
                 <p>Masuk ke:<br>
                 <strong>GitHub → Actions → CI - SAST & DAST</strong></p>
-                <ul>Di bagian output akan terlihat:
-                    <li>Hasil SAST dari SonarQube</li>
-                    <li>Hasil DAST dari ZAP</li>
-                    <li>Laporan zap_report.html : <a href="https://github.com/kimookoii/devsecops-week5/actions/runs/19732586524/artifacts/4696036645">https://github.com/kimookoii/devsecops-week5/actions/runs/19732586524/artifacts/4696036645</a></li>
-                </ul>
                 <img src="assets/dso-16.png" alt="Image1" class="article-image">
-                <img src="assets/dso-17.png" alt="Image1" class="article-image">
+                <p>Di bagian output akan terlihat:</p>
+                <ul>
+                    <li><strong>Hasil SAST dari SonarQube</strong></li>
+                    <img src="assets/dso-18.png" alt="Image1" class="article-image">
+                    <li><strong>Hasil DAST dari ZAP</strong></li>
+                    <img src="assets/dso-19.png" alt="Image1" class="article-image">
+                    <li><strong>Laporan zap_report.html:</strong> <a href="https://github.com/kimookoii/devsecops-week5/actions/runs/19732586524/artifacts/4696036645">https://github.com/kimookoii/devsecops-week5/actions/runs/19732586524/artifacts/4696036645</a></li>
+                    <img src="assets/dso-17.png" alt="Image1" class="article-image">
+                </ul>
             </article>
 
 
             <article>
-                <h2>Interpretasi Hasil</h2>
-                <p><strong>SonarQube:</strong></p>
-                <ul>
-                    <li>Bugs: logic errors → perbaiki flow program</li>
-                    <li>Vulnerabilities: misalnya improper input validation → lakukan sanitasi input</li>
-                    <li>Security Hotspots: perlu review manual, misalnya penggunaan crypto library</li>
-                </ul>
+                <h2>Temuan dan Mitigasi : SonarQube</h2>
+                <img src="assets/dso-20.png" alt="Image1" class="article-image">
 
-                <p><strong>OWASP ZAP:</strong></p>
-                <ul>Temuan umum:
-                    <li>XSS → gunakan escaping & Content Security Policy</li>
-                    <li>SQL Injection → gunakan prepared statement</li>
-                    <li>Missing Security Headers → tambahkan HSTS, X-Frame-Options</li>
-                    <li>Directory listing → matikan autoindex pada server</li>
+                <h3>1. Add password protection to this database</h3>
+                <img src="assets/dso-21.png" alt="Image1" class="article-image">
+                <p>Ini bukan bug 100% (Sonar tidak bilang “vulnerability”), tetapi peringatan bahwa koneksi database kamu menggunakan username = root dan password kosong, yang tidak aman untuk environment apa pun (bahkan untuk development).</p>
+                <p><strong>Kenapa Sonar memberi peringatan ini?</strong></p>
+                <p>Karena baris:</p>
+                <textarea id="markdown-input6" rows="0" cols="0">
+$username = "root";
+$password = "";
+                </textarea>
+                <ul>Dan ini:
+                    <li><strong>Tidak ada password:</strong> akses database terbuka.</li>
+                    <li><strong>Menggunakan root:</strong> role paling tinggi (akses penuh ke mysql).</li>
+                    <li><strong>Ditulis langsung di file:</strong> credential hardcoded → praktik tidak aman.</li>
                 </ul>
-                <ul>Untuk setiap kerentanan, pastikan dilakukan:
-                    <li>Validasi input</li>
-                    <li>Sanitasi output</li>
-                    <li>Penerapan prinsip least privilege</li>
-                    <li>Hardening aplikasi & server</li>
+                <p>Sonar menganggap ini high-risk hotspot, karena jika code ini digunakan dalam deployment, database kamu bisa diambil alih.</p>
+                <p><strong>Perbaikan yang benar</strong></p>
+                <p>Buat user baru MySQL:</p>
+                <textarea id="markdown-input6" rows="0" cols="0">
+CREATE USER 'antrian_user'@'%' IDENTIFIED BY 'PasswordKuat123!';
+GRANT ALL PRIVILEGES ON db_antrian.* TO 'antrian_user'@'%';
+FLUSH PRIVILEGES;
+                </textarea>
+                <p>Lalu update file auth/db.php:</p>
+                <textarea id="markdown-input9" rows="0" cols="0">
+<?php
+$servername = "localhost";
+$username   = "antrian_user"; 
+$password   = "PasswordKuat123!";
+
+try {
+    $conn = new PDO(
+        "mysql:host=$servername;dbname=db_antrian;charset=utf8mb4",
+        $username,
+        $password,
+        [
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES   => false,
+        ]
+    );
+} catch (PDOException $e) {
+    die("Database connection failed.");
+}
+                </textarea>
+
+                <h3>2. Remove the parentheses from this echo call</h3>
+                <img src="assets/dso-22.png" alt="Image1" class="article-image">
+                <p><strong>Kenapa Sonar memberi peringatan ini?</strong></p>
+                <textarea id="markdown-input" rows="0" cols="0">
+<title><?php echo (basename($_SERVER['PHP_SELF']) == 'login.php' ? 'Login - Antrian' : 'Error') ?></title>
+                </textarea>
+                <p>SonarQube menganggap bahwa tanda kurung ( ... ) setelah echo tidak diperlukan dan membuat kode “kurang clean”.<br>
+                    Ini bukan bug dan bukan celah keamanan — hanya Code Smell / gaya penulisan.</p>
+                <p><strong>Perbaikan yang benar</strong></p>
+                <p>Cukup hapus tanda kurung luar, karena echo tidak membutuhkan ekspresi di dalam ().</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+<title><?php echo basename($_SERVER['PHP_SELF']) == 'login.php' ? 'Login - Antrian' : 'Error' ?></title>
+                </textarea>
+                <p>Output-nya tetap sama.</p>
+                <img src="assets/dso-23.png" alt="Image1" class="article-image">
+                <img src="assets/dso-24.png" alt="Image1" class="article-image">
+                <p>Untuk masalah <strong>"Remove the parentheses from this echo call."</strong> yang lain. Perbaikan tetap sama, cukup hapus tanda kurung luar. Karena echo tidak membutuhkan ekspresi di dalam ().</p>
+
+                <h3>3. include_once</h3>
+                <p>Ini BUKAN bug atau vuln. Ini hanya "Code Smell" bersifat rekomendasi, dan dalam project PHP procedural seperti punyamu, warning ini boleh diabaikan.</p>
+                <p><strong>Kenapa Sonar memberi peringatan ini?</strong></p>
+                <p>Sonar menunjukkan:<br>
+                    <strong>Replace "include_once" with namespace import mechanism through the "use" keyword.</strong><br>
+                    Ini rule milik Sonar untuk PHP <strong>berbasis OOP + namespace modern</strong> (PSR-4). Rule ini menganggap kamu memanggil file PHP seolah-olah kamu memanggil class/function di namespace, padahal bentuk kode kamu adalah:</p>
+                <textarea id="markdown-input6" rows="0" cols="0">
+include_once '../auth/db.php';
+include_once '../csrf-security/csrf.php';
+                </textarea>
+                <p>Dalam project lama / procedural PHP, ini normal.<br>
+                    Sonar tidak secara otomatis tahu struktur aplikasi kamu — jadi dia memberikan false positive recommendation.</p>
+                <p><strong>Perbaikan yang benar (jika ingin menghilangkan warning)</strong></p>
+                <p>Tambahkan komentar Sonar untuk menandai rule ini sebagai “won’t fix”.<br>
+                    Tambahkan di atas baris include:</p>
+                <textarea id="markdown-input6" rows="0" cols="0">
+// NOSONAR - include_once needed because this project is procedural, not namespaced.
+include_once '../auth/db.php';
+include_once '../csrf-security/csrf.php';
+                </textarea>
+                <p>SonarQube otomatis mengabaikan baris tersebut.<br>
+                    Ini adalah BEST PRACTICE saat rule tidak applicable.</p>
+            </article>
+
+
+            <article>
+                <h2>Temuan dan Mitigasi : OWASP ZAP</h2>
+
+                <h3>1. Content Security Policy (CSP) Header Not Set</h3>
+                <img src="assets/dso-26.png" alt="Image1" class="article-image">
+                <p><strong>Kenapa terjadi?</strong></p>
+                <p>ZAP menandai temuan “Content Security Policy (CSP) Header Not Set” karena halaman web tidak mengirimkan header Content-Security-Policy.</p>
+                <ul>Tanpa CSP, browser tidak tahu sumber konten mana yang boleh dijalankan, sehingga aplikasi menjadi lebih rentan terhadap:
+                    <li>Cross-Site Scripting (XSS)</li>
+                    <li>Data injection / malicious scripts</li>
+                    <li>Loading script atau resource dari domain berbahaya</li>
                 </ul>
+                <p>CSP adalah lapisan keamanan tambahan yang membatasi JavaScript, CSS, gambar, font, iframe, dan resource lain agar hanya berasal dari sumber yang dipercaya.</p>
+                <p><strong>Cara Mengatasinya</strong></p>
+                <p>Tambahkan header CSP pada web server atau aplikasi. Format paling sederhana:</p>
+                <p>Apache / .htaccess</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+Header always set Content-Security-Policy "default-src 'self';"
+                </textarea>
+                <p>PHP (per halaman)</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+header("Content-Security-Policy: default-src 'self';");
+                </textarea>
+
+                <h3>2. Insufficient Site Isolation Against Spectre</h3>
+                <img src="assets/dso-27.png" alt="Image1" class="article-image">
+                <img src="assets/dso-28.png" alt="Image1" class="article-image">
+                <p><strong>Kenapa terjadi?</strong></p>
+                <ul>ZAP memberikan temuan "Insufficient Site Isolation Against Spectre" karena halaman web tidak mengirimkan header keamanan modern seperti:
+                    <li>Cross-Origin-Resource-Policy (CORP)</li>
+                    <li>Cross-Origin-Embedder-Policy (COEP)</li>
+                </ul>
+                <p>Header-header ini dirancang untuk melindungi browser dari side-channel attacks, terutama Spectre, yang memungkinkan website jahat membaca informasi sensitif dari website lain melalui mekanisme spekulatif CPU.</p>
+                <p>Tanpa header ini, browser tidak dapat sepenuhnya mengisolasi sumber daya (resource isolation), sehingga risiko kebocoran data antar-origin menjadi lebih tinggi.</p>
+                <p><strong>Cara Mengatasinya</strong></p>
+                <p>Tambahkan header berikut pada web server atau aplikasi:</p>
+                <p><strong>Header Wajib (nilai paling aman)</strong></p>
+                <p>Cross-Origin-Resource-Policy (CORP)</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+Header always set Cross-Origin-Resource-Policy "same-origin"
+                </textarea>
+                <p>Cross-Origin-Embedder-Policy (COEP)</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+Header always set Cross-Origin-Embedder-Policy "require-corp"
+                </textarea>
+                <p><strong>Contoh implementasi lengkap (Apache / .htaccess)</strong></p>
+                <textarea id="markdown-input6" rows="0" cols="0">
+<IfModule mod_headers.c>
+    Header always set Cross-Origin-Resource-Policy "same-origin"
+    Header always set Cross-Origin-Embedder-Policy "require-corp"
+</IfModule>
+                </textarea>
+                <p><strong>Menggunakan PHP (per halaman)</strong></p>
+                <textarea id="markdown-input6" rows="0" cols="0">
+header("Cross-Origin-Resource-Policy: same-origin");
+header("Cross-Origin-Embedder-Policy: require-corp");
+                </textarea>
+
+                <h3>3. Server Leaks Version Information via "Server" HTTP Response Header</h3>
+                <img src="assets/dso-29.png" alt="Image1" class="article-image">
+                <p><strong>Kenapa terjadi?</strong></p>
+                <p>ZAP menemukan bahwa server web mengirimkan header:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+Server: Apache/2.4.65 (Debian)
+                </textarea>
+                <ul>Informasi ini dianggap sensitif karena:
+                    <li>Mengungkap jenis server (Apache / Nginx / IIS)</li>
+                    <li>Mengungkap versi dan OS (Debian)</li>
+                    <li>Membantu penyerang menargetkan eksploit yang cocok dengan versi tersebut</li>
+                </ul>
+                <p>Singkatnya: fingerprinting → memudahkan attacker mengetahui kelemahan dan exploit apa yang kemungkinan bekerja.<br>
+                    Tidak mematikan, tapi low-risk hardening issue yang wajib diperbaiki untuk mengurangi attack surface.</p>
+                <p><strong>Cara Mengatasinya</strong></p>
+                <p><strong>Apache (httpd / Debian / Docker php:apache)</strong></p>
+                <p>Tambahkan ini ke config Apache:</p>
+                <textarea id="markdown-input6" rows="0" cols="0">
+ServerSignature Off
+ServerTokens Prod
+                </textarea>
+                <p>Atau di .htaccess (jika diizinkan):</p>
+                <textarea id="markdown-input6" rows="0" cols="0">
+ServerSignature Off
+Header unset Server
+                </textarea>
+                <p><strong>Jika pakai container Docker berdasarkan apache</strong></p>
+                <p>Tambahkan ke Dockerfile:</p>
+                <textarea id="markdown-input6" rows="0" cols="0">
+RUN echo "ServerSignature Off" >> /etc/apache2/conf-available/security.conf \
+ && echo "ServerTokens Prod" >> /etc/apache2/conf-available/security.conf \
+ && a2enconf security
+                </textarea>
+                <p><strong>PHP (hilangkan X-Powered-By)</strong></p>
+                <p>Di php.ini atau file config:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+expose_php = Off
+                </textarea>
             </article>
 
 
