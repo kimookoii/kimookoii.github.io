@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Under Maintenance</title>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <title>Praktik Minggu 6 DevSecOps</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -12,34 +11,477 @@
         <div class="header-container">
             <button class="back-button" onclick="window.history.back();">&#8592; Back</button>
             <h1>88032023006  |  ZICO</h1>
+            <p>...</p>
         </div>
     </header>
 
     <title1>
         <div class="title1-container">
-            <h1>🚧 Website Sedang Dalam Pemeliharaan 🚧</h1>
-            <h2>Kami akan segera kembali!</h2>
+            <h1>Praktik Minggu 6 DevSecOps</h1>
+            <h2>Software Composition Analysis (SCA)</h2>
         </div>
     </title1>
 
     <main>
         <section class="content">
+
+            <!-- ======================================================== -->
             <article>
+                <h2>1. Pendahuluan</h2>
                 <p>
-                    Saat ini situs sedang dalam proses pemeliharaan untuk peningkatan sistem dan performa.
-                    Kami mohon maaf atas ketidaknyamanan ini.
+                Software Composition Analysis (SCA) adalah proses untuk menganalisis komponen 
+                open-source dalam aplikasi untuk mendeteksi kerentanan keamanan, lisensi, dan 
+                ketergantungan yang bermasalah. Berdasarkan materi dari perkuliahan DevSecOps 
+                laporan SCA mencakup:
+                </p>
+                <ul>
+                    <li>Daftar dependency & versinya</li>
+                    <li>Kerentanan yang terdeteksi (CVE & severity)</li>
+                    <li>Versi aman yang direkomendasikan</li>
+                    <li>Mitigasi / remediation (upgrade library)</li>
+                </ul>
+                <p>Aplikasi yang diuji: <b>Web Antrian</b> (PHP/Node/Python – disesuaikan project).</p>
+            </article>
+
+
+            <!-- ======================================================== -->
+            <article>
+                <h2>2. Tools yang Digunakan</h2>
+                <ul>
+                    <li><b>OWASP Dependency-Check</b> – open-source scanner berbasis NVD</li>
+                    <li><b>Snyk CLI</b> – deteksi CVE real-time & rekomendasi versi aman</li>
+                    <li><b>GitHub Dependabot</b> – notifikasi & auto PR update dependency</li>
+                </ul>
+            </article>
+
+
+            <!-- ======================================================== -->
+            <article>
+                <h2>3.1 Praktik 1 – Menggunakan OWASP Dependency-Check</h2>
+                <p>Langkah pertama dalam proses Software Composition Analysis (SCA) adalah melakukan pemindaian terhadap seluruh library yang digunakan pada aplikasi Web Antrian. Pemindaian ini bertujuan untuk mengidentifikasi apakah terdapat dependency yang memiliki kerentanan (CVE), versi yang tidak aman, atau komponen yang sudah usang.</p>
+                <p>Untuk memulai, buka Command Prompt (CMD) pada Windows 11 lalu masuk ke direktori proyek aplikasi:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+cd C:\xampp\htdocs\antrian
+                </textarea>
+                <p>Setelah berada di dalam folder proyek, jalankan OWASP Dependency-Check menggunakan Docker. Perintah berikut akan melakukan proses pemindaian penuh terhadap seluruh dependency dan menghasilkan laporan dalam format HTML:</p>
+                <textarea id="markdown-input2" rows="0" cols="0">
+docker run --rm -it -v ${PWD}:/src owasp/dependency-check --scan /src --format "HTML" --out /src/reports
+                </textarea>
+                <img src="assets/dso-1.png" alt="Image" class="article-image">
+                <p>Setelah proses pemindaian selesai, Dependency-Check akan membuat folder baru bernama reports. Di dalamnya terdapat file utama laporan:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+/reports/dependency-check-report.html
+                </textarea>
+                <img src="assets/dso-2.png" alt="Image" class="article-image">
+                <p>File HTML tersebut dapat dibuka melalui browser untuk melihat daftar library yang terdeteksi, informasi kerentanan (CVE), tingkat keparahan (Severity), hingga rekomendasi versi yang aman untuk digunakan.</p>
+                <p>Berikut hasil tampilan laporan Dependency-Check: <a href="data/dependency-check-report.html">dependency-check-report.html</a></p>
+                <img src="assets/dso-3.png" alt="Image" class="article-image">
+            </article>
+
+
+            <!-- ======================================================== -->
+            <article>
+                <h2>3.2 Praktik 2 – Menggunakan Snyk CLI</h2>
+                <p>Selain OWASP Dependency-Check, analisis Software Composition Analysis juga dilakukan menggunakan Snyk CLI, sebuah tool keamanan modern yang mampu mendeteksi kerentanan pada dependency secara real-time serta memberikan rekomendasi versi aman. Snyk memiliki integrasi yang baik dengan ekosistem DevSecOps sehingga cocok digunakan dalam tahap pengembangan berkelanjutan.</p>
+                <p>Langkah pertama yang harus dilakukan adalah membuat akun di situs resmi Snyk melalui:</p>
+                <p><a href="https://snyk.io">https://snyk.io</a></p>
+                <!-- p>Klik Avatar (di bagian kiri bawah)) → Account Settings → API token → Klik Show token:</p>
+                <img src="assets/dso-4.png" alt="Image" class="article-image" -->
+                <p>Selanjutnya, Snyk CLI dapat diinstal pada Windows 11 menggunakan perintah:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+npm install -g snyk
+                </textarea>
+                <img src="assets/dso-5.png" alt="Image" class="article-image">
+                <p>Setelah instalasi berhasil, lakukan autentikasi:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+snyk auth
+                </textarea>
+                <img src="assets/dso-6.png" alt="Image" class="article-image">
+                <p>Setelah terhubung, langkah berikutnya adalah menjalankan proses pemindaian pada direktori proyek aplikasi Web Antrian. Arahkan Command Prompt ke folder proyek, kemudian jalankan:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+cd C:\xampp\htdocs\antrian
+                </textarea>
+                <textarea id="markdown-input" rows="0" cols="0">
+snyk test
+                </textarea>
+                <img src="assets/dso-7.png" alt="Image" class="article-image">
+                <p>Dari laporan tersebut terlihat bahwa Snyk mampu menunjukkan detail lengkap kerentanan, termasuk tingkat keparahan (severity), deskripsi singkat, link referensi CVE, serta versi library yang telah diperbaiki.</p>
+                <p>Untuk kebutuhan pemantauan berkelanjutan (Continuous Monitoring), Snyk menyediakan fitur snyk monitor. Ketika perintah berikut dijalankan:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+snyk monitor
+                </textarea>
+                <img src="assets/dso-8.png" alt="Image" class="article-image">
+                <p>Proyek akan direkam ke dashboard Snyk, dan setiap perubahan dependency di masa depan akan dianalisis secara otomatis. Fitur ini sangat berguna dalam pipeline CI/CD, karena setiap build dapat terpantau status keamanannya secara real-time.</p>
+                <p>Secara keseluruhan, Snyk CLI memberikan laporan yang lengkap, praktis, dan mudah diintegrasikan, sehingga sangat membantu proses deteksi dini terhadap library rentan pada aplikasi Web Antrian.</p>
+                <img src="assets/dso-9.png" alt="Image" class="article-image">
+            </article>
+
+
+            <!-- ======================================================== -->
+            <article>
+                <h2>3.3 Praktik 3 – Menggunakan GitHub Dependabot</h2>
+                <p>Dependabot adalah fitur bawaan GitHub yang berfungsi untuk memantau dan memperbarui dependency secara otomatis. Dengan alat ini, kerentanan pada library pihak ketiga dapat terdeteksi lebih awal sehingga mempermudah proses pemeliharaan keamanan aplikasi. Dependabot akan memberikan peringatan terhadap versi library yang sudah usang, membuka Pull Request pembaruan secara otomatis, dan menampilkan CVE yang terkait dengan paket yang digunakan.</p>
+                <p>Untuk mengaktifkan Dependabot, pastikan proyek telah berada di dalam repository GitHub. Selanjutnya, tambahkan file konfigurasi berikut pada direktori .github:</p>
+                <p>Path file:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+.github/dependabot.yml
+                </textarea>
+                <p>Isi konfigurasi:</p>
+                <textarea id="markdown-input3" rows="0" cols="0">
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "composer"
+    directory: "/"
+    schedule:
+      interval: "daily"
+                </textarea>
+                <p>Konfigurasi ini membuat Dependabot melakukan pengecekan otomatis setiap hari terhadap kedua ekosistem dependency, yaitu npm dan Composer. Jika terdapat pembaruan versi atau kerentanan yang ditemukan, Dependabot akan segera memberikan notifikasi dan dapat membuka Pull Request untuk memperbaiki versi library tersebut.</p>
+                <p><strong>Mengaktifkan Dependabot Security Updates</strong></p>
+                <p>Buka halaman berikut sesuai repository:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+https://github.com/<username>/<nama_repo>/settings/security_analysis
+                </textarea>
+                <p>Pada bagian Advanced Security, aktifkan opsi untuk Dependabot agar analisis dilakukan secara otomatis.</p>
+                <img src="assets/dso-10.png" alt="Image" class="article-image">
+                <p><strong>Melihat Hasil Deteksi Dependabot</strong></p>
+                <p>Untuk melihat hasil pemindaian, masuk ke repository → Security → Dependabot. Pada halaman ini akan ditampilkan daftar alert, tingkat keparahan, serta rekomendasi pembaruan.</p>
+                <img src="assets/dso-11.png" alt="Image" class="article-image">
+                <p>Secara keseluruhan, penggunaan Dependabot sangat membantu menjaga keamanan dependency dengan cara otomatis dan terstruktur, sehingga memperkuat proses SCA pada aplikasi Web Antrian.</p>
+            </article>
+
+
+            <!-- ======================================================== -->
+            <article>
+                <h2>4. Integrasi ke CI/CD Pipeline</h2>
+                <p>Untuk memastikan proses Software Composition Analysis (SCA) berjalan otomatis setiap kali terjadi perubahan pada repository, langkah berikut dilakukan untuk mengintegrasikan SCA ke dalam pipeline CI/CD menggunakan GitHub Actions. Integrasi ini memungkinkan deteksi kerentanan berjalan secara berkelanjutan tanpa perlu menjalankan pemeriksaan secara manual.</p>
+                <p><strong>1. Siapkan secret SNYK_TOKEN</strong><br>
+                    Agar Snyk dapat dijalankan di GitHub Actions, API token harus disimpan sebagai secret:</p>
+                <ol>
+                    <li>Masuk ke GitHub → repo kamu → Settings → Secrets and variables → Actions → New repository secret.</li>
+                    <li>Nama: SNYK_TOKEN</li>
+                    <img src="assets/dso-12.png" alt="Image" class="article-image">
+                    <li>Nilai: token dari Account Settings → API token di dashboard Snyk.</li>
+                    <li>Simpan.</li>
+                </ol>
+                <p><strong>2. Menambahkan Workflow GitHub Actions</strong><br>
+                    Selanjutnya, dibuat sebuah workflow yang akan menjalankan OWASP Dependency-Check dan Snyk secara otomatis setiap kali ada push, pull request, atau pemindaian terjadwal.</p>
+                <ol>
+                    <li>Add file → Create new file</li>
+                    <textarea id="markdown-input" rows="0" cols="0">
+.github/workflows/ci-sca.yml
+                    </textarea>
+                    <li>Isi workflow:</li>
+                    <textarea id="markdown-input4" rows="0" cols="0">
+name: CI - Multi SCA (Node + PHP)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *' # daily 03:00 UTC
+
+permissions:
+  contents: read
+
+jobs:
+  sca-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node (if package.json present)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+        if: ${{ always() && (hashFiles('**/package.json') != '') }}
+
+      - name: Setup PHP (if composer.json present)
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+        if: ${{ always() && (hashFiles('**/composer.json') != '') }}
+
+      - name: Install Node deps (ci if lockfile)
+        if: ${{ hashFiles('**/package.json') != '' }}
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Install Composer deps
+        if: ${{ hashFiles('**/composer.json') != '' }}
+        run: |
+          composer install --no-interaction --prefer-dist --no-dev || true
+
+      - name: Run tests (node) if available
+        if: ${{ hashFiles('**/package.json') != '' && contains(steps.checkout.outputs.files, 'package.json') }}
+        run: |
+          if npm run | grep -q "test"; then npm test || true; else echo "No test script"; fi
+
+      - name: Run Snyk - npm
+        if: ${{ hashFiles('**/package.json') != '' }}
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          echo "Running Snyk for npm..."
+          snyk test --package-manager=npm || echo "snyk-npm-failed" > snyk-npm-exit.txt
+
+      - name: Run Snyk - composer
+        if: ${{ hashFiles('**/composer.json') != '' }}
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          echo "Running Snyk for composer..."
+          if [ -f composer.lock ]; then
+            snyk test --file=composer.lock --package-manager=composer || echo "snyk-composer-failed" > snyk-composer-exit.txt
+          else
+            snyk test --file=composer.json --package-manager=composer || echo "snyk-composer-failed" > snyk-composer-exit.txt
+          fi
+
+      - name: Run OWASP Dependency-Check (Docker)
+        run: |
+          mkdir -p reports || true
+          docker run --rm -v "${{ github.workspace }}:/src" -v "${{ runner.temp }}/dc-data:/usr/share/dependency-check/data" \
+            owasp/dependency-check:latest --scan /src --format "HTML" --out /src/reports || true
+
+      - name: Upload reports artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sca-reports
+          path: |
+            reports/dependency-check-report.html
+            snyk-npm-exit.txt
+            snyk-composer-exit.txt
+
+      - name: Summary (logs)
+        run: |
+          echo "Artifacts uploaded: sca-reports"
+                    </textarea>
+                    <li>Commit file.</li>
+                </ol>
+                <p><strong>3. Verifikasi dan Melihat Hasil</strong></p>
+                <p>Setelah workflow ditambahkan dan commit dilakukan:</p>
+                <ol>
+                    <li>Masuk ke tab Actions pada repository.</li>
+                    <li>Jalankan workflow secara manual dengan tombol Run workflow, atau tunggu hingga terpicu oleh push/pull request.</li>
+                    <img src="assets/dso-13.png" alt="Image" class="article-image">
+                    <li>Setelah proses selesai, buka job yang berjalan dan klik Artifacts.</li>
+                    <img src="assets/dso-14.png" alt="Image" class="article-image">
+                    <li>Unduh file dependency-check-report.html: <a href="data/dependency-check-report.html">dependency-check-report.html</a></li>
+                    <li>Jika secret SNYK_TOKEN sudah diatur, laporan Snyk juga akan muncul pada log workflow atau pada snapshot monitoring di dashboard Snyk.</li>
+                    <img src="assets/dso-15.png" alt="Image" class="article-image">
+                </ol>
+                <p>Integrasi ini memastikan bahwa pengecekan keamanan terhadap dependency dilakukan secara otomatis, terjadwal, dan terdokumentasi, sehingga mendukung penerapan DevSecOps pada aplikasi Web Antrian.</p>
+            </article>
+
+
+            <!-- ======================================================== -->
+            <article>
+                <h2>5.1 Analisis Hasil & Mitigasi : OWASP Dependency-Check</h2>
+
+                <table border="1" cellpadding="8">
+                <tr>
+                    <th>Dependency</th>
+                    <th>Package</th>
+                    <th>Severity</th>
+                    <th>CVE Count</th>
+                    <th>Confidence</th>
+                    <th>Envidence Count</th>
+                </tr>
+
+                <tr>
+                    <td>Chart.bundle.min.js</td>
+                    <td>pkg:javascript/moment.js@2.24.0</td>
+                    <td>HIGH</td>
+                    <td>2</td>
+                    <td></td>
+                    <td>3</td>
+                </tr>
+
+                <tr>
+                    <td>jquery-git.js</td>
+                    <td>pkg:javascript/jquery@3.3.2-pre</td>
+                    <td>MEDIUM*</td>
+                    <td>3</td>
+                    <td></td>
+                    <td>3</td>
+                </tr>
+
+                <tr>
+                    <td>jquery.dataTables.js</td>
+                    <td>pkg:javascript/jquery.datatables@1.10.24</td>
+                    <td>MEDIUM</td>
+                    <td>2</td>
+                    <td></td>
+                    <td>3</td>
+                </tr>
+
+                <tr>
+                    <td>jquery.dataTables.min.js</td>
+                    <td>pkg:javascript/jquery.datatables@1.10.24</td>
+                    <td>MEDIUM</td>
+                    <td>2</td>
+                    <td></td>
+                    <td>3</td>
+                </tr>
+                </table>
+
+                <p>Perbarui seluruh library JavaScript rentan (Chart.js, Moment.js, jQuery, dan DataTables) ke versi terbaru yang telah memperbaiki kerentanan, atau gantikan dengan versi yang direkomendasikan untuk menghilangkan risiko keamanan dari dependensi yang sudah usang.</p>
+                <p><strong>Cara memberbaikinya:</strong></p>
+                <p>1. Update moment.js</p>
+                <textarea id="markdown-input2" rows="0" cols="0">
+Invoke-WebRequest "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js" -OutFile "assets/js/moment.min.js"
+                </textarea>
+                <p>2. Update jQuery</p>
+                <textarea id="markdown-input2" rows="0" cols="0">
+Invoke-WebRequest "https://code.jquery.com/jquery-3.4.0.min.js" -OutFile "assets/js/jquery.min.js"
+                </textarea>
+                <p>3. Update DataTables (JS dan CSS)</p>
+                <textarea id="markdown-input5" rows="0" cols="0">
+Invoke-WebRequest "https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js" -OutFile "assets/js/jquery.dataTables.min.js"
+
+Invoke-WebRequest "https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" -OutFile "assets/css/jquery.dataTables.min.css"
+                </textarea>
+                <img src="assets/dso-22.png" alt="Image" class="article-image">
+                <p>Untuk Windows, perintah wget tidak tersedia secara bawaan, sehingga pembaruan library dapat dilakukan menggunakan PowerShell melalui perintah Invoke-WebRequest sebagai pengganti. Cukup menjalankan perintah unduhan untuk moment.js, jQuery, dan DataTables, maka file akan otomatis terganti dengan versi terbaru. Alternatifnya, file juga dapat diunduh manual melalui browser. Dengan cara ini, proses update library tetap mudah dilakukan di lingkungan Windows.</p>
+            </article>
+
+
+            <!-- ======================================================== -->
+            <article>
+                <h2>5.2 Analisis Hasil & Mitigasi : Snyk</h2>
+
+                <h3>1. CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</h3>
+                <img src="assets/dso-16.png" alt="Image" class="article-image">
+                <p><strong>Mitigasi:</strong></p>
+                <p>Lakukan validasi dan output encoding pada semua data yang berasal dari pengguna (termasuk cookie), aktifkan header keamanan seperti Content-Security-Policy, dan set cookie dengan flag HttpOnly & SameSite untuk mencegah XSS dan pencurian sesi.</p>
+                <img src="assets/dso-20.png" alt="Image" class="article-image">
+                <p><strong>Cara memberbaikinya:</strong></p>
+                <ol>
+                    <li>Gunakan htmlspecialchars saat menampilkan data ke HTML (escaping untuk konteks teks).</li>
+                    <textarea id="markdown-input5" rows="0" cols="0">
+<span class="mr-2 d-none d-lg-inline text-gray-600 small">
+<?php
+  $display = isset($_COOKIE['X-APP-USERNAME']) ? $_COOKIE['X-APP-USERNAME'] : $_SESSION['role'];
+  echo htmlspecialchars($display, ENT_QUOTES, 'UTF-8');
+?>
+</span>
+                    </textarea>
+                    <li>Jika data masuk ke atribut HTML, gunakan encoding khusus atribut (masih htmlspecialchars dengan ENT_QUOTES).</li>
+                    <textarea id="markdown-input" rows="0" cols="0">
+<img src="<?php echo htmlspecialchars($avatarUrl, ENT_QUOTES, 'UTF-8'); ?>" alt="profile">
+                    </textarea>
+                    <li>Set cookie dengan flag keamanan (HttpOnly, Secure, SameSite).</li>
+                    <textarea id="markdown-input5" rows="0" cols="0">
+setcookie('X-APP-USERNAME', $value, [
+  'expires' => time()+3600,
+  'path' => '/',
+  'domain' => '',      // sesuaikan
+  'secure' => true,    // hanya via HTTPS
+  'httponly' => true,  // tidak bisa diakses JS
+  'samesite' => 'Lax'  // atau 'Strict'
+]);
+                    </textarea>
+                    <li>Tambahkan header Content-Security-Policy (CSP) untuk membatasi sumber skrip.</li>
+                    <textarea id="markdown-input2" rows="0" cols="0">
+header("Content-Security-Policy: default-src 'self'; script-src 'self'; object-src 'none';");
+                    </textarea>
+                    <li>Validasi/normalisasi input di server — tolak atau sanitasi input yang tidak sesuai pola (email, username, dsb.).</li>
+                    <li>Gunakan framework/templating yang melakukan escaping otomatis (mis. Twig, Blade) dan hindari echo langsung dari data pengguna tanpa escaping.</li>
+                </ol>
+
+                <h3>2. CWE-916: Use of Password Hash With Insufficient Computational Effort</h3>
+                <img src="assets/dso-17.png" alt="Image" class="article-image">
+                <p><strong>Mitigasi:</strong></p>
+                <p>Hindari penggunaan algoritma hash lemah seperti MD5 dan ganti dengan algoritma hashing yang kuat serta aman secara kriptografi, misalnya bcrypt, PBKDF2, atau Argon2.</p>
+                <img src="assets/dso-21.png" alt="Image" class="article-image">
+                <p><strong>Cara memberbaikinya:</strong></p>
+                <ol>
+                    <li>Contoh perbaikan (Node.js)</li>
+                    <textarea id="markdown-input5" rows="0" cols="0">
+const crypto = require('crypto');
+
+function hashPassword(password) {
+  return crypto.pbkdf2Sync(password, 'salt', 100000, 64, 'sha512').toString('hex');
+}
+                    </textarea>
+                    <li>Atau gunakan library lebih aman:</li>
+                    <textarea id="markdown-input2" rows="0" cols="0">
+const bcrypt = require('bcrypt');
+const hash = await bcrypt.hash(password, 10);
+                    </textarea>
+                </ol>
+
+                <!--p><strong>3. Sensitive Cookie Without 'HttpOnly' Flag</strong></p>
+                <img src="assets/dso-18.png" alt="Image" class="article-image">
+                <p><strong>4. Sensitive Cookie in HTTPS Session Without 'Secure' Attribute</strong></p>
+                <img src="assets/dso-19.png" alt="Image" class="article-image" -->
+            </article>
+
+
+            <!-- ======================================================== >
+
+            <article>
+                <h2>6. Remediasi (Perbaikan) Library Rentan</h2>
+
+                <p>Pada bagian ini saya melakukan perbaikan pada salah satu library rentan, yaitu:</p>
+
+                <h3>Library Rentan: lodash 4.17.19</h3>
+                <p>
+                Berdasarkan hasil Snyk (Page 11), ditemukan kerentanan Prototype Pollution pada
+                versi <b>4.17.19</b>.
+                </p>
+
+                <h3>Langkah Perbaikan di Windows 11</h3>
+                <textarea id="markdown-input" rows="0" cols="0">
+npm install lodash@4.17.21 --save
+                </textarea>
+
+                <p>Verifikasi:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+npm list lodash
+                </textarea>
+
+                <img src="img/remediation-lodash.png" alt="Upgrade lodash success" />
+
+                <p>
+                Setelah upgrade, dilakukan scan ulang dengan Snyk & Dependency-Check.  
+                Hasilnya: <b>CVE sudah hilang</b>.
+                </p>
+            </article -->
+
+
+            <!-- ======================================================== -->
+            <article>
+                <h2>6. Kesimpulan</h2>
+                <p>
+                Berdasarkan seluruh proses SCA yang dilakukan pada aplikasi Web Antrian, dapat 
+                disimpulkan bahwa banyak komponen open source yang memerlukan pemantauan 
+                berkelanjutan. Dengan menggunakan tiga tools berbeda (Dependency-Check, Snyk, 
+                Dependabot), deteksi kerentanan menjadi lebih akurat dan cepat.  
+                </p>
+
+                <p>Kesimpulan utama:</p>
+                <ul>
+                    <li>SCA sangat penting dalam pipeline DevSecOps.</li>
+                    <li>Tiap tool memberikan insight berbeda.</li>
+                </ul>
+
+                <p>
+                Dengan demikian, aplikasi menjadi lebih aman dan sesuai standar keamanan modern.
                 </p>
             </article>
 
-            <article>
-                <h2>Informasi</h2>
-                <ul>
-                    <li>Waktu maintenance: sementara</li>
-                    <li>Layanan akan aktif kembali dalam waktu dekat</li>
-                    <li>Terima kasih atas kesabaran Anda 🙏</li>
-                </ul>
-                <p>Silakan coba akses kembali beberapa saat lagi.</p>
-            </article>
         </section>
     </main>
 
