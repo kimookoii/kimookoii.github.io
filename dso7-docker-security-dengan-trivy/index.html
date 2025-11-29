@@ -231,6 +231,8 @@ C:\xampp\htdocs\devsecops-docker\trivy-output-secure.txt
                 <p class="small">Setelah hardening severity HIGH/CRITICAL hilang dan jumlah MEDIUM/LOW turun signifikan.</p>
             </article>
 
+            <!-- ======================================================== -->
+
             <article>
                 <h2>4.8 Flow Praktik : Perbandingan Hasil Scan</h2>
                 <p>Contoh perintah untuk menghitung severity sebelum & sesudah menggunakan <code>jq</code>:</p>
@@ -256,7 +258,36 @@ type severity-secure.txt
 
             <article>
                 <h2>6. Integrasi Trivy ke GitHub Actions (Security Gate)</h2>
-                <p>Workflow di bawah akan membangun image lalu menjalankan Trivy. Jika ditemukan HIGH/CRITICAL, pipeline akan gagal (exit code 1).</p>
+
+                <p><strong>1. Membuat Repository GitHub (Langkah Awal)</strong></p>
+                <p>Buat repository baru</p>
+                <ol>
+                    <li>Masuk ke GitHub: <a href="https://github.com">https://github.com</a></li>
+                    <li>Klik tombol New repository</li>
+                    <li>Isi:<ul>
+                        <li>Repository name: <strong>devsecops-week7</strong></li>
+                        <li>Description: <strong>Repository untuk tugas DevSecOps — Docker Security dengan Trivy</strong></li>
+                        <li>Visibility: <strong>Public</strong></li>
+                    </ul></li>
+                    <ul>Klik Create repository</ul>
+                </ol>
+                <p>Repo kamu sekarang siap digunakan.</p>
+                
+                <h4>Push kode aplikasi ke GitHub</h4>
+                <p>Jalankan di Git Bash / CMD:</p>
+                <textarea id="markdown-input4" rows="0" cols="0">
+cd C:\xampp\htdocs\devsecops-docker
+git init
+git add .
+git commit -m "Initial commit - Integrasi Trivy ke GitHub"
+git branch -M main
+git remote add origin https://github.com/kimookoii/devsecops-week7.git
+git push -u origin main
+                </textarea>
+                <p>Setelah push, seluruh kode aplikasi akan muncul di repository GitHub.</p>
+                <img src="assets/dso-14.png" alt="Image1" class="article-image">
+
+
                 <pre><code>name: Trivy Image Scan
 
 on:
