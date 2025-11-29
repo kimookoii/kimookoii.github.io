@@ -10,7 +10,7 @@
 4. **[Threat Modeling](https://kimookoii.github.io/dso4-threat-modeling/)**
 5. **[Sast & Dast](https://kimookoii.github.io/dso5-sast-dast/)**
 5. **[Software Composition Analysis](https://kimookoii.github.io/dso6-software-composition-analysis/)**
-5. **[Docker Security dengan Trivy](https://kimookoii.github.io/dso7-docker-security-dengan-trivy/)** x
+5. **[Docker Security dengan Trivy](https://kimookoii.github.io/dso7-docker-security-dengan-trivy/)**
 
 ---
 

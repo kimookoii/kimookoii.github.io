@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Under Maintenance</title>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <title>Praktik Minggu 7 DevSecOps</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -12,34 +11,345 @@
         <div class="header-container">
             <button class="back-button" onclick="window.history.back();">&#8592; Back</button>
             <h1>88032023006  |  ZICO</h1>
+            <p>...</p>
         </div>
     </header>
 
     <title1>
         <div class="title1-container">
-            <h1>🚧 Website Sedang Dalam Pemeliharaan 🚧</h1>
-            <h2>Kami akan segera kembali!</h2>
+            <h1>Praktik Minggu 7 DevSecOps</h1>
+            <h2>Docker Security dengan Trivy</h2>
         </div>
     </title1>
 
     <main>
         <section class="content">
+
+            <!-- ======================================================== -->
+
             <article>
                 <p>
-                    Saat ini situs sedang dalam proses pemeliharaan untuk peningkatan sistem dan performa.
-                    Kami mohon maaf atas ketidaknyamanan ini.
+                    Pada topik DevSecOps ini, pembahasan berfokus pada cara mengamankan Docker image menggunakan <b>Trivy</b>, 
+                    sebuah vulnerability scanner yang mampu mendeteksi CVE, misconfiguration, serta risiko keamanan lain dalam container.
                 </p>
             </article>
 
             <article>
-                <h2>Informasi</h2>
+                <h2>1. Konsep Dasar Keamanan Docker</h2>
+                <p>Keamanan container mencakup perlindungan pada beberapa komponen penting seperti:</p>
                 <ul>
-                    <li>Waktu maintenance: sementara</li>
-                    <li>Layanan akan aktif kembali dalam waktu dekat</li>
-                    <li>Terima kasih atas kesabaran Anda 🙏</li>
+                    <li><b>Image</b> — base image, library, dependency.</li>
+                    <li><b>Container runtime</b> — proses di dalam container.</li>
+                    <li><b>Host OS</b> — kernel yang digunakan bersama.</li>
+                    <li><b>Registry</b> — tempat penyimpanan image.</li>
+                    <li><b>CI/CD pipeline</b> — proses build dan distribusi image.</li>
                 </ul>
-                <p>Silakan coba akses kembali beberapa saat lagi.</p>
             </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>2. Ancaman Umum pada Ekosistem Docker</h2>
+                <ul>
+                    <li><b>Vulnerable base image</b> — image lama atau tak terverifikasi.</li>
+                    <li><b>Misconfiguration</b> — container berjalan sebagai root, port terbuka, tidak ada batasan resource.</li>
+                    <li><b>Malicious image injection</b> — image palsu di registry publik.</li>
+                    <li><b>Sensitive data exposure</b> — password/API key tersimpan di Dockerfile.</li>
+                </ul>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>3. Trivy: Fungsi Singkat</h2>
+                <p>Trivy dapat mendeteksi:</p>
+                <ul>
+                    <li>Vulnerabilities (CVE) pada package dan library image</li>
+                    <li>System package vulnerabilities</li>
+                    <li>Misconfiguration</li>
+                    <li>Secrets dan IaC issues</li>
+                </ul>
+                <p class="small">Severity: Critical, High, Medium, Low, Unknown.</p>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>4.1 Flow Praktik : Tahap Persiapan</h2>
+
+                <p>Pastikan Docker terinstall</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+docker --version
+                </textarea>
+                <p>Pastikan Trivy terinstall</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+trivy --version
+                </textarea>
+                <p>Jika belum terpasang Trivy (contoh Linux):</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+docker run --rm aquasec/trivy:latest image alpine:3.18
+                </textarea>
+                <img src="assets/dso-1.png" alt="Image" class="article-image">
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>4.2 Flow Praktik : Membuat Folder Proyek, Dockerfile, dan Aplikasi (Tidak Aman)</h2>
+
+                <p><strong>1. Membuat folder proyek</strong></p>
+                <textarea id="markdown-input" rows="0" cols="0">
+C:\xampp\htdocs\devsecops-docker
+                </textarea>
+                <img src="assets/dso-2.png" alt="Image" class="article-image">
+
+                <p><strong>2. Membuat Dockerfile</strong></p>
+                <p>C:\xampp\htdocs\devsecops-docker\Dockerfile</p>
+                <textarea id="markdown-input3" rows="0" cols="0">
+FROM python:3.8
+WORKDIR /app
+COPY . /app
+RUN pip install flask==1.0
+EXPOSE 5000
+CMD ["python", "app.py"]
+                </textarea>
+
+                <p><strong>3. Membuat app.py</strong></p>
+                <p>C:\xampp\htdocs\devsecops-docker\app.py</p>
+                <textarea id="markdown-input4" rows="0" cols="0">
+from flask import Flask
+app = Flask(__name__)
+@app.route("/")
+def home():
+ return "Hello DevSecOps"
+if __name__ == "__main__":
+ app.run(host="0.0.0.0", port=5000)
+                </textarea>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>4.3 Flow Praktik : Membuat Docker Image (Tidak Aman)</h2>
+                <textarea id="markdown-input" rows="0" cols="0">
+docker build -t insecure-app:1 .
+                </textarea>
+                <img src="assets/dso-3.png" alt="Image" class="article-image">
+                <p><strong>Simpan image ke TAR</strong></p>
+                <textarea id="markdown-input" rows="0" cols="0">
+docker save insecure-app:1 -o insecure-app.tar
+                </textarea>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>4.4 Flow Praktik : Scan Image dengan Trivy (Tidak Aman)</h2>
+                <p><strong>1. Scan dengan Trivy dan simpan output</strong></p>
+                <textarea id="markdown-input2" rows="0" cols="0">
+docker run --rm -v "C:\xampp\htdocs\devsecops-docker:/scan" aquasec/trivy:latest image --input /scan/insecure-app.tar --scanners vuln --format table --output /scan/trivy-output-insecure.txt --timeout 30m
+                </textarea>
+                <textarea id="markdown-input6" rows="0" cols="0">
+docker run --rm -v "C:\xampp\htdocs\devsecops-docker:/scan" aquasec/trivy:latest image --input /scan/insecure-app.tar --scanners vuln --format json --output /scan/trivy-output-insecure.json --timeout 15m
+                </textarea>
+
+                <p><strong>2. Analisis Kerentanan</strong></p>
+                <p>Gunakan perintah berikut untuk melihat berapa kerentanan yang ditemukan:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+findstr /i "HIGH CRITICAL" trivy-output-insecure.txt
+                </textarea>
+                <img src="assets/dso-4.png" alt="Image" class="article-image">
+                <p>Atau langsung buka file trivy-output-before.txt:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+C:\xampp\htdocs\devsecops-docker\trivy-output-insecure.txt
+                </textarea>
+                <img src="assets/dso-5.png" alt="Image" class="article-image">
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>4.5 Flow Praktik : Perbaiki Image (Aman)</h2>
+                <p><strong>Perbaikan utama pada Dockerfile</strong></p>
+                <ul>
+                    <li>Ganti base image ke minimal (python:3.12-slim).</li>
+                    <li>Perbarui dependency (flask==2.3.2).</li>
+                    <li>Gunakan <code>--no-cache-dir</code> pada pip untuk mengurangi layer cache.</li>
+                    <li>Tambahkan non-root user dan paksa container berjalan non-root.</li>
+                </ul>
+                <p><strong>Edit Dockerfile menjadi:</strong></p>
+                <textarea id="markdown-input5" rows="0" cols="0">
+FROM python:3.12-slim
+WORKDIR /app
+COPY . /app
+RUN pip install --no-cache-dir flask==2.3.2
+RUN adduser --disabled-password appuser
+USER appuser
+EXPOSE 5000
+CMD ["python", "app.py"]
+                </textarea>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>4.6 Flow Praktik : Membuat Ulang Docker Image (Aman)</h2>
+                <p><strong>1. Rebuild image dari Dockerfile</strong></p>
+                <textarea id="markdown-input" rows="0" cols="0">
+docker build -t secure-app:1 .
+                </textarea>
+                <img src="assets/dso-6.png" alt="Image" class="article-image">
+                <p><strong>2. Simpan ulang image ke TAR</strong></p>
+                <textarea id="markdown-input" rows="0" cols="0">
+docker save secure-app:1 -o secure-app.tar
+                </textarea>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>4.7 Flow Praktik : Scan Ulang Image dengan Trivy (Aman)</h2>
+                <p><strong>1. Scan dengan Trivy dan simpan output</strong></p>
+                <textarea id="markdown-input2" rows="0" cols="0">
+docker run --rm -v "C:\xampp\htdocs\devsecops-docker:/scan" aquasec/trivy:latest image --input /scan/secure-app.tar --scanners vuln --format table --output /scan/trivy-output-secure.txt --timeout 30m
+                </textarea>
+                <textarea id="markdown-input6" rows="0" cols="0">
+docker run --rm -v "C:\xampp\htdocs\devsecops-docker:/scan" aquasec/trivy:latest image --input /scan/secure-app.tar --scanners vuln --format json --output /scan/trivy-output-secure.json --timeout 15m
+                </textarea>
+
+                <p><strong>2. Analisis Kerentanan</strong></p>
+                <p>Gunakan perintah berikut untuk melihat berapa kerentanan yang ditemukan:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+findstr /i "HIGH CRITICAL" trivy-output-secure.txt
+                </textarea>
+                <img src="assets/dso-7.png" alt="Image" class="article-image">
+                <p>Atau langsung buka file trivy-output-secure.txt:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+C:\xampp\htdocs\devsecops-docker\trivy-output-secure.txt
+                </textarea>
+                <img src="assets/dso-8.png" alt="Image" class="article-image">
+                <p class="small">Setelah hardening severity HIGH/CRITICAL hilang dan jumlah MEDIUM/LOW turun signifikan.</p>
+            </article>
+
+            <article>
+                <h2>4.8 Flow Praktik : Perbandingan Hasil Scan</h2>
+                <p>Contoh perintah untuk menghitung severity sebelum & sesudah menggunakan <code>jq</code>:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+powershell -Command "Get-Content trivy-output-insecure.json | ConvertFrom-Json | Select-Object -Expand Results | Select-Object -Expand Vulnerabilities | Group-Object Severity | Sort-Object Count -Descending | Format-Table Count, Name > severity-insecure.txt"
+                </textarea>
+                <textarea id="markdown-input" rows="0" cols="0">
+powershell -Command "Get-Content trivy-output-secure.json | ConvertFrom-Json | Select-Object -Expand Results | Select-Object -Expand Vulnerabilities | Group-Object Severity | Sort-Object Count -Descending | Format-Table Count, Name > severity-secure.txt"
+                </textarea>
+                <img src="assets/dso-9.png" alt="Image" class="article-image">
+                <textarea id="markdown-input" rows="0" cols="0">
+type severity-insecure.txt
+                </textarea>
+                <textarea id="markdown-input" rows="0" cols="0">
+type severity-secure.txt
+                </textarea>
+                <img src="assets/dso-10.png" alt="Image" class="article-image">
+
+                <p>Berdasarkan perhitungan hasil scan tersebut terlihat bahwa severity yang bersifat HIGH, CRITICAL, dan UNKNOWN hilang. Selain itu untuk severity yang bersifat LOW turun dari 906 menjadi 51 serta MEDIUM turun dari 2130 menjadi 2.</p>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>6. Integrasi Trivy ke GitHub Actions (Security Gate)</h2>
+                <p>Workflow di bawah akan membangun image lalu menjalankan Trivy. Jika ditemukan HIGH/CRITICAL, pipeline akan gagal (exit code 1).</p>
+                <pre><code>name: Trivy Image Scan
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  trivy-scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        run: |
+          set -euo pipefail
+          REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          REPO_NAME=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
+          docker build -t ghcr.io/$REPO_OWNER/$REPO_NAME:scan-latest .
+
+      - name: Install Trivy via APT repo
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y gnupg wget apt-transport-https lsb-release
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install -y trivy
+          trivy --version
+
+      - name: Run Trivy Scan (fail on HIGH/CRITICAL) and save output
+        run: |
+          set -euo pipefail
+          trivy image --exit-code 1 --severity HIGH,CRITICAL --format table ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:scan-latest | tee trivy-output.txt
+          rc=${PIPESTATUS[0]:-0}
+          if [ "$rc" -eq 1 ]; then
+            echo "Trivy found HIGH/CRITICAL vulnerabilities (exit code $rc). See trivy-output.txt"
+            exit 1
+          elif [ "$rc" -ne 0 ]; then
+            echo "Trivy returned unexpected exit code $rc"
+            exit $rc
+          else
+            echo "No HIGH/CRITICAL vulnerabilities found."
+          fi
+
+      - name: Upload Trivy Output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-output
+          path: trivy-output.txt</code></pre>
+
+                <p class="small">Setelah menambahkan workflow file ke <code>.github/workflows/</code>, commit & push ke GitHub:</p>
+                <pre><code>git add .
+git commit -m "Add Trivy image scan workflow"
+git branch -M main
+git remote add origin https://github.com/&lt;username&gt;/&lt;repo&gt;.git
+git push -u origin main</code></pre>
+            </article>
+
+            <article>
+                <h2>7. Tips & Rekomendasi</h2>
+                <ul>
+                    <li>Jangan menyimpan secrets di Dockerfile — gunakan secret manager atau GitHub Secrets.</li>
+                    <li>Pertimbangkan multi-stage builds untuk mengurangi attack surface.</li>
+                    <li>Perbarui base image dan dependency secara berkala.</li>
+                    <li>Gabungkan SCA (Trivy) dengan linting (Dockle) dan runtime protection (Falco) untuk proteksi berlapis.</li>
+                    <li>Sesuaikan threshold (mis. hanya High/Critical) untuk menghindari false positives menghentikan CI tanpa alasan kuat.</li>
+                </ul>
+            </article>
+
+            <article>
+                <h2>Kesimpulan</h2>
+                <p>
+                    Flow praktik ini dirancang agar mudah diikuti: mulai dari membuat image yang sengaja tidak aman,
+                    mendeteksi kerentanan dengan Trivy, menerapkan hardening pada Dockerfile, hingga memvalidasi perbaikan
+                    dan menempatkan Trivy sebagai bagian dari pipeline CI/CD. Dengan pendekatan ini, deteksi dini dan mitigasi
+                    kerentanan menjadi bagian rutin dari siklus pengembangan — inti dari budaya DevSecOps. :contentReference[oaicite:3]{index=3}
+                </p>
+            </article>
+
         </section>
     </main>
 
