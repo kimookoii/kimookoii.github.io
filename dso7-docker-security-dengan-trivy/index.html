@@ -151,7 +151,7 @@ docker save insecure-app:1 -o insecure-app.tar
             <article>
                 <h2>4.4 Flow Praktik : Scan Image dengan Trivy (Tidak Aman)</h2>
                 <p><strong>1. Scan menggunakan image Trivy dan simpan output (table & json)</strong></p>
-                <textarea id="markdown-input2" rows="0" cols="0">
+                <textarea id="markdown-input6" rows="0" cols="0">
 docker run --rm -v "C:\xampp\htdocs\devsecops-docker:/scan" aquasec/trivy:latest image --input /scan/insecure-app.tar --scanners vuln --format table --output /scan/trivy-output-insecure.txt --timeout 30m
                 </textarea>
                 <textarea id="markdown-input6" rows="0" cols="0">
@@ -216,7 +216,7 @@ docker save secure-app:1 -o secure-app.tar
             <article>
                 <h2>4.7 Flow Praktik : Scan Ulang Image dengan Trivy (Aman)</h2>
                 <p><strong>1. Scan dengan Trivy dan simpan output</strong></p>
-                <textarea id="markdown-input2" rows="0" cols="0">
+                <textarea id="markdown-input6" rows="0" cols="0">
 docker run --rm -v "C:\xampp\htdocs\devsecops-docker:/scan" aquasec/trivy:latest image --input /scan/secure-app.tar --scanners vuln --format table --output /scan/trivy-output-secure.txt --timeout 30m
                 </textarea>
                 <textarea id="markdown-input6" rows="0" cols="0">
@@ -242,10 +242,10 @@ C:\xampp\htdocs\devsecops-docker\trivy-output-secure.txt
             <article>
                 <h2>4.8 Flow Praktik : Perbandingan Hasil Scan</h2>
                 <p>Untuk menghitung dan membandingkan severity sebelum & sesudah (menggunakan PowerShell di Windows):</p>
-                <textarea id="markdown-input" rows="0" cols="0">
+                <textarea id="markdown-input6" rows="0" cols="0">
 powershell -Command "Get-Content trivy-output-insecure.json | ConvertFrom-Json | Select-Object -Expand Results | Select-Object -Expand Vulnerabilities | Group-Object Severity | Sort-Object Count -Descending | Format-Table Count, Name > severity-insecure.txt"
                 </textarea>
-                <textarea id="markdown-input" rows="0" cols="0">
+                <textarea id="markdown-input6" rows="0" cols="0">
 powershell -Command "Get-Content trivy-output-secure.json | ConvertFrom-Json | Select-Object -Expand Results | Select-Object -Expand Vulnerabilities | Group-Object Severity | Sort-Object Count -Descending | Format-Table Count, Name > severity-secure.txt"
                 </textarea>
                 <img src="assets/dso-9.png" alt="Image" class="article-image">
@@ -300,30 +300,76 @@ git push -u origin main
 .github/workflows/trivy.yml
                 </textarea>
                 <p>Isi:</p>
-                <textarea id="markdown-input4" rows="0" cols="0">
-name: Trivy Scan
+                <textarea id="markdown-input7" rows="0" cols="0">
+name: Trivy Image Scan
+
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  scan:
+  trivy-scan:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build Docker image
-        run: docker build -t devsecops-scan .
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
 
-      - name: Run Trivy (action)
-        uses: aquasecurity/trivy-action@v0.9.0
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        run: |
+          set -euo pipefail
+          REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          REPO_NAME=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
+          docker build -t ghcr.io/$REPO_OWNER/$REPO_NAME:scan-latest .
+
+      - name: Install Trivy via APT repo
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y gnupg wget apt-transport-https lsb-release
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install -y trivy
+          trivy --version
+
+      - name: Run Trivy Scan (fail on HIGH/CRITICAL) and save output
+        run: |
+          set -euo pipefail
+          REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          REPO_NAME=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
+
+          # Run trivy and capture its exit code while saving output to file
+          # trivy exit codes: 0 = no vulnerabilities found (or below severity filter)
+          #                     1 = vulnerabilities found (for severity filter) -> we want to fail pipeline
+          trivy image --exit-code 1 --severity HIGH,CRITICAL --format table ghcr.io/$REPO_OWNER/$REPO_NAME:scan-latest | tee trivy-output.txt
+          rc=${PIPESTATUS[0]:-0}
+          if [ "$rc" -eq 1 ]; then
+            echo "Trivy found HIGH/CRITICAL vulnerabilities (exit code $rc). See trivy-output.txt"
+            exit 1
+          elif [ "$rc" -ne 0 ]; then
+            echo "Trivy returned unexpected exit code $rc"
+            exit $rc
+          else
+            echo "No HIGH/CRITICAL vulnerabilities found."
+          fi
+
+      - name: Upload Trivy Output
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          image-ref: devsecops-scan
-          format: table
-          severity: HIGH,CRITICAL
-          exit-code: 1
+          name: trivy-output
+          path: trivy-output.txt
                 </textarea>
                 <p>Workflow ini akan menjalankan Trivy dan memaksa pipeline gagal jika ditemukan vulnerability High atau Critical, sehingga menjadi security gate yang efektif.</p>
 
