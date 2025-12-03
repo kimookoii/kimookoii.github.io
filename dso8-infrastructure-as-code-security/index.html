@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Praktik Minggu 8 DevSecOps</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <button class="back-button" onclick="window.history.back();">&#8592; Back</button>
+            <h1>88032023006  |  ZICO</h1>
+            <p>...</p>
+        </div>
+    </header>
+
+    <title1>
+        <div class="title1-container">
+            <h1>Praktik Minggu 8 DevSecOps</h1>
+            <h2>Infrastructure as Code (IaC) Security</h2>
+        </div>
+    </title1>
+
+    <main>
+        <section class="content">
+
+            <!-- ======================================================== -->
+
+            <article>
+                <p>Dokumentasi lengkap langkah-langkah yang diminta: install paket, deploy konfigurasi, tambahkan minimal 3 misconfiguration, scan dengan <code>ansible-lint</code>, perbaiki findings, dan buat laporan. Saya menulis panduan ini dengan asumsi Anda bekerja pada <strong>Windows 11 tanpa WSL/VM</strong>. Karena Ansible pada dasarnya membutuhkan lingkungan kontrol berbasis POSIX (Linux/macOS), saya menyertakan solusi praktis tanpa harus menginstall Linux di mesin lokal: menjalankan pemeriksaan & playbook melalui <strong>GitHub Actions</strong> (CI) sehingga Anda tetap bisa bekerja full-Windows tanpa WSL/VM.</p>
+
+                <h2>Ringkasan solusi</h2>
+                <ul>
+                    <li>Berikan contoh Ansible playbook untuk menginstall paket (contoh: nginx) dan deploy file konfigurasi.</li>
+                    <li>Tambahkan 3 misconfiguration: file permission insecure, playbook tanpa handlers (no handlers), dan plaintext password di vars.</li>
+                    <li>Gunakan <code>ansible-lint</code> di GitHub Actions untuk scan (karena Anda tidak menggunakan WSL/VM).</li>
+                    <li>Tunjukkan hasil temuan (contoh output <em>ansible-lint</em> yang realistis) dan langkah perbaikan.</li>
+                    <li>Berikan laporan akhir dan checklist.</li>
+                </ul>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2 id="environment">1. Catatan lingkungan</h2>
+                <p><strong>Penting:</strong> Ansible belum didukung sebagai control-node langsung di Windows tanpa WSL/VM. Pilihan praktis tanpa mengubah OS lokal:</p>
+                <ol>
+                    <li><strong>Gunakan GitHub Actions</strong> untuk menjalankan <code>ansible-lint</code> dan <code>ansible-playbook</code> pada runner <code>ubuntu-latest</code>. Ini tidak butuh WSL atau VM lokal.</li>
+                    <li>Atau gunakan <strong>Docker Desktop</strong> (Linux containers) untuk menjalankan container yang menjalankan Ansible. (Catatan: Docker memerlukan fitur virtualisasi di Windows, tapi bukan VM manual.)</li>
+                </ol>
+                <p>Di artikel ini saya memilih opsi <strong>GitHub Actions</strong> karena sesuai untuk pengguna Windows yang tidak ingin menambah lapisan VM/WSL.</p>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2 id="files">2. Struktur file yang akan digunakan</h2>
+                <p>Letakkan ini di repo GitHub Anda:</p>
+
+                <textarea id="markdown-input" rows="0" cols="0">
+devsecops-week8/
+├─ .github/workflows/ansible-lint.yml      # workflow untuk scan & run
+├─ playbook.yml                             # playbook utama
+├─ roles/
+│  └─ webserver/
+│     ├─ tasks/
+│     │  └─ main.yml
+│     ├─ templates/
+│     │  └─ index.html.j2
+│     └─ files/
+│        └─ secret.txt
+└─ inventory.ini
+                </textarea>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2 id="playbook">3. Contoh playbook (dengan misconfiguration)</h2>
+                <p><strong>File: playbook.yml</strong></p>
+                <textarea id="markdown-input" rows="0" cols="0">
+- name: Deploy webserver and content (with intentional misconfigurations)
+  hosts: web
+  become: true
+  vars:
+    # MISCONFIGURATION 1: PLAINTEXT PASSWORD (bad practice)
+    db_password: "SuperSecretPlainText123"
+    admin_user: "webadmin"
+  roles:
+    - role: webserver
+                </textarea>
+
+                <p><strong>File: roles/webserver/tasks/main.yml</strong></p>
+                <textarea id="markdown-input" rows="0" cols="0">
+- name: Install nginx (package)
+  apt:
+    name: nginx
+    state: present
+  tags: install
+
+- name: Deploy index page (bad permissions intentionally)
+  copy:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    mode: '0777'        # MISCONFIGURATION 2: FILE PERMISSION INSECURE
+  tags: deploy
+
+- name: Deploy a "secret" file (plaintext secret)
+  copy:
+    src: files/secret.txt
+    dest: /etc/myapp/secret.txt
+    mode: '0644'        # readable by all (also insecure depending on secret)
+  tags: secrets
+
+# MISCONFIGURATION 3: No handlers defined & service not notified (no handlers)
+# We intentionally do NOT use 'notify: restart nginx' after deploying config,
+# so there's no handler and service isn't restarted (functional misconfig).
+- name: Ensure nginx is enabled and started (but not notified by tasks above)
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+  tags: service
+                </textarea>
+
+                <p><strong>File: roles/webserver/templates/index.html.j2</strong></p>
+                <textarea id="markdown-input" rows="0" cols="0">
+&lt;html&gt;
+  &lt;head&gt;&lt;title&gt;Demo&lt;/title&gt;&lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello from Ansible demo&lt;/h1&gt;
+    &lt;p&gt;DB Password (plaintext included in vars): {{ db_password }}&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+                </textarea>
+
+                <p><strong>File: roles/webserver/files/secret.txt</strong></p>
+                <textarea id="markdown-input" rows="0" cols="0">
+this-is-a-secret-token: abcdef1234567890
+                </textarea>
+
+                <p><strong>Inventory (dummy): inventory.ini</strong></p>
+                <textarea id="markdown-input" rows="0" cols="0">
+[web]
+192.0.2.10 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa
+                </textarea>
+                <p>Catatan: IP di atas hanya contoh. Untuk demo lokal via Actions Anda bisa gunakan <code>local_action</code> atau docker container sebagai target, tapi kita fokus pada scanning & linting di CI.</p>
+            </article>
+
+            <article>
+                <h2 id="ansible-lint">4. Menjalankan ansible-lint via GitHub Actions</h2>
+                <p>Contoh .github/workflows/ansible-lint.yml untuk memindai repo setiap push:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+name: Ansible Lint & Dry-run
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install ansible-core and ansible-lint
+        run: |
+          python -m pip install --upgrade pip
+          pip install "ansible-core>=2.14" ansible-lint
+
+      - name: Run ansible-lint
+        run: |
+          ansible-lint -v
+                </textarea>
+
+                <p>Workflow di atas akan menjalankan ansible-lint terhadap role dan playbook di repo Anda. Jika Anda ingin lint only pada folder tertentu: <code>ansible-lint playbook.yml roles/</code>.</p>
+            </article>
+
+            <article>
+                <h2 id="sample-output">5. Contoh output ansible-lint (ilustratif)</h2>
+                <p>Berikut contoh output yang realistis ketika ansible-lint menemukan masalah pada playbook/role di atas. <em>Catatan:</em> ini ilustrasi — output aktual bergantung pada versi <code>ansible-lint</code> dan aturan yang aktif.</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+$ ansible-lint playbook.yml
+
+[ANSIBLE0006] Use shell only when shell functionality is required
+playbook.yml:2 Task/Handler: name: Deploy webserver and content (with intentional misconfigurations)
+
+[ANSIBLE0012] Commands should not change things if nothing needs doing
+roles/webserver/tasks/main.yml:12
+Task: Deploy index page (bad permissions intentionally)
+
+[ANSIBLE0013] Files copied with incorrect permissions
+roles/webserver/tasks/main.yml:12
+Task: Deploy index page (bad permissions intentionally)
+  mode set to 0777 which is insecure
+
+[ANSIBLE0002] Trailing whitespace
+roles/webserver/templates/index.html.j2:3
+
+[ANSIBLE0022] Use of vars that may contain secrets in templates
+roles/webserver/templates/index.html.j2:4
+  db_password used directly in template (plaintext secret exposure)
+
+Summary: 5 problems (5 code rules violated)
+                </textarea>
+
+                <p>Penjelasan singkat dari temuan di atas:</p>
+                <ul>
+                    <li><strong>mode 0777</strong> — memberi semua hak pada file (read/write/execute) untuk owner/group/other: sangat tidak aman untuk konten web atau secret file.</li>
+                    <li><strong>plaintext password</strong> muncul di template/vars — seharusnya disimpan di vault/secrets management.</li>
+                    <li><strong>No handlers</strong> — perubahan konfigurasi tidak memicu restart service karena tidak ada <code>notify</code> + <code>handlers</code>.</li>
+                </ul>
+            </article>
+
+            <article>
+                <h2>6. Perbaikan untuk setiap temuan</h2>
+
+                <h3>a) Perbaiki permissions file (MISCONFIGURATION: 0777)</h3>
+                <p><strongSaran:</strong> ubah mode menjadi <code>0644</code> untuk file web, dan untuk file berisi secret gunakan <code>0600</code> dengan owner root atau akun aplikasi yang tepat.</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+- name: Deploy index page (fixed permissions)
+  copy:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    mode: '0644'
+    owner: www-data
+    group: www-data
+  notify: restart nginx
+                </textarea>
+
+                <h3>b) Secret & plaintext password (MISCONFIGURATION: plaintext password)</h3>
+                <p><strong>Saran:</strong> jangan letakkan password langsung di playbook. Gunakan salah satu:</p>
+                <ul>
+                    <li><strong>Ansible Vault:</strong> enkripsi variabel sensitif (<code>ansible-vault encrypt_string</code>).</li>
+                    <li><strong>Secrets Manager / CI Secrets:</strong> simpan secret di GitHub Secrets dan inject ke runtime job, atau gunakan HashiCorp Vault.</li>
+                </ul>
+                <p>Contoh menggunakan Ansible Vault (di CI Anda bisa decrypt atau gunakan secrets):</p>
+                <textarea id="markdown-input" rows="0" cols="0"># contoh encrypted var (hasil ansible-vault encrypt_string)
+db_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          61626364... (blok terenkripsi)
+                </textarea>
+                <h3>c) No handlers (MISCONFIGURATION: no handlers)</h3>
+                <p>Tambahkan handler untuk restart nginx dan panggil <code>notify</code> pada task yang mengubah konfigurasi.</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+# tasks/main.yml (perubahan)
+- name: Deploy index page (fixed permissions)
+  copy:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    mode: '0644'
+    owner: www-data
+    group: www-data
+  notify: restart nginx
+
+# roles/webserver/handlers/main.yml
+- name: restart nginx
+  service:
+    name: nginx
+    state: restarted
+                </textarea>
+                <h3>d) Tambahan: hindari meletakkan secret di template</h3>
+                <p>Hapus atau mask bagian yang menampilkan <code>db_password</code> pada template; bila perlu, tampilkan hanya masked value atau jangan tampilkan sama sekali.</p>
+
+                <textarea id="markdown-input" rows="0" cols="0">
+&lt;!-- roles/webserver/templates/index.html.j2 (fixed) --&gt;
+&lt;html&gt;
+  &lt;head&gt;&lt;title&gt;Demo&lt;/title&gt;&lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello from Ansible demo&lt;/h1&gt;
+    &lt;p&gt;Aplikasi berjalan. (Password disimpan aman)</p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+                </textarea>
+                <p>Setelah perbaikan: jalankan kembali <code>ansible-lint</code> (di GitHub Actions) dan pastikan semua rule teratasi.</p>
+            </article>
+
+            <article>
+                <h2 id="re-run">7. Contoh re-run <code>ansible-lint</code> (setelah perbaikan) — contoh output</h2>
+                <textarea id="markdown-input" rows="0" cols="0">
+$ ansible-lint playbook.yml
+
+All files linted successfully: no problems detected
+                </textarea>
+                <p>Jika Anda masih melihat peringatan, <code>ansible-lint</code> akan mencetak rule id dan lokasi file. Gunakan itu untuk memperbaiki.</p>
+            </article>
+
+            <article>
+                <h2 id="report">8. Laporan / Hasil</h2>
+                <p>Berikut contoh ringkasan laporan yang bisa Anda sertakan sebagai bagian dari PR atau file <code>REPORT.md</code> di repo:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+Laporan Scan Ansible - ansible-misconfig-demo
+=========================================
+Tanggal: 2025-12-03
+Lingkungan: GitHub Actions (ubuntu-latest)
+Tools: ansible-core, ansible-lint
+
+Temuan awal:
+- 1x plaintext password ditemukan di vars (db_password)
+- 1x insecure file permission (mode: 0777) pada index.html deploy
+- 1x no handlers (service restart tidak di-notify)
+- 1x template menampilkan variabel sensitif secara langsung
+
+Langkah perbaikan:
+1) Ganti plaintext password ke Ansible Vault atau CI secrets.
+2) Ubah permissions file dari 0777 ke 0644; secret files -> 0600.
+3) Tambahkan handler 'restart nginx' dan notify dari task yang mengganti file.
+4) Hapus tampilan password di template.
+
+Hasil setelah perbaikan:
+- ansible-lint: clean (no problems)
+- Playbook didesain agar idempotent dan aman secara permission & secret handling.
+
+Rekomendasi:
+- Integrasikan ansible-lint di PR (CI).
+- Gunakan Ansible Vault atau secret manager.
+- Terapkan scanning tambahan (e.g., trivy untuk image, ossec untuk host).
+                </textarea>
+            </article>
+
+            <article>
+                <h2 id="how-to-run-local">9. Cara menjalankan (opsi untuk Anda di Windows tanpa WSL/VM)</h2>
+                <ol>
+                    <li><strong>Gunakan GitHub Actions</strong> — push repo ke GitHub dan lihat hasil lint di Actions tab. (Direkomendasikan untuk pengguna Windows tanpa WSL).</li>
+                    <li><strong>Gunakan Docker</strong> — buat container Ubuntu yang menjalankan Ansible & target lokal (docker-in-docker atau container sebagai target).</li>
+                    <li><strong>Jika bersedia install WSL/VM</strong> — install WSL2 + Ubuntu untuk pengalaman Ansible native (pilihan ini tidak diinginkan sesuai pernyataan Anda).</li>
+                </ol>
+                <p>Contoh menjalankan check lokal menggunakan Docker:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+# jalankan container ubuntu
+docker run --rm -it -v "%cd%":/work -w /work ubuntu:24.04 /bin/bash
+
+# di dalam container:
+apt update && apt install -y python3 python3-pip git ssh
+pip install "ansible-core>=2.14" ansible-lint
+ansible-lint playbook.yml
+                </textarea>
+            </article>
+
+            <article>
+                <h2 id="checklist">10. Checklist deliverable (untuk tugas Anda)</h2>
+                <table>
+                    <thead>
+                        <tr><th>Item</th><th>Status</th><th>Keterangan</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Install paket</td><td>Contoh di playbook</td><td>nginx via apt (role tasks)</td></tr>
+                        <tr><td>Deploy konfigurasi</td><td>Contoh di role</td><td>index.html, secret.txt</td></tr>
+                        <tr><td>Tambahkan 3 misconfiguration</td><td>✔</td><td>Plaintext password, 0777 file perms, no handlers</td></tr>
+                        <tr><td>Scan dengan ansible-lint</td><td>Workflow disediakan</td><td>GitHub Actions workflow file</td></tr>
+                        <tr><td>Perbaiki semua findings</td><td>Contoh perbaikan diberikan</td><td>handlers, vault, permissions</td></tr>
+                        <tr><td>Buat laporan</td><td>Contoh REPORT.md di artikel</td><td>Termasuk ringkasan & rekomendasi</td></tr>
+                        <tr><td>Dokumentasi / Artikel HTML</td><td>✔</td><td>Dokumen ini (HTML) siap dipakai</td></tr>
+                    </tbody>
+                </table>
+            </article>
+
+            <article>
+                <h2 id="conclusion">11. Kesimpulan</h2>
+                <p>Anda sekarang memiliki contoh repo, playbook dengan intentional misconfigurations, workflow CI untuk melakukan <code>ansible-lint</code>, contoh output masalah, dan langkah perbaikan. Karena Anda bekerja sepenuhnya di Windows tanpa WSL/VM, cara termudah dan teraman untuk menjalankan linting & dry-run Ansible adalah melalui <strong>GitHub Actions</strong> (atau Docker jika Anda nyaman dengan virtualisasi ringan). Integrasikan linting ini di pipeline CI sehingga setiap PR otomatis ter-scan dan tidak ada secret/plainttext atau permission risk yang lolos ke master branch.</p>
+                <p>Jika Anda mau, saya bisa:</p>
+                <ul>
+                    <li>Membuat file repo lengkap (playbook, role, workflow, REPORT.md) sehingga tinggal Anda copy-paste ke GitHub — saya akan siapkan konten file-file tersebut dalam satu bundle HTML/markdown.</li>
+                    <li>Membuat template <code>REPORT.md</code> yang bisa Anda unggah ke repo.</li>
+                </ul>
+            </article>
+
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 | made with love -zico</p>
+    </footer>
+
+</body>
+</html>
