@@ -43,7 +43,7 @@
             <!-- ======================================================== -->
 
             <article>
-                <h2 id="environment">1. Catatan lingkungan</h2>
+                <h2>1. Catatan lingkungan</h2>
                 <p><strong>Penting:</strong> Ansible belum didukung sebagai control-node langsung di Windows tanpa WSL/VM. Pilihan praktis tanpa mengubah OS lokal:</p>
                 <ol>
                     <li><strong>Gunakan GitHub Actions</strong> untuk menjalankan <code>ansible-lint</code> dan <code>ansible-playbook</code> pada runner <code>ubuntu-latest</code>. Ini tidak butuh WSL atau VM lokal.</li>
@@ -55,7 +55,54 @@
             <!-- ======================================================== -->
 
             <article>
-                <h2 id="files">2. Struktur file yang akan digunakan</h2>
+                <h2>.1 Flow Praktik : Tahap Persiapan</h2>
+                <p>Persiapan Direktori</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+mkdir iac-terraform-sec
+                </textarea>
+                <textarea id="markdown-input" rows="0" cols="0">
+cd iac-terraform-sec
+                </textarea>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>.2 Flow Praktik : Buat file Terraform insecure</h2>
+                <p>Buat file main.tf</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+resource "aws_s3_bucket" "example" {
+ bucket = "my-insecure-bucket"
+ acl = "public-read" # insecure
+ versioning {
+ enabled = false # insecure
+ }
+}
+                </textarea>
+                <p>Sengaja dibuat insecure agar hasil scan muncul.</p>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>.2 Flow Praktik : Buat file Terraform insecure</h2>
+                <p>Buat file main.tf</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+resource "aws_s3_bucket" "example" {
+ bucket = "my-insecure-bucket"
+ acl = "public-read" # insecure
+ versioning {
+ enabled = false # insecure
+ }
+}
+                </textarea>
+                <p>Sengaja dibuat insecure agar hasil scan muncul.</p>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2 id="files">.3 Install Trivy</h2>
                 <p>Letakkan ini di repo GitHub Anda:</p>
 
                 <textarea id="markdown-input" rows="0" cols="0">
