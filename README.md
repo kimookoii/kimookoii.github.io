@@ -24,6 +24,7 @@
 5. **[Decompile APK & Static Analysis](https://kimookoii.github.io/pm5-decompile-apk-static-analysis/)** x
 6. **[Dynamic Analysis & Hooking](https://kimookoii.github.io/pm6-dynamic-analysis-hooking/)** x
 7. **[Reverse Engineering Mobile App](https://kimookoii.github.io/pm7-reverse-engineering-mobile-app/)** x
+8. **[Insecure Data Storage](https://kimookoii.github.io/pm8-insecure-data-storage/)** x
 
 ---
 
