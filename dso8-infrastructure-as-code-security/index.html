@@ -28,35 +28,33 @@
             <!-- ======================================================== -->
 
             <article>
-                <p>Dokumentasi lengkap langkah-langkah yang diminta: install paket, deploy konfigurasi, tambahkan minimal 3 misconfiguration, scan dengan <code>ansible-lint</code>, perbaiki findings, dan buat laporan. Saya menulis panduan ini dengan asumsi Anda bekerja pada <strong>Windows 11 tanpa WSL/VM</strong>. Karena Ansible pada dasarnya membutuhkan lingkungan kontrol berbasis POSIX (Linux/macOS), saya menyertakan solusi praktis tanpa harus menginstall Linux di mesin lokal: menjalankan pemeriksaan & playbook melalui <strong>GitHub Actions</strong> (CI) sehingga Anda tetap bisa bekerja full-Windows tanpa WSL/VM.</p>
-
-                <h2>Ringkasan solusi</h2>
-                <ul>
-                    <li>Berikan contoh Ansible playbook untuk menginstall paket (contoh: nginx) dan deploy file konfigurasi.</li>
-                    <li>Tambahkan 3 misconfiguration: file permission insecure, playbook tanpa handlers (no handlers), dan plaintext password di vars.</li>
-                    <li>Gunakan <code>ansible-lint</code> di GitHub Actions untuk scan (karena Anda tidak menggunakan WSL/VM).</li>
-                    <li>Tunjukkan hasil temuan (contoh output <em>ansible-lint</em> yang realistis) dan langkah perbaikan.</li>
-                    <li>Berikan laporan akhir dan checklist.</li>
-                </ul>
+              <p>Pada praktik DevSecOps minggu ke-8 ini, kita berfokus pada keamanan Infrastructure as Code (IaC) dengan menggunakan dua tool utama:</p>
+              <ul>
+                <li>Trivy → untuk memeriksa misconfiguration pada file Terraform</li>
+                <li>ansible-lint → untuk memeriksa kualitas dan keamanan playbook Ansible</li>
+              </ul>
+              <p>Karena Ansible dan sebagian besar tool IaC dibuat untuk berjalan di lingkungan Linux/POSIX, sedangkan Anda bekerja menggunakan Windows 11 tanpa WSL atau Virtual Machine, maka seluruh proses scanning akan dilakukan melalui:</p>
+              <ul>
+                <li>Docker container (untuk menjalankan Trivy & ansible-lint)</li>
+                <li>GitHub Actions (opsional sebagai alternatif lingkungan eksekusi CI/CD)</li>
+              </ul>
+              <p>Dengan pendekatan ini, Anda tetap bisa melakukan seluruh langkah DevSecOps secara penuh tanpa berpindah OS.</p>
+              <ol>Dokumentasi berikut memuat:
+                <li>Instalasi paket dan persiapan direktori</li>
+                <li>Pembuatan konfigurasi IaC (Terraform & Ansible)</li>
+                <li>Penyisipan minimal 3 misconfiguration</li>
+                <li>Scanning otomatis menggunakan Trivy dan ansible-lint</li>
+                <li>Perbaikan semua temuan (findings)</li>
+                <li>Pembuatan laporan akhir</li>
+              </ol>
+              <p>Seluruh langkah ditulis rinci dan dilengkapi script, command, serta penjelasan perbaikan agar mudah direplikasi pada mesin Windows.</p>
             </article>
 
             <!-- ======================================================== -->
 
             <article>
-                <h2>1. Catatan lingkungan</h2>
-                <p><strong>Penting:</strong> Ansible belum didukung sebagai control-node langsung di Windows tanpa WSL/VM. Pilihan praktis tanpa mengubah OS lokal:</p>
-                <ol>
-                    <li><strong>Gunakan GitHub Actions</strong> untuk menjalankan <code>ansible-lint</code> dan <code>ansible-playbook</code> pada runner <code>ubuntu-latest</code>. Ini tidak butuh WSL atau VM lokal.</li>
-                    <li>Atau gunakan <strong>Docker Desktop</strong> (Linux containers) untuk menjalankan container yang menjalankan Ansible. (Catatan: Docker memerlukan fitur virtualisasi di Windows, tapi bukan VM manual.)</li>
-                </ol>
-                <p>Di artikel ini saya memilih opsi <strong>GitHub Actions</strong> karena sesuai untuk pengguna Windows yang tidak ingin menambah lapisan VM/WSL.</p>
-            </article>
-
-            <!-- ======================================================== -->
-
-            <article>
-                <h2>.1 Flow Praktik : Tahap Persiapan</h2>
-                <p>Persiapan Direktori</p>
+                <h2>1.1 Flow Praktik 1 : Tahap Persiapan</h2>
+                <p>Buat direktori baru untuk IaC Terraform:</p>
                 <textarea id="markdown-input" rows="0" cols="0">
 mkdir iac-terraform-sec
                 </textarea>
@@ -68,356 +66,335 @@ cd iac-terraform-sec
             <!-- ======================================================== -->
 
             <article>
-                <h2>.2 Flow Praktik : Buat file Terraform insecure</h2>
-                <p>Buat file main.tf</p>
-                <textarea id="markdown-input" rows="0" cols="0">
+                <h2>1.2 Flow Praktik 1 : Buat File Terraform Insecure</h2>
+                <p>File main.tf dibuat secara sengaja insecure untuk memunculkan temuan ketika discan menggunakan Trivy.</p>
+                <p><strong>main.tf (versi insecure)</strong></p>
+                <textarea id="markdown-input2" rows="0" cols="0">
 resource "aws_s3_bucket" "example" {
- bucket = "my-insecure-bucket"
- acl = "public-read" # insecure
- versioning {
- enabled = false # insecure
- }
+    bucket = "my-insecure-bucket"
+    acl = "public-read" # insecure
+    versioning {
+        enabled = false # insecure
+    }
 }
                 </textarea>
-                <p>Sengaja dibuat insecure agar hasil scan muncul.</p>
+                <img src="assets/dso-1.png" alt="Image1" class="article-image">
+                <p><strong>Misconfiguration yang dimasukkan:</strong></p>
+                <ul>
+                  <li>acl = "public-read" → bucket dapat dibaca publik</li>
+                  <li>versioning.enabled = false → tidak ada proteksi versi</li>
+                </ul>
             </article>
 
             <!-- ======================================================== -->
 
             <article>
-                <h2>.2 Flow Praktik : Buat file Terraform insecure</h2>
-                <p>Buat file main.tf</p>
+                <h2>1.3 Flow Praktik 1 : Scan dengan Trivy (Tidak Aman)</h2>
+                <p>Trivy dijalankan melalui Docker</p>
+                <textarea id="markdown-input3" rows="0" cols="0">
+docker run --rm -v "C:\Users\laptop\OneDrive\Documents\GitHub\devsecops-week8\iac-terraform-sec:/scan" aquasec/trivy:latest config /scan/main.tf --format table --output /scan/trivy-iac-output.txt --timeout 30m
+                </textarea>
+                <img src="assets/dso-2.png" alt="Image1" class="article-image">
+                <p>Output akan tersimpan pada:</p>
                 <textarea id="markdown-input" rows="0" cols="0">
+trivy-iac-output-insecure.txt
+                </textarea>
+                <p>Buka file trivy-iac-output-insecure.txt:</p>
+                <img src="assets/dso-3.png" alt="Image1" class="article-image">
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>1.4 Flow Praktik 1 : Fix Misconfiguration</h2>
+                <p>Ubah file Terraform menjadi aman:</p>
+                <p><strong>main.tf (versi secure)</strong></p>
+                <textarea id="markdown-input2" rows="0" cols="0">
 resource "aws_s3_bucket" "example" {
- bucket = "my-insecure-bucket"
- acl = "public-read" # insecure
- versioning {
- enabled = false # insecure
- }
+    bucket = "my-insecure-bucket"
+    acl = "private"
+    versioning {
+        enabled = true
+    }
 }
                 </textarea>
-                <p>Sengaja dibuat insecure agar hasil scan muncul.</p>
             </article>
 
             <!-- ======================================================== -->
 
             <article>
-                <h2 id="files">.3 Install Trivy</h2>
-                <p>Letakkan ini di repo GitHub Anda:</p>
-
+                <h2>1.5 Flow Praktik 1 : Scan Ulang dengan Trivy (Aman)</h2>
+                <p>Trivy dijalankan melalui Docker</p>
+                <textarea id="markdown-input3" rows="0" cols="0">
+docker run --rm -v "C:\Users\laptop\OneDrive\Documents\GitHub\devsecops-week8\iac-terraform-sec:/scan" aquasec/trivy:latest config /scan/main.tf --format table --output /scan/trivy-iac-output-secure.txt --timeout 30m
+                </textarea>
+                <img src="assets/dso-4.png" alt="Image1" class="article-image">
+                <p>Output akan tersimpan pada:</p>
                 <textarea id="markdown-input" rows="0" cols="0">
-devsecops-week8/
-├─ .github/workflows/ansible-lint.yml      # workflow untuk scan & run
-├─ playbook.yml                             # playbook utama
-├─ roles/
-│  └─ webserver/
-│     ├─ tasks/
-│     │  └─ main.yml
-│     ├─ templates/
-│     │  └─ index.html.j2
-│     └─ files/
-│        └─ secret.txt
-└─ inventory.ini
+trivy-iac-output-secure.txt
+                </textarea>
+                <p>Buka file trivy-iac-output-secure.txt:</p>
+                <img src="assets/dso-5.png" alt="Image1" class="article-image">
+                <p>Hasil menunjukkan bahwa misconfiguration telah hilang.</p>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>2.1 Flow Praktik 2 : Tahap Persiapan</h2>
+                <p>Persiapan Direktori</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+mkdir ansible-sec
+                </textarea>
+                <textarea id="markdown-input" rows="0" cols="0">
+cd ansible-sec
+                </textarea>
+                <textarea id="markdown-input" rows="0" cols="0">
+mkdir roles
+                </textarea>
+                <textarea id="markdown-input" rows="0" cols="0">
+mkdir tasks
                 </textarea>
             </article>
 
             <!-- ======================================================== -->
 
             <article>
-                <h2 id="playbook">3. Contoh playbook (dengan misconfiguration)</h2>
-                <p><strong>File: playbook.yml</strong></p>
+                <h2>2.2 Flow Praktik 2 : Buat File Playbook Insecure</h2>
+                <p>Playbook awal dibuat dengan beberapa kesalahan konfigurasi agar ansible-lint menghasilkan temuan.</p>
+                <p><strong>playbook.yml (versi insecure)</strong></p>
+                <textarea id="markdown-input4" rows="0" cols="0">
+- hosts: all
+  become: yes
+  tasks:
+    - name: Install Apache
+      apt:
+        name: apache2
+        state: present
+
+    - name: Copy Insecure Config
+      copy:
+        src: config.conf
+        dest: /etc/apache2/config.conf
+        mode: 0777   # insecure
+
+                </textarea>
+                <img src="assets/dso-6.png" alt="Image1" class="article-image">
+                <p><strong>Misconfiguration yang ditambahkan (3 buah):</strong></p>
+                <ul>
+                  <li>File permission insecure → 0777</li>
+                  <li>No handlers → perubahan konfigurasi tidak memicu restart</li>
+                  <li>Truthy YAML salah (yes)</li>
+                  <li>Modul tidak FQCN (apt/copy) (bonus)</li>
+                </ul>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>2.3 Flow Praktik 2 : Jalankan Scanning ansible-lint</h2>
+                <p><strong>Scan menggunakan ansible-lint</strong></p>
                 <textarea id="markdown-input" rows="0" cols="0">
-- name: Deploy webserver and content (with intentional misconfigurations)
-  hosts: web
+docker run --rm -v "${PWD}:/data" -w /data cytopia/ansible-lint ansible-lint playbook.yml
+                </textarea>
+                <p><strong>Hasil</strong></p>
+                <img src="assets/dso-7.png" alt="Image1" class="article-image">
+                <p><strong>Temuan (findings) yang muncul:</strong></p>
+                <ul>
+                  <li><strong>name[play]:</strong> All plays should be named. (warning) playbook.yml:1</li>
+                  <li><strong>yaml[truthy]:</strong> Truthy value should be one of [false, true] playbook.yml:2</li>
+                  <li><strong>fqcn[action-core]:</strong> Use FQCN for builtin module actions (apt). playbook.yml:4 Use `ansible.builtin.apt` or `ansible.legacy.apt` instead.</li>
+                  <li><strong>fqcn[action-core]:</strong> Use FQCN for builtin module actions (copy). playbook.yml:9 Use `ansible.builtin.copy` or `ansible.legacy.copy` instead.</li>
+                </ul>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>2.4 Flow Praktik 2 : Perbaikan Playbook dan Jalankan Scanning Ulang</h2>
+
+                <p><strong>Berikut yang perlu diperbaiki:</strong></p>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Komponen</th>
+                      <th>Sebelumnya</th>
+                      <th>Setelah Perbaikan</th>
+                      <th>Alasan</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Nama Play</td>
+                      <td>Tidak ada</td>
+                      <td><code>- name: Playbook</code></td>
+                      <td>Memenuhi rule lint</td>
+                    </tr>
+
+                    <tr>
+                      <td>Boolean</td>
+                      <td><code>yes</code></td>
+                      <td><code>true</code></td>
+                      <td>Format YAML standar</td>
+                    </tr>
+
+                    <tr>
+                      <td>Modul</td>
+                      <td><code>apt, copy</code></td>
+                      <td><code>ansible.builtin.apt, ansible.builtin.copy</code></td>
+                      <td>FQCN wajib</td>
+                    </tr>
+
+                    <tr>
+                      <td>Mode file</td>
+                      <td><code>0777</code></td>
+                      <td><code>0644</code></td>
+                      <td>Security best practice</td>
+                    </tr>
+
+                    <tr>
+                      <td>Struktur task</td>
+                      <td>Kurang rapih</td>
+                      <td>Konsisten &amp; lint-friendly</td>
+                      <td>Readability &amp; maintainability</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p><strong>playbook.yml (versi secure)</strong></p>
+                <textarea id="markdown-input4" rows="0" cols="0">
+- name: Playbook
+  hosts: all
   become: true
-  vars:
-    # MISCONFIGURATION 1: PLAINTEXT PASSWORD (bad practice)
-    db_password: "SuperSecretPlainText123"
-    admin_user: "webadmin"
-  roles:
-    - role: webserver
-                </textarea>
+  tasks:
+    - name: Install Apache
+      ansible.builtin.apt:
+        name: apache2
+        state: present
 
-                <p><strong>File: roles/webserver/tasks/main.yml</strong></p>
+    - name: Copy Insecure Config
+      ansible.builtin.copy:
+        src: config.conf
+        dest: /etc/apache2/config.conf
+        mode: 0644
+
+                </textarea>
+                <p><strong>Scan Ulang menggunakan ansible-lint</strong></p>
                 <textarea id="markdown-input" rows="0" cols="0">
-- name: Install nginx (package)
-  apt:
-    name: nginx
-    state: present
-  tags: install
-
-- name: Deploy index page (bad permissions intentionally)
-  copy:
-    src: index.html.j2
-    dest: /var/www/html/index.html
-    mode: '0777'        # MISCONFIGURATION 2: FILE PERMISSION INSECURE
-  tags: deploy
-
-- name: Deploy a "secret" file (plaintext secret)
-  copy:
-    src: files/secret.txt
-    dest: /etc/myapp/secret.txt
-    mode: '0644'        # readable by all (also insecure depending on secret)
-  tags: secrets
-
-# MISCONFIGURATION 3: No handlers defined & service not notified (no handlers)
-# We intentionally do NOT use 'notify: restart nginx' after deploying config,
-# so there's no handler and service isn't restarted (functional misconfig).
-- name: Ensure nginx is enabled and started (but not notified by tasks above)
-  service:
-    name: nginx
-    state: started
-    enabled: yes
-  tags: service
+docker run --rm -v "${PWD}:/data" -w /data cytopia/ansible-lint ansible-lint playbook.yml
                 </textarea>
-
-                <p><strong>File: roles/webserver/templates/index.html.j2</strong></p>
-                <textarea id="markdown-input" rows="0" cols="0">
-&lt;html&gt;
-  &lt;head&gt;&lt;title&gt;Demo&lt;/title&gt;&lt;/head&gt;
-  &lt;body&gt;
-    &lt;h1&gt;Hello from Ansible demo&lt;/h1&gt;
-    &lt;p&gt;DB Password (plaintext included in vars): {{ db_password }}&lt;/p&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
-                </textarea>
-
-                <p><strong>File: roles/webserver/files/secret.txt</strong></p>
-                <textarea id="markdown-input" rows="0" cols="0">
-this-is-a-secret-token: abcdef1234567890
-                </textarea>
-
-                <p><strong>Inventory (dummy): inventory.ini</strong></p>
-                <textarea id="markdown-input" rows="0" cols="0">
-[web]
-192.0.2.10 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa
-                </textarea>
-                <p>Catatan: IP di atas hanya contoh. Untuk demo lokal via Actions Anda bisa gunakan <code>local_action</code> atau docker container sebagai target, tapi kita fokus pada scanning & linting di CI.</p>
+                <p><strong>Hasil</strong></p>
+                <img src="assets/dso-8.png" alt="Image1" class="article-image">
+                <p>Tidak ada lagi temuan (0 failures, 0 warnings).</p>
+                <p>Playbook dinyatakan aman dan sesuai standar Ansible modern.</p>
             </article>
 
+            <!-- ======================================================== -->
+
             <article>
-                <h2 id="ansible-lint">4. Menjalankan ansible-lint via GitHub Actions</h2>
-                <p>Contoh .github/workflows/ansible-lint.yml untuk memindai repo setiap push:</p>
+                <h2>3. Integrasi IaC Security dengan GitHub Actions</h2>
+
+                <p><strong>Membuat Repository GitHub (Langkah Awal)</strong></p>
+                <p>Buat repository baru</p>
+                <ol>
+                    <li>Masuk ke GitHub: <a href="https://github.com">https://github.com</a></li>
+                    <li>Klik tombol New repository</li>
+                    <li>Isi:<ul>
+                        <li>Repository name: <strong>devsecops-week8</strong></li>
+                        <li>Description: <strong>Repository untuk tugas DevSecOps — Infrastructure as Code (IaC) Security</strong></li>
+                        <li>Visibility: <strong>Public</strong></li>
+                    </ul></li>
+                    <ul>Klik Create repository</ul>
+                </ol>
+                <p>Repo kamu sekarang siap digunakan.</p>
+                
+                <p><strong>Push kode aplikasi ke GitHub</strong></p>
+                <p>Jalankan di Git Bash / CMD:</p>
+                <textarea id="markdown-input2" rows="0" cols="0">
+cd C:\Users\laptop\OneDrive\Documents\GitHub\devsecops-week8
+git init
+git add .
+git commit -m "Initial commit - Integrasi ke GitHub"
+git branch -M main
+git remote add origin https://github.com/kimookoii/devsecops-week8.git
+git push -u origin main
+                </textarea>
+                <p>Setelah push, seluruh kode aplikasi akan muncul di repository GitHub.</p>
+                <img src="assets/dso-9.png" alt="Image1" class="article-image">
+                
+                <p><strong>Tambahkan Workflow GitHub Actions untuk IaC Security</strong></p>
+                <p>Untuk melakukan pemeriksaan keamanan otomatis, buat file workflow pada direktori:</p>
+                <p>Buat file iac-security.yml</p>
                 <textarea id="markdown-input" rows="0" cols="0">
-name: Ansible Lint & Dry-run
+.github/workflows/iac-security.yml
+                </textarea>
+                <p>Isi:</p>
+                <textarea id="markdown-input5" rows="0" cols="0">
+name: IaC Security Scan
 
 on:
   push:
-    branches: [ main ]
   pull_request:
 
 jobs:
-  lint:
+  terraform-security:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
+      - name: Install Trivy
+        uses: aquasecurity/trivy-action@master
         with:
-          python-version: '3.11'
+          scan-type: config
+          scan-ref: .
 
-      - name: Install ansible-core and ansible-lint
+      - name: Terraform Validate
+        run: terraform validate || true
+
+  ansible-security:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install Ansible & ansible-lint
         run: |
-          python -m pip install --upgrade pip
-          pip install "ansible-core>=2.14" ansible-lint
+          sudo apt update
+          sudo apt install -y ansible
+          pip install --upgrade pip
+          pip install ansible-lint
 
       - name: Run ansible-lint
-        run: |
-          ansible-lint -v
+        run: ansible-lint .
                 </textarea>
-
-                <p>Workflow di atas akan menjalankan ansible-lint terhadap role dan playbook di repo Anda. Jika Anda ingin lint only pada folder tertentu: <code>ansible-lint playbook.yml roles/</code>.</p>
-            </article>
-
-            <article>
-                <h2 id="sample-output">5. Contoh output ansible-lint (ilustratif)</h2>
-                <p>Berikut contoh output yang realistis ketika ansible-lint menemukan masalah pada playbook/role di atas. <em>Catatan:</em> ini ilustrasi — output aktual bergantung pada versi <code>ansible-lint</code> dan aturan yang aktif.</p>
-                <textarea id="markdown-input" rows="0" cols="0">
-$ ansible-lint playbook.yml
-
-[ANSIBLE0006] Use shell only when shell functionality is required
-playbook.yml:2 Task/Handler: name: Deploy webserver and content (with intentional misconfigurations)
-
-[ANSIBLE0012] Commands should not change things if nothing needs doing
-roles/webserver/tasks/main.yml:12
-Task: Deploy index page (bad permissions intentionally)
-
-[ANSIBLE0013] Files copied with incorrect permissions
-roles/webserver/tasks/main.yml:12
-Task: Deploy index page (bad permissions intentionally)
-  mode set to 0777 which is insecure
-
-[ANSIBLE0002] Trailing whitespace
-roles/webserver/templates/index.html.j2:3
-
-[ANSIBLE0022] Use of vars that may contain secrets in templates
-roles/webserver/templates/index.html.j2:4
-  db_password used directly in template (plaintext secret exposure)
-
-Summary: 5 problems (5 code rules violated)
-                </textarea>
-
-                <p>Penjelasan singkat dari temuan di atas:</p>
-                <ul>
-                    <li><strong>mode 0777</strong> — memberi semua hak pada file (read/write/execute) untuk owner/group/other: sangat tidak aman untuk konten web atau secret file.</li>
-                    <li><strong>plaintext password</strong> muncul di template/vars — seharusnya disimpan di vault/secrets management.</li>
-                    <li><strong>No handlers</strong> — perubahan konfigurasi tidak memicu restart service karena tidak ada <code>notify</code> + <code>handlers</code>.</li>
+                <p>Workflow ini terdiri dari dua job:</p>
+                <ul><strong>terraform-security</strong>
+                  <li>Memindai file Terraform menggunakan Trivy</li>
+                  <li>Melakukan terraform validate</li>
                 </ul>
-            </article>
-
-            <article>
-                <h2>6. Perbaikan untuk setiap temuan</h2>
-
-                <h3>a) Perbaiki permissions file (MISCONFIGURATION: 0777)</h3>
-                <p><strongSaran:</strong> ubah mode menjadi <code>0644</code> untuk file web, dan untuk file berisi secret gunakan <code>0600</code> dengan owner root atau akun aplikasi yang tepat.</p>
-                <textarea id="markdown-input" rows="0" cols="0">
-- name: Deploy index page (fixed permissions)
-  copy:
-    src: index.html.j2
-    dest: /var/www/html/index.html
-    mode: '0644'
-    owner: www-data
-    group: www-data
-  notify: restart nginx
-                </textarea>
-
-                <h3>b) Secret & plaintext password (MISCONFIGURATION: plaintext password)</h3>
-                <p><strong>Saran:</strong> jangan letakkan password langsung di playbook. Gunakan salah satu:</p>
-                <ul>
-                    <li><strong>Ansible Vault:</strong> enkripsi variabel sensitif (<code>ansible-vault encrypt_string</code>).</li>
-                    <li><strong>Secrets Manager / CI Secrets:</strong> simpan secret di GitHub Secrets dan inject ke runtime job, atau gunakan HashiCorp Vault.</li>
+                <ul><strong>ansible-security</strong>
+                  <li>Menginstal Ansible & ansible-lint</li>
+                  <li>Melakukan scan terhadap playbook Ansible</li>
                 </ul>
-                <p>Contoh menggunakan Ansible Vault (di CI Anda bisa decrypt atau gunakan secrets):</p>
-                <textarea id="markdown-input" rows="0" cols="0"># contoh encrypted var (hasil ansible-vault encrypt_string)
-db_password: !vault |
-          $ANSIBLE_VAULT;1.1;AES256
-          61626364... (blok terenkripsi)
-                </textarea>
-                <h3>c) No handlers (MISCONFIGURATION: no handlers)</h3>
-                <p>Tambahkan handler untuk restart nginx dan panggil <code>notify</code> pada task yang mengubah konfigurasi.</p>
-                <textarea id="markdown-input" rows="0" cols="0">
-# tasks/main.yml (perubahan)
-- name: Deploy index page (fixed permissions)
-  copy:
-    src: index.html.j2
-    dest: /var/www/html/index.html
-    mode: '0644'
-    owner: www-data
-    group: www-data
-  notify: restart nginx
+                <p>Semua pemeriksaan dilakukan otomatis setiap kali ada push atau pull request.</p>
 
-# roles/webserver/handlers/main.yml
-- name: restart nginx
-  service:
-    name: nginx
-    state: restarted
-                </textarea>
-                <h3>d) Tambahan: hindari meletakkan secret di template</h3>
-                <p>Hapus atau mask bagian yang menampilkan <code>db_password</code> pada template; bila perlu, tampilkan hanya masked value atau jangan tampilkan sama sekali.</p>
+                <p><strong>Menjalankan Pipeline</strong></p>
+                <p>Setelah workflow dibuat dan dipush, pipeline otomatis berjalan.</p>
+                <p>Masuk ke:<br>
+                <strong>GitHub → Actions</strong></p>
+                <img src="assets/dso-10.png" alt="Image1" class="article-image">
+                <p>Di bagian output akan terlihat:</p>
+                <img src="assets/dso-11.png" alt="Image1" class="article-image">
+                <p>Jika konfigurasi sudah diperbaiki dan tidak ada misconfiguration, status pipeline akan berwarna hijau (success).</p>
 
-                <textarea id="markdown-input" rows="0" cols="0">
-&lt;!-- roles/webserver/templates/index.html.j2 (fixed) --&gt;
-&lt;html&gt;
-  &lt;head&gt;&lt;title&gt;Demo&lt;/title&gt;&lt;/head&gt;
-  &lt;body&gt;
-    &lt;h1&gt;Hello from Ansible demo&lt;/h1&gt;
-    &lt;p&gt;Aplikasi berjalan. (Password disimpan aman)</p&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
-                </textarea>
-                <p>Setelah perbaikan: jalankan kembali <code>ansible-lint</code> (di GitHub Actions) dan pastikan semua rule teratasi.</p>
             </article>
 
-            <article>
-                <h2 id="re-run">7. Contoh re-run <code>ansible-lint</code> (setelah perbaikan) — contoh output</h2>
-                <textarea id="markdown-input" rows="0" cols="0">
-$ ansible-lint playbook.yml
-
-All files linted successfully: no problems detected
-                </textarea>
-                <p>Jika Anda masih melihat peringatan, <code>ansible-lint</code> akan mencetak rule id dan lokasi file. Gunakan itu untuk memperbaiki.</p>
-            </article>
+            <!-- ======================================================== -->
 
             <article>
-                <h2 id="report">8. Laporan / Hasil</h2>
-                <p>Berikut contoh ringkasan laporan yang bisa Anda sertakan sebagai bagian dari PR atau file <code>REPORT.md</code> di repo:</p>
-                <textarea id="markdown-input" rows="0" cols="0">
-Laporan Scan Ansible - ansible-misconfig-demo
-=========================================
-Tanggal: 2025-12-03
-Lingkungan: GitHub Actions (ubuntu-latest)
-Tools: ansible-core, ansible-lint
-
-Temuan awal:
-- 1x plaintext password ditemukan di vars (db_password)
-- 1x insecure file permission (mode: 0777) pada index.html deploy
-- 1x no handlers (service restart tidak di-notify)
-- 1x template menampilkan variabel sensitif secara langsung
-
-Langkah perbaikan:
-1) Ganti plaintext password ke Ansible Vault atau CI secrets.
-2) Ubah permissions file dari 0777 ke 0644; secret files -> 0600.
-3) Tambahkan handler 'restart nginx' dan notify dari task yang mengganti file.
-4) Hapus tampilan password di template.
-
-Hasil setelah perbaikan:
-- ansible-lint: clean (no problems)
-- Playbook didesain agar idempotent dan aman secara permission & secret handling.
-
-Rekomendasi:
-- Integrasikan ansible-lint di PR (CI).
-- Gunakan Ansible Vault atau secret manager.
-- Terapkan scanning tambahan (e.g., trivy untuk image, ossec untuk host).
-                </textarea>
-            </article>
-
-            <article>
-                <h2 id="how-to-run-local">9. Cara menjalankan (opsi untuk Anda di Windows tanpa WSL/VM)</h2>
-                <ol>
-                    <li><strong>Gunakan GitHub Actions</strong> — push repo ke GitHub dan lihat hasil lint di Actions tab. (Direkomendasikan untuk pengguna Windows tanpa WSL).</li>
-                    <li><strong>Gunakan Docker</strong> — buat container Ubuntu yang menjalankan Ansible & target lokal (docker-in-docker atau container sebagai target).</li>
-                    <li><strong>Jika bersedia install WSL/VM</strong> — install WSL2 + Ubuntu untuk pengalaman Ansible native (pilihan ini tidak diinginkan sesuai pernyataan Anda).</li>
-                </ol>
-                <p>Contoh menjalankan check lokal menggunakan Docker:</p>
-                <textarea id="markdown-input" rows="0" cols="0">
-# jalankan container ubuntu
-docker run --rm -it -v "%cd%":/work -w /work ubuntu:24.04 /bin/bash
-
-# di dalam container:
-apt update && apt install -y python3 python3-pip git ssh
-pip install "ansible-core>=2.14" ansible-lint
-ansible-lint playbook.yml
-                </textarea>
-            </article>
-
-            <article>
-                <h2 id="checklist">10. Checklist deliverable (untuk tugas Anda)</h2>
-                <table>
-                    <thead>
-                        <tr><th>Item</th><th>Status</th><th>Keterangan</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>Install paket</td><td>Contoh di playbook</td><td>nginx via apt (role tasks)</td></tr>
-                        <tr><td>Deploy konfigurasi</td><td>Contoh di role</td><td>index.html, secret.txt</td></tr>
-                        <tr><td>Tambahkan 3 misconfiguration</td><td>✔</td><td>Plaintext password, 0777 file perms, no handlers</td></tr>
-                        <tr><td>Scan dengan ansible-lint</td><td>Workflow disediakan</td><td>GitHub Actions workflow file</td></tr>
-                        <tr><td>Perbaiki semua findings</td><td>Contoh perbaikan diberikan</td><td>handlers, vault, permissions</td></tr>
-                        <tr><td>Buat laporan</td><td>Contoh REPORT.md di artikel</td><td>Termasuk ringkasan & rekomendasi</td></tr>
-                        <tr><td>Dokumentasi / Artikel HTML</td><td>✔</td><td>Dokumen ini (HTML) siap dipakai</td></tr>
-                    </tbody>
-                </table>
-            </article>
-
-            <article>
-                <h2 id="conclusion">11. Kesimpulan</h2>
-                <p>Anda sekarang memiliki contoh repo, playbook dengan intentional misconfigurations, workflow CI untuk melakukan <code>ansible-lint</code>, contoh output masalah, dan langkah perbaikan. Karena Anda bekerja sepenuhnya di Windows tanpa WSL/VM, cara termudah dan teraman untuk menjalankan linting & dry-run Ansible adalah melalui <strong>GitHub Actions</strong> (atau Docker jika Anda nyaman dengan virtualisasi ringan). Integrasikan linting ini di pipeline CI sehingga setiap PR otomatis ter-scan dan tidak ada secret/plainttext atau permission risk yang lolos ke master branch.</p>
-                <p>Jika Anda mau, saya bisa:</p>
-                <ul>
-                    <li>Membuat file repo lengkap (playbook, role, workflow, REPORT.md) sehingga tinggal Anda copy-paste ke GitHub — saya akan siapkan konten file-file tersebut dalam satu bundle HTML/markdown.</li>
-                    <li>Membuat template <code>REPORT.md</code> yang bisa Anda unggah ke repo.</li>
-                </ul>
+                <h2 id="conclusion">4. Kesimpulan</h2>
+                <p>Praktikum Minggu 8 DevSecOps ini berhasil menunjukkan bagaimana penerapan keamanan pada Infrastructure as Code (IaC) dapat dilakukan secara sistematis menggunakan Terraform dan Ansible. Melalui pembuatan konfigurasi yang disengaja insecure, proses scanning menggunakan Trivy dan ansible-lint mampu mengidentifikasi berbagai misconfiguration seperti permission file yang terlalu permisif, modul tanpa FQCN, boolean YAML yang tidak standar, dan konfigurasi layanan cloud yang berpotensi terbuka. Setelah dilakukan perbaikan, proses pemindaian ulang menunjukkan bahwa seluruh temuan telah terselesaikan. Integrasi pipeline otomatis melalui GitHub Actions memastikan bahwa setiap perubahan pada repository akan selalu melewati proses validasi keamanan, sehingga mencegah misconfiguration masuk ke tahap deployment. Dengan demikian, seluruh rangkaian kegiatan ini memberikan pemahaman praktis bahwa keamanan IaC bukan hanya sebatas menulis konfigurasi, tetapi juga memastikan bahwa proses pembangunan, validasi, dan otomatisasi berjalan secara aman, konsisten, dan sesuai standar DevSecOps modern.</p>
             </article>
 
         </section>
