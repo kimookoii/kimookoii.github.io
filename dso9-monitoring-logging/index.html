@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Praktik Minggu 9 DevSecOps</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <button class="back-button" onclick="window.history.back();">&#8592; Back</button>
+            <h1>88032023006  |  ZICO</h1>
+            <p>...</p>
+        </div>
+    </header>
+
+    <title1>
+        <div class="title1-container">
+            <h1>Praktik Minggu 9 DevSecOps</h1>
+            <h2>Monitoring & Logging</h2>
+        </div>
+    </title1>
+
+    <main>
+        <section class="content">
+
+          <!-- ======================================================== -->
+          <article>
+            <h2>Monitoring dan Logging dalam DevSecOps</h2>
+            <p>Dalam pendekatan DevSecOps, monitoring dan logging berperan sebagai mekanisme observasi berkelanjutan untuk memastikan keamanan, ketersediaan, dan performa sistem. Monitoring tidak hanya berfokus pada uptime layanan, tetapi juga pada deteksi dini terhadap anomali, kegagalan aplikasi, serta potensi serangan keamanan.</p>
+            <p>Artikel ini membahas implementasi monitoring dan logging menggunakan <b>ELK Stack (Elasticsearch dan Kibana)</b> serta <b>Prometheus dan Grafana</b> pada lingkungan Windows 11 dengan PowerShell. </p>
+          </article>
+          
+          <article>
+            <h2>Arsitektur Monitoring dan Logging</h2>
+            <p>Arsitektur sistem monitoring yang digunakan terdiri dari beberapa komponen utama:</p>
+            <ul>
+              <li>Aplikasi sederhana berbasis Flask sebagai sumber log</li>
+              <li>Elasticsearch sebagai media penyimpanan dan indexing log</li>
+              <li>Kibana sebagai alat visualisasi dan analisis log</li>
+              <li>Prometheus sebagai pengumpul metrics sistem</li>
+              <li>Grafana sebagai dashboard pemantauan performa</li>
+            </ul>
+            <p>Aplikasi menghasilkan log aktivitas yang dikirim ke Elasticsearch dan dianalisis melalui Kibana, sementara Prometheus memantau metrics sistem seperti CPU dan RAM melalui Node Exporter yang kemudian divisualisasikan pada Grafana.</p>
+          </article>
+          
+          <article>
+            <h2>Implementasi Lingkungan Sistem</h2>
+            <p>Seluruh layanan dijalankan menggunakan Docker pada sistem operasi Windows 11. Manajemen container dilakukan melalui PowerShell dengan menggunakan Docker Compose.</p>
+            <p>ELK Stack digunakan untuk centralized logging, sedangkan Prometheus dan Grafana digunakan untuk metrics monitoring. Aplikasi Flask dijalankan untuk menghasilkan log aktivitas sistem yang relevan dengan kebutuhan analisis keamanan.</p>
+          </article>
+          
+          <article>
+            <h2>Simulasi Skenario Keamanan</h2>
+            <p>Untuk menguji efektivitas monitoring dan logging, dilakukan beberapa simulasi sebagai berikut:</p>
+            <ul>
+              <li><b>Error aplikasi</b> untuk menghasilkan log error</li>
+              <li><b>Login gagal berulang</b> sebagai simulasi serangan brute force</li>
+              <li><b>Beban sistem tinggi</b> untuk memicu peningkatan penggunaan CPU dan RAM</li>
+            </ul>
+            <p>Simulasi ini bertujuan untuk mengamati bagaimana sistem monitoring mendeteksi dan menyajikan indikasi kejadian abnormal.</p>
+          </article>
+
+          <article>
+            <h2>Hasil Observasi Monitoring</h2>
+            <p>Berdasarkan hasil pengamatan:</p>
+            <ul>
+              <li>Kibana menampilkan peningkatan log <i>Failed login attempt</i> dalam waktu singkat</li>
+              <li>Terjadi pola log berulang yang mengindikasikan aktivitas mencurigakan</li>
+              <li>Grafana menunjukkan lonjakan CPU usage saat simulasi beban tinggi dilakukan</li>
+              <li>Penggunaan memory meningkat ketika error aplikasi terjadi secara berulang</li>
+            </ul>
+            <p>Dashboard pada Kibana dan Grafana mempermudah analisis berbasis waktu (time-series) dan membantu memahami hubungan antara log aplikasi dan metrics sistem.</p>
+          </article>
+
+          <article>
+            <h2>Analisis Keamanan Sistem</h2>
+            <p>Dari hasil observasi, beberapa indikasi ancaman dapat diidentifikasi:</p>
+            <ul>
+              <li>Login gagal berulang merupakan indikasi awal serangan brute force</li>
+              <li>Lonjakan CPU usage berpotensi mengarah pada serangan Denial of Service (DoS)</li>
+              <li>Error aplikasi berulang dapat menjadi celah eksploitasi jika tidak ditangani</li>
+            </ul>
+            <p>Dampak terhadap sistem meliputi penurunan performa, peningkatan response time, dan risiko downtime apabila tidak dilakukan mitigasi seperti rate limiting, alert otomatis, atau hardening aplikasi.</p>
+          </article>
+
+          <article>
+          <h2>Dokumentasi dan Bukti Implementasi</h2>
+          <p>Sebagai bukti implementasi, disertakan:</p>
+          <ul>
+            <li>Screenshot dashboard log pada Kibana</li>
+            <li>Screenshot dashboard metrics CPU dan RAM pada Grafana</li>
+            <li>Repository GitHub berisi konfigurasi Docker dan dokumentasi</li>
+          </ul>
+          <p>Dokumentasi ini menunjukkan bahwa sistem monitoring dan logging telah berjalan sesuai dengan skenario tugas yang diberikan.</p>
+          </article>
+
+          <article>
+            <h2>Kesimpulan</h2>
+            <p>Implementasi ELK Stack serta Prometheus dan Grafana membuktikan bahwa monitoring dan logging merupakan komponen penting dalam DevSecOps. Dengan visibilitas yang baik terhadap log dan metrics sistem, potensi ancaman keamanan dan gangguan performa dapat terdeteksi lebih awal.</p>
+            <p>Pendekatan ini mendukung prinsip continuous security monitoring dan membantu tim dalam melakukan respons insiden secara cepat dan terukur.</p>
+          </article>
+
+        </section>
+      </main>
+
+    <footer>
+      <p>&copy; 2025 | Monitoring & Logging DevSecOps - Zico</p>
+    </footer>
+</body>
+</html>

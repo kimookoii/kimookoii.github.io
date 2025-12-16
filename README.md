@@ -12,6 +12,7 @@
 6. **[Software Composition Analysis](https://kimookoii.github.io/dso6-software-composition-analysis/)**
 7. **[Docker Security dengan Trivy](https://kimookoii.github.io/dso7-docker-security-dengan-trivy/)**
 8. **[Infrastructure as Code (IaC) Security](https://kimookoii.github.io/dso8-infrastructure-as-code-security/)**
+9. **[Monitoring & Logging](https://kimookoii.github.io/dso9-monitoring-logging/)**
 
 ---
 
