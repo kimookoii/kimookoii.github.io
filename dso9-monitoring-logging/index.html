@@ -26,14 +26,17 @@
         <section class="content">
 
           <!-- ======================================================== -->
+
           <article>
-            <h2>Monitoring dan Logging dalam DevSecOps</h2>
+            <h2>1. Monitoring dan Logging dalam DevSecOps</h2>
             <p>Dalam pendekatan DevSecOps, monitoring dan logging berperan sebagai mekanisme observasi berkelanjutan untuk memastikan keamanan, ketersediaan, dan performa sistem. Monitoring tidak hanya berfokus pada uptime layanan, tetapi juga pada deteksi dini terhadap anomali, kegagalan aplikasi, serta potensi serangan keamanan.</p>
             <p>Artikel ini membahas implementasi monitoring dan logging menggunakan <b>ELK Stack (Elasticsearch dan Kibana)</b> serta <b>Prometheus dan Grafana</b> pada lingkungan Windows 11 dengan PowerShell. </p>
           </article>
+
+            <!-- ======================================================== -->
           
           <article>
-            <h2>Arsitektur Monitoring dan Logging</h2>
+            <h2>2. Arsitektur Monitoring dan Logging</h2>
             <p>Arsitektur sistem monitoring yang digunakan terdiri dari beberapa komponen utama:</p>
             <ul>
               <li>Aplikasi sederhana berbasis Flask sebagai sumber log</li>
@@ -44,26 +47,383 @@
             </ul>
             <p>Aplikasi menghasilkan log aktivitas yang dikirim ke Elasticsearch dan dianalisis melalui Kibana, sementara Prometheus memantau metrics sistem seperti CPU dan RAM melalui Node Exporter yang kemudian divisualisasikan pada Grafana.</p>
           </article>
+
+            <!-- ======================================================== -->
           
           <article>
-            <h2>Implementasi Lingkungan Sistem</h2>
+            <h2>3. Implementasi Lingkungan Sistem</h2>
             <p>Seluruh layanan dijalankan menggunakan Docker pada sistem operasi Windows 11. Manajemen container dilakukan melalui PowerShell dengan menggunakan Docker Compose.</p>
             <p>ELK Stack digunakan untuk centralized logging, sedangkan Prometheus dan Grafana digunakan untuk metrics monitoring. Aplikasi Flask dijalankan untuk menghasilkan log aktivitas sistem yang relevan dengan kebutuhan analisis keamanan.</p>
           </article>
           
-          <article>
-            <h2>Simulasi Skenario Keamanan</h2>
-            <p>Untuk menguji efektivitas monitoring dan logging, dilakukan beberapa simulasi sebagai berikut:</p>
-            <ul>
-              <li><b>Error aplikasi</b> untuk menghasilkan log error</li>
-              <li><b>Login gagal berulang</b> sebagai simulasi serangan brute force</li>
-              <li><b>Beban sistem tinggi</b> untuk memicu peningkatan penggunaan CPU dan RAM</li>
-            </ul>
-            <p>Simulasi ini bertujuan untuk mengamati bagaimana sistem monitoring mendeteksi dan menyajikan indikasi kejadian abnormal.</p>
-          </article>
+            <!-- ======================================================== -->
+
+            <article>
+              <h2>4.1 Flow Praktik 1 : Tahap Persiapan</h2>
+              <p>Pada tahap awal, dilakukan persiapan lingkungan kerja untuk implementasi centralized logging menggunakan ELK Stack (Elasticsearch, Logstash/Filebeat, dan Kibana) yang dijalankan menggunakan Docker.</p>
+              <p>Langkah pertama adalah membuat direktori baru sebagai workspace monitoring:</p>
+              <textarea id="markdown-input" rows="0" cols="0">
+mkdir devsecops-monitoring
+              </textarea>
+              <textarea id="markdown-input" rows="0" cols="0">
+cd devsecops-monitoring
+              </textarea>
+              <p>Direktori ini digunakan untuk menyimpan seluruh konfigurasi Docker, aplikasi simulasi, dan log aplikasi.</p>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+              <h2>4.2 Flow Praktik 1 : Buat File Docker Compose ELK</h2>
+              <p>Membuat File <b>Dockerfile</b></p>
+              <p>Dockerfile digunakan untuk membangun image aplikasi Flask sederhana yang akan menghasilkan log.</p>
+              <textarea id="markdown-input2" rows="0" cols="0">
+FROM python:3.10-slim
+WORKDIR /app
+COPY app/app.py .
+RUN pip install flask
+CMD ["python", "app.py"]
+              </textarea>
+              <p>Membuat File <b>docker-compose.yml</b></p>
+              <p>File docker-compose.yml digunakan untuk menjalankan Elasticsearch, Kibana, dan aplikasi Flask secara terintegrasi.</p>
+              <textarea id="markdown-input3" rows="0" cols="0">
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.0
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
+  flask-app:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./logs:/app
+              </textarea>
+              <p>File docker-compose.yml digunakan untuk menjalankan Elasticsearch, Kibana, dan aplikasi Flask secara terintegrasi.</p>
+              <textarea id="markdown-input" rows="0" cols="0">
+docker compose up -d
+              </textarea>
+              <img src="assets/dso-1.png" alt="Image1" class="article-image">
+              <p>Setelah service berjalan, dilakukan pengujian akses:</p>
+              <p>Elasticsearch: <a href="http://localhost:9200">http://localhost:9200</a></p>
+              <img src="assets/dso-2.png" alt="Image1" class="article-image">
+              <p>Kibana: <a href="http://localhost:5601">http://localhost:5601</a></p>
+              <img src="assets/dso-3.png" alt="Image1" class="article-image">
+              <p>Hal ini memastikan bahwa ELK Stack telah berjalan dengan baik.</p>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+              <h2>4.3 Flow Praktik 1 : Buat File Simulasi Log Aplikasi</h2>
+              <p>Aplikasi Flask dibuat untuk menghasilkan berbagai jenis log yang akan dianalisis pada Kibana.</p>
+              <p>Membuat File <b>app.py</b></p>
+              <textarea id="markdown-input4" rows="0" cols="0">
+import logging
+import os
+from flask import Flask
+
+app = Flask(__name__)
+
+# Detect environment
+LOG_PATH = "/app/app.log" if os.path.exists("/app") else "logs/app.log"
+
+os.makedirs(os.path.dirname(LOG_PATH), exist_ok=True)
+
+logging.basicConfig(
+    filename=LOG_PATH,
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s"
+)
+
+@app.route("/")
+def home():
+    app.logger.info("User accessed home page")
+    return "Hello DevSecOps"
+
+@app.route("/login")
+def login():
+    app.logger.warning("Failed login attempt")
+    return "Login failed"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+              </textarea>
+              <p>Endpoint /login digunakan untuk mensimulasikan login gagal berulang (brute force).</p>
+              <img src="assets/dso-4.png" alt="Image1" class="article-image">
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+              <h2>4.4 Flow Praktik 1 : Analisis di Kibana</h2>
+              <p>Log yang masuk ke Elasticsearch dianalisis melalui Kibana Discover dengan melakukan pencarian log bertipe Failed login attempt. Selain itu, visualisasi log dibuat dalam bentuk dashboard untuk memudahkan analisis pola serangan.</p>
+              <p>Cari log Failed login attempt</p>
+              <img src="assets/dso-6.png" alt="Image1" class="article-image">
+              <p>Buat dashboard</p>
+              <img src="assets/dso-7.png" alt="Image1" class="article-image">
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+              <h2>5.1 Flow Praktik 2 : Tahap Persiapan</h2>
+              <p>File prometheus.yml dibuat untuk mengatur proses pengambilan metrik sistem.</p>
+              <p>Membuat file <b>prometheus.yml</b></p>
+              <textarea id="markdown-input5" rows="0" cols="0">
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "node-exporter"
+    static_configs:
+      - targets: ["node-exporter:9100"]
+              </textarea>
+              <p>Edit dan tambahkan pada <b>docker-compose.yml</b></p>
+              <p>Konfigurasi ini kemudian ditambahkan ke dalam docker-compose.yml untuk menjalankan Prometheus, Node Exporter, dan Grafana.</p>
+              <textarea id="markdown-input6" rows="0" cols="0">
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+
+  node-exporter:
+    image: prom/node-exporter
+    ports:
+      - "9100:9100"
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+              </textarea>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+              <h2>5.2 Flow Praktik 2 : Jalankan Semua Service</h2>
+              <p>Seluruh container dijalankan ulang agar konfigurasi terbaru aktif</p>
+              <textarea id="markdown-input" rows="0" cols="0">
+docker compose down
+              </textarea>
+              <textarea id="markdown-input" rows="0" cols="0">
+docker compose up -d
+              </textarea>
+              <img src="assets/dso-8.png" alt="Image1" class="article-image">
+              <p>Status container diverifikasi menggunakan</p>
+              <textarea id="markdown-input" rows="0" cols="0">
+docker ps
+              </textarea>
+              <img src="assets/dso-9.png" alt="Image1" class="article-image">
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+              <h2>5.3 Flow Praktik 2 : Cek Prometheus</h2>
+              <p>Prometheus diakses melalui browser: <a href="http://localhost:9090">http://localhost:9090</a></p>
+              <p>Menu Status → Targets</p>
+              <img src="assets/dso-10.png" alt="Image1" class="article-image">
+              <P>Menu Status → Targets digunakan untuk memastikan bahwa Node Exporter berada dalam status UP.</P>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+              <h2>5.4 Flow Praktik 2 : Cek Grafana</h2>
+              <p>Grafana diakses melalui: <a href="http://localhost:3000">http://localhost:3000</a></p>
+              <p>Login menggunakan akun default</p>
+              <textarea id="markdown-input7" rows="0" cols="0">
+user: admin
+pass: admin
+              </textarea>
+              <img src="assets/dso-11.png" alt="Image1" class="article-image">
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+              <h2>5.5 Flow Praktik 2 : Tambahkan Data Source Prometheus</h2>
+              <p>Buka browser: <a href="http://localhost:3000">http://localhost:3000</a></p>
+              <P>Pada Grafana, dilakukan penambahan data source Prometheus melalui menu:</P>
+              <ol>
+                <li>Connections → Data Sources</li>
+                <li>Add new data source</li>
+                <li>Pilih Prometheus</li>
+                <li>URL:
+                  <textarea id="markdown-input" rows="0" cols="0">
+http://prometheus:9090
+                  </textarea>
+                </li>
+                <li>Kemudian dilakukan Save & Test untuk memastikan koneksi berhasil.</li>
+              </ol>
+              <img src="assets/dso-12.png" alt="Image1" class="article-image">
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+              <h2>5.6 Flow Praktik 2 : Import Dashboard CPU & RAM</h2>
+              <ol>
+                <li>Menu Dashboards → Import</li>
+                <li>Dashboard ID: (Node Exporter Full)
+                  <textarea id="markdown-input" rows="0" cols="0">
+1860
+                  </textarea>
+                </li>
+                <li>Klik tombol Load (biru di kanan)</li>
+                <li>Import</li>
+              </ol>
+              <img src="assets/dso-13.png" alt="Image1" class="article-image">
+              <p>Dashboard ini digunakan untuk memonitor penggunaan CPU dan RAM secara real-time.</p>
+            </article>
+
+            <!-- ======================================================== -->
 
           <article>
-            <h2>Hasil Observasi Monitoring</h2>
+            <h2>6.1 Simulasi Skenario Keamanan: Error aplikasi</h2>
+            <p>Simulasi error dilakukan dengan menambahkan endpoint /error pada aplikasi Flask yang memicu exception.</p>
+            <p><b>1. Tambahkan endpoint error di app.py</b></p>
+            <p>Edit <b>app.py</b>, tambahkan route ini:</p>
+            <textarea id="markdown-input2" rows="0" cols="0">
+@app.route("/error")
+def error():
+    app.logger.error("Application error occurred")
+    return 1 / 0
+            </textarea>
+            <p>Sehingga <b>app.py</b> lengkap seperti ini:</p>
+            <textarea id="markdown-input8" rows="0" cols="0">
+import logging
+import os
+from flask import Flask
+
+app = Flask(__name__)
+
+LOG_DIR = "/app"
+LOG_FILE = "/app/app.log"
+
+# pastikan folder log ada
+os.makedirs(LOG_DIR, exist_ok=True)
+
+logging.basicConfig(
+    filename=LOG_FILE,
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s"
+)
+
+@app.route("/")
+def home():
+    app.logger.info("User accessed home page")
+    return "Hello DevSecOps"
+
+@app.route("/login")
+def login():
+    app.logger.warning("Failed login attempt")
+    return "Login failed"
+
+@app.route("/error")
+def error():
+    app.logger.error("Application error occurred")
+    return 1 / 0
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+            </textarea>
+            <p><b>2. Jalankan ulang Flask (Docker)</b></p>
+            <textarea id="markdown-input" rows="0" cols="0">
+docker compose up -d --build
+            </textarea>
+            <img src="assets/dso-14.png" alt="Image1" class="article-image">
+            <p><b>3. Trigger</b></p>
+            <textarea id="markdown-input9" rows="0" cols="0">
+Invoke-WebRequest http://localhost:5000/login
+Invoke-WebRequest http://localhost:5000/error
+            </textarea>
+            <img src="assets/dso-15.png" alt="Image1" class="article-image">
+            <p><b>4. Hasil</b></p>
+            <p>Simulasi Login Gagal (Brute Force)</p>
+            <textarea id="markdown-input9" rows="0" cols="0">
+Invoke-WebRequest http://localhost:5000/login
+StatusCode: 200
+Content: Login failed
+            </textarea>
+            <p>Simulasi Error Aplikasi</p>
+            <textarea id="markdown-input7" rows="0" cols="0">
+Invoke-WebRequest http://localhost:5000/error
+Internal Server Error
+            </textarea>
+            <p>Kibana</p>
+            <img src="assets/dso-16.png" alt="Image1" class="article-image">
+          </article>
+
+            <!-- ======================================================== -->
+
+          <article>
+            <h2>6.2. Simulasi Skenario Keamanan: Login gagal berulang</h2>
+            <p>Untuk menguji efektivitas monitoring dan logging, dilakukan beberapa simulasi sebagai berikut:</p>
+            <p><b>1. Jalankan ini di PowerShell:</b></p>
+            <textarea id="markdown-input9" rows="0" cols="0">
+for ($i=1; $i -le 30; $i++) {
+  Invoke-WebRequest http://localhost:5000/login -UseBasicParsing
+}
+            </textarea>
+            <p>Artinya:<br>30 request login gagal<br>Dalam waktu singkat<br>Sangat mirip brute force attack</p>
+            <p><b>2. Hasil:</b></p>
+            <p>Simulasi Login gagal berulang</p>
+            <textarea id="markdown-input" rows="0" cols="0">
+Get-Content .\app\app.log -Tail 20
+            </textarea>
+            <img src="assets/dso-17.png" alt="Image1" class="article-image">
+            <p>Kibana</p>
+            <img src="assets/dso-18.png" alt="Image1" class="article-image">
+          </article>
+
+            <!-- ======================================================== -->
+
+          <article>
+            <h2>6.3. Simulasi Skenario Keamanan: Beban sistem tinggi (CPU)</h2>
+            <p><b>1. Jalankan di PowerShell:</b></p>
+            <textarea id="markdown-input9" rows="0" cols="0">
+1..8 | ForEach-Object {
+  Start-Job { while ($true) { } }
+}
+            </textarea>
+            <p>Artinya:<br>Membuat 8 job<br>Mengunci 8 core CPU</p>
+            <p><b>2. Hasil:</b></p>
+            <p>Grafana: Sebelum</p>
+            <img src="assets/dso-19.png" alt="Image1" class="article-image">
+            <p>Grafana: Sesudah</p>
+            <img src="assets/dso-20.png" alt="Image1" class="article-image">
+            <p>Hentikan semua Job</p>
+            <textarea id="markdown-input" rows="0" cols="0">
+Get-Job | Remove-Job -Force
+            </textarea>
+          </article>
+
+            <!-- ======================================================== -->
+
+          <article>
+            <h2>7. Hasil Observasi Monitoring</h2>
             <p>Berdasarkan hasil pengamatan:</p>
             <ul>
               <li>Kibana menampilkan peningkatan log <i>Failed login attempt</i> dalam waktu singkat</li>
@@ -74,39 +434,82 @@
             <p>Dashboard pada Kibana dan Grafana mempermudah analisis berbasis waktu (time-series) dan membantu memahami hubungan antara log aplikasi dan metrics sistem.</p>
           </article>
 
-          <article>
-            <h2>Analisis Keamanan Sistem</h2>
-            <p>Dari hasil observasi, beberapa indikasi ancaman dapat diidentifikasi:</p>
-            <ul>
-              <li>Login gagal berulang merupakan indikasi awal serangan brute force</li>
-              <li>Lonjakan CPU usage berpotensi mengarah pada serangan Denial of Service (DoS)</li>
-              <li>Error aplikasi berulang dapat menjadi celah eksploitasi jika tidak ditangani</li>
-            </ul>
-            <p>Dampak terhadap sistem meliputi penurunan performa, peningkatan response time, dan risiko downtime apabila tidak dilakukan mitigasi seperti rate limiting, alert otomatis, atau hardening aplikasi.</p>
-          </article>
+            <!-- ======================================================== -->
 
           <article>
-          <h2>Dokumentasi dan Bukti Implementasi</h2>
+            <h2>8. Analisis Keamanan Sistem</h2>
+            <p>Pada praktik monitoring DevSecOps ini, dilakukan tiga skenario simulasi keamanan untuk menguji kemampuan sistem monitoring dalam mendeteksi potensi ancaman, yaitu error aplikasi, login gagal berulang, dan beban sistem tinggi. Seluruh aktivitas dipantau menggunakan ELK Stack untuk log dan Prometheus–Grafana untuk metrik sistem.</p>
+            <p><b>1. Simulasi Error Aplikasi</b><br>
+              Simulasi error dilakukan dengan memicu exception pada aplikasi Flask melalui endpoint /error. Aktivitas ini menghasilkan log dengan level ERROR yang tercatat di sistem logging dan dikirim ke Elasticsearch.<br>
+              </p>
+            <ul><b>Indikasi ancaman:</b>
+              <li>Munculnya log error secara tiba-tiba dan berulang</li>
+              <li>Indikasi bug aplikasi atau input tidak tervalidasi</li>
+              <li>Potensi eksploitasi celah aplikasi (error-based attack></li>
+            </ul>
+            <ul><b>Dampak ke sistem:</b>
+              <li>Aplikasi dapat crash atau berhenti merespons</li>
+              <li>Penurunan keandalan layanan</li>
+              <li>Informasi error berpotensi membocorkan detail sistem jika tidak ditangani dengan baik</li>
+            </ul>
+            <p><b>2. Simulasi Login Gagal Berulang (Brute Force)</b></p>
+            <p>Simulasi brute force dilakukan dengan mengakses endpoint /login secara berulang dalam waktu singkat. Setiap percobaan login gagal menghasilkan log dengan level WARNING yang menunjukkan pola kegagalan autentikasi.</p>
+            <ul><b>Indikasi ancaman:</b>
+              <li>Banyak event login gagal dalam waktu singkat</li>
+              <li>Pola akses tidak wajar dari sisi aplikasi</li>
+              <li>Karakteristik serangan brute force terhadap kredensial</li>
+            </ul>
+            <ul><b>Dampak ke sistem:</b>
+              <li>Risiko pengambilalihan akun (account takeover)</li>
+              <li>Peningkatan beban aplikasi akibat request berulang</li>
+              <li>Penurunan keamanan autentikasi jika tidak ada mekanisme pembatasan</li>
+            </ul>
+            <p><b>3. Simulasi Beban Sistem Tinggi (High CPU & RAM)</b></p>
+            <p>Beban sistem disimulasikan dengan menghasilkan konsumsi CPU dan memori yang tinggi secara bersamaan. Hasilnya terlihat jelas pada dashboard Grafana melalui lonjakan CPU usage dan penggunaan memori.</p>
+            <ul><b>Indikasi ancaman:</b>
+              <li>Lonjakan penggunaan resource secara tiba-tiba</li>
+              <li>Pola yang menyerupai serangan denial of service (DoS)</li>
+              <li>Ketidakwajaran aktivitas sistem dibanding kondisi normal</li>
+            </ul>
+            <ul><b>Dampak ke sistem:</b>
+              <li>Aplikasi menjadi lambat atau tidak responsif</li>
+              <li>Potensi downtime layanan</li>
+              <li>Resource starvation yang memengaruhi service lain</li>
+            </ul>
+          </article>
+
+            <!-- ======================================================== -->
+
+          <article>
+          <h2>9. Dokumentasi dan Bukti Implementasi</h2>
           <p>Sebagai bukti implementasi, disertakan:</p>
-          <ul>
+          <ol>
             <li>Screenshot dashboard log pada Kibana</li>
+            <img src="assets/dso-21.png" alt="Image1" class="article-image">
             <li>Screenshot dashboard metrics CPU dan RAM pada Grafana</li>
+            <img src="assets/dso-22.png" alt="Image1" class="article-image">
             <li>Repository GitHub berisi konfigurasi Docker dan dokumentasi</li>
-          </ul>
+            <img src="assets/dso-23.png" alt="Image1" class="article-image">
+          </0l>
           <p>Dokumentasi ini menunjukkan bahwa sistem monitoring dan logging telah berjalan sesuai dengan skenario tugas yang diberikan.</p>
           </article>
 
+            <!-- ======================================================== -->
+
           <article>
-            <h2>Kesimpulan</h2>
+            <h2>10. Kesimpulan</h2>
             <p>Implementasi ELK Stack serta Prometheus dan Grafana membuktikan bahwa monitoring dan logging merupakan komponen penting dalam DevSecOps. Dengan visibilitas yang baik terhadap log dan metrics sistem, potensi ancaman keamanan dan gangguan performa dapat terdeteksi lebih awal.</p>
             <p>Pendekatan ini mendukung prinsip continuous security monitoring dan membantu tim dalam melakukan respons insiden secara cepat dan terukur.</p>
           </article>
 
+            <!-- ======================================================== -->
+
         </section>
-      </main>
+    </main>
 
     <footer>
-      <p>&copy; 2025 | Monitoring & Logging DevSecOps - Zico</p>
+        <p>&copy; 2025 | made with love -zico</p>
     </footer>
+
 </body>
 </html>
