@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Under Maintenance</title>
+    <title>Praktik Minggu 2 Pentest Mobile</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -11,40 +11,260 @@
     <header>
         <div class="header-container">
             <button class="back-button" onclick="window.history.back();">&#8592; Back</button>
-            <h1>88032023006  |  ZICO</h1>
+            <h1>88032023006 | ZICO</h1>
         </div>
     </header>
 
     <title1>
         <div class="title1-container">
-            <h1>🚧 Website Sedang Dalam Pemeliharaan 🚧</h1>
-            <h2>Kami akan segera kembali!</h2>
+            <h1>Praktik Minggu 2 Pentest Mobile</h1>
+            <h2>Arsitektur Android dan IOS</h2>
         </div>
     </title1>
 
     <main>
         <section class="content">
+
+            <!-- ======================================================== -->
+
             <article>
+                <h2>1. Pendahuluan</h2>
+                <p>Android merupakan sistem operasi mobile yang bersifat terbuka dan banyak digunakan, sehingga menjadi target umum dalam pengujian keamanan aplikasi mobile. Praktikum ini bertujuan untuk melakukan eksplorasi lanjutan menggunakan Android Debug Bridge (ADB) serta analisis statis awal terhadap file APK untuk mengidentifikasi konfigurasi berisiko dan data sensitif yang tersimpan secara tidak aman.</p>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>2. Lingkungan dan Tools</h2>
+                <ul>
+                    <li>Sistem Operasi: Windows 11 (tanpa WSL, tanpa virtual machine)</li>
+                    <li>Android Emulator: Android Studio Emulator</li>
+                    <li>ADB (Android Debug Bridge)</li>
+                    <li>JADX GUI (decompiler APK)</li>
+                    <li>APK sample / aplikasi uji non-produksi</li>
+                </ul>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>3. Persiapan Awal</h2>
+
+                <h3>3.1 Verifikasi Koneksi Emulator</h3>
+                <p>Perintah adb devices digunakan untuk memverifikasi bahwa emulator Android telah terhubung dengan ADB dan siap digunakan untuk proses pengujian.</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb devices
+                </textarea>
+                <img src="assets/pm-1.png" alt="Image" class="article-image">
+
+                <h3>3.2 Siapkan APK Target (F-Droid)</h3>
+                <ol>
+                    <li>Unduh APK F-Droid dari <a href="https://f-droid.org/">https://f-droid.org/</a></li>
+                    <li>Pastikan file F-Droid.apk berada di folder Downloads.</li>
+                    <li>Masuk ke direktori Downloads dan pastikan file tersedia:
+                        <textarea id="markdown-input" rows="0" cols="0">
+cd Downloads
+                        </textarea>
+                        <textarea id="markdown-input" rows="0" cols="0">
+dir
+                        </textarea>
+                    </li>
+                    <img src="assets/pm-2.png" alt="Image" class="article-image">
+                    <li>Install F-Droid ke emulator menggunakan ADB:
+                        <textarea id="markdown-input" rows="0" cols="0">
+adb install -r F-Droid.apk
+                        </textarea>
+                    </li>
+                    <img src="assets/pm-3.png" alt="Image" class="article-image">
+                    <li>Status device menandakan emulator terhubung dengan ADB dan aplikasi F-Droid berhasil terpasang.</li>
+                    <img src="assets/pm-4.png" alt="Image" class="article-image">
+                </ol>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>4. Eksplorasi ADB Lanjutan</h2>
+                <p>Sebelum memulai praktik, pindah ke direktori kerja yang digunakan dengan menjalankan perintah berikut pada Command Prompt.</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+cd D:\kuliah\pentest-mobile\pentest-mobile-2
+                </textarea>
+
+                <h3>4.1 Enumerasi Aplikasi Terpasang</h3>
+                <p>Menampilkan daftar aplikasi terpasang dan memfilter package F-Droid:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb shell pm list packages | findstr fdroid
+                </textarea>
+                <img src="assets/pm-5.png" alt="Image" class="article-image">
                 <p>
-                    Saat ini situs sedang dalam proses pemeliharaan untuk peningkatan sistem dan performa.
-                    Kami mohon maaf atas ketidaknyamanan ini.
+                    Digunakan untuk menampilkan seluruh package aplikasi yang terpasang pada emulator.
+                    Dari hasil ini, dipilih satu aplikasi target untuk dianalisis lebih lanjut.
+                </p>
+
+                <h3>4.2 Informasi Detail Aplikasi</h3>
+                <p>Mengambil informasi detail aplikasi F-Droid:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb shell dumpsys package org.fdroid.fdroid
+                </textarea>
+                <img src="assets/pm-6.png" alt="Image" class="article-image">
+                <p>Menyimpan hasil informasi package ke file untuk dokumentasi:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb shell dumpsys package org.fdroid.fdroid > dumpsys_fdroid.txt
+                </textarea>
+
+                <p>
+                    Perintah ini memberikan informasi detail seperti permission, activity, service,
+                    serta status <em>debuggable</em> pada aplikasi.
+                </p>
+
+                <h3>4.3 Mengambil File APK dari Emulator</h3>
+                <p>Menentukan lokasi file APK F-Droid pada emulator:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb shell pm path org.fdroid.fdroid
+                </textarea>
+                <img src="assets/pm-7.png" alt="Image" class="article-image">
+                <p>Mengambil file APK F-Droid dari emulator ke sistem host Windows:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb pull /data/app/~~Xd2S0pyQiIAEIpRwEhlcBA==/org.fdroid.fdroid-KR8PTYnYw0JyrT4SBtBt4w==/base.apk fdroid.apk
+                </textarea>
+                <img src="assets/pm-8.png" alt="Image" class="article-image">
+                <p>APK diekstrak langsung dari emulator untuk dilakukan analisis statis di sisi host Windows.</p>
+                <p>Pastikan file tersedia</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+dir
+                </textarea>
+                <img src="assets/pm-9.png" alt="Image" class="article-image">
+
+                <h3>4.4 Pengambilan Database dan Shared Preferences Aplikasi</h3>
+                <p>Menampilkan daftar database milik aplikasi F-Droid pada emulator</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb shell ls /data/data/org.fdroid.fdroid/databases
+                </textarea>
+                <p>Mengambil file database aplikasi F-Droid dari emulator ke host Windows (jika akses diizinkan):</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb pull /data/data/org.fdroid.fdroid/databases/<nama_database>.db ./fdroid.db
+                </textarea>
+                <img src="assets/pm-10.png" alt="Image" class="article-image">
+                <p>Hasil ini menunjukkan bahwa data internal aplikasi tidak dapat diakses tanpa hak istimewa root, sesuai dengan model keamanan Android.</p>
+
+                <h3>4.5 Pengambilan Database dan Shared Preferences Aplikasi (Root)</h3>
+                <p>Aktifkan Root pada Emulator</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb root
+                </textarea>
+                <p>Menampilkan daftar database milik aplikasi F-Droid pada emulator</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb shell ls /data/data/org.fdroid.fdroid/databases
+                </textarea>
+                <p>Mengambil file database aplikasi F-Droid dari emulator ke host Windows</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb pull /data/data/org.fdroid.fdroid/databases/fdroid_db ./fdroid_db
+                </textarea>
+                <img src="assets/pm-11.png" alt="Image" class="article-image">
+                <p>(Opsional, tapi direkomendasikan) Ambil file WAL & SHM</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb pull /data/data/org.fdroid.fdroid/databases/fdroid_db-wal .
+                </textarea>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb pull /data/data/org.fdroid.fdroid/databases/fdroid_db-shm .
+                </textarea>
+                <img src="assets/pm-12.png" alt="Image" class="article-image">
+                <p>Setelah emulator dijalankan dalam mode root, direktori internal aplikasi F-Droid dapat diakses menggunakan ADB. File database berhasil diambil dari /data/data/org.fdroid.fdroid/databases untuk keperluan analisis lebih lanjut.</p>
+            
+                <h3>4.6 Pengambilan Log dan Bugreport Aplikasi</h3>
+                <p>Mengambil log sistem yang berkaitan dengan aktivitas aplikasi F-Droid:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb logcat -d > logcat_fdroid.txt
+                </textarea>
+                <p>Menghasilkan bugreport perangkat yang mencakup informasi sistem dan aplikasi F-Droid:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb bugreport bugreport_fdroid.zip
+                </textarea>
+                <img src="assets/pm-13.png" alt="Image" class="article-image">
+                <p>File log dan bugreport digunakan sebagai bukti pendukung untuk analisis perilaku dan troubleshooting aplikasi.</p>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>5. Analisis Statis Awal APK</h2>
+
+                <h3>5.1 Dekompilasi APK</h3>
+                <p>
+                    File APK dibuka menggunakan JADX GUI pada Windows untuk melihat struktur source code,
+                    resource, serta file konfigurasi aplikasi.
+                </p>
+
+                <h3>5.2 Analisis AndroidManifest.xml</h3>
+                <p>
+                    Beberapa konfigurasi berisiko yang diperiksa:
+                </p>
+                <ul>
+                    <li><strong>android:debuggable="true"</strong></li>
+                    <li><strong>android:allowBackup="true"</strong></li>
+                    <li>Activity atau Service dengan <strong>android:exported="true"</strong></li>
+                    <li>Permission berlebihan yang tidak relevan</li>
+                </ul>
+
+                <h3>5.3 Pencarian String Sensitif</h3>
+                <p>
+                    Dilakukan pencarian string plaintext seperti:
+                </p>
+                <ul>
+                    <li>API Key</li>
+                    <li>URL backend</li>
+                    <li>Username dan password hardcoded</li>
+                </ul>
+                <p>
+                    Ditemukan beberapa string URL API yang ditulis secara langsung di dalam source code,
+                    yang berpotensi dimanfaatkan oleh pihak tidak bertanggung jawab.
                 </p>
             </article>
 
             <article>
-                <h2>Informasi</h2>
+                <h2>6. Temuan</h2>
                 <ul>
-                    <li>Waktu maintenance: sementara</li>
-                    <li>Layanan akan aktif kembali dalam waktu dekat</li>
-                    <li>Terima kasih atas kesabaran Anda 🙏</li>
+                    <li>Aplikasi masih memiliki konfigurasi <em>debuggable</em> aktif</li>
+                    <li>Fitur <em>allowBackup</em> diaktifkan</li>
+                    <li>Terdapat activity yang diekspos tanpa validasi</li>
+                    <li>Ditemukan string URL API dalam bentuk plaintext</li>
                 </ul>
-                <p>Silakan coba akses kembali beberapa saat lagi.</p>
             </article>
+
+            <article>
+                <h2>7. Analisis Risiko</h2>
+                <p>
+                    Konfigurasi tersebut dapat dimanfaatkan untuk melakukan reverse engineering,
+                    pencurian data, manipulasi aktivitas aplikasi, serta penyalahgunaan API backend.
+                    Jika aplikasi dipublikasikan ke pengguna umum, risiko kebocoran data menjadi tinggi.
+                </p>
+            </article>
+
+            <article>
+                <h2>8. Rekomendasi</h2>
+                <ul>
+                    <li>Nonaktifkan mode debuggable pada build produksi</li>
+                    <li>Set <em>allowBackup</em> menjadi false</li>
+                    <li>Batasi komponen exported dan gunakan permission khusus</li>
+                    <li>Hindari penyimpanan data sensitif dalam plaintext</li>
+                </ul>
+            </article>
+
+            <article>
+                <h2>9. Kesimpulan</h2>
+                <p>
+                    Eksplorasi ADB lanjutan dan analisis statis awal merupakan tahap penting
+                    dalam pengujian keamanan aplikasi Android. Dengan metode sederhana dan tools gratis
+                    di Windows 11, berbagai konfigurasi berisiko dapat diidentifikasi sejak awal
+                    sebelum aplikasi dirilis ke publik.
+                </p>
+            </article>
+
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2025 | made with love -zico</p>
+        <p>&copy; 2025 | made with love - zico</p>
     </footer>
 </body>
 </html>
