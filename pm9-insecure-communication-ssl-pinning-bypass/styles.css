@@ -1,0 +1,225 @@
+/* Gaya umum untuk body */
+body {
+    font-family: Tahoma, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    line-height: 1.6;
+}
+
+
+
+
+/* Pengaturan header */
+header {
+    background-color: #333;
+    color: white;
+    padding: 20px 0;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1em;
+    text-align: right;
+    margin-right: 40px; /* Jarak agar tidak terlalu pojok */
+}
+
+header p {
+    margin: 10px 0 0;
+    font-size: 1.3em;
+    text-align: center;
+}
+
+
+
+
+/* Tombol Back */
+.back-button {
+    background-color: #555;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.3s;
+    position: absolute;
+    left: 40px;
+    top: 20px;
+}
+
+.back-button:hover {
+    background-color: #777;
+}
+
+
+
+
+/* Judul */
+title1 {
+    text-align: center;
+    font-size: 1.3em;
+}
+
+.title1-container h1,
+.title1-container h2 {
+    margin-bottom: 0px; /* Mengurangi jarak bawah */
+}
+
+.title1-container h2 {
+    margin-top: 0; /* Menghilangkan jarak atas agar lebih rapat */
+    font-size: 1.5em; /* Bisa disesuaikan ukurannya agar proporsional */
+}
+
+
+
+
+/* Pengaturan konten utama */
+main {
+    max-width: 1000px;
+    margin: 0 auto; /* Agar konten berada di tengah */
+    padding: 20px;
+}
+
+
+
+
+/* Mengatur jarak antar artikel */
+article {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 20px; /* Jarak antar artikel */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+/* Mengatur gambar dalam artikel */
+.article-image {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    display: block;
+    margin: 20px auto; /* Membuat jarak atas dan bawah 20px */
+    border-radius: 10px;
+}
+
+
+
+
+/* Mengatur jarak kanan dan kiri konten */
+.content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+
+
+
+/* Mengatur table agar tidak terlalu lebar */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f4f4f4;
+}
+
+
+
+
+/* Mengatur tampilan textarea agar menyerupai kode */
+#markdown-input {
+    width: 100%;
+    max-width: 800px;
+    height: 90px;
+    display: block;
+    margin: 20px auto; /* Membuat jarak atas dan bawah 20px, serta center */
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 16px;
+    font-family: Consolas, "Courier New", monospace; /* Menggunakan font seperti kode */
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: #f4f4f4; /* Warna latar belakang seperti editor kode */
+    resize: vertical; /* Bisa diubah ukurannya hanya secara vertikal */
+}
+
+/* Efek saat textarea dalam keadaan fokus */
+#markdown-input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+    outline: none;
+    background-color: #fff; /* Latar belakang putih saat diklik */
+}
+
+
+
+
+/* Mengatur tampilan textarea agar menyerupai kode */
+#markdown-input2 {
+    width: 100%;
+    max-width: 800px;
+    height: 50px;
+    display: block;
+    margin: 20px auto; /* Membuat jarak atas dan bawah 20px, serta center */
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 16px;
+    font-family: Consolas, "Courier New", monospace; /* Menggunakan font seperti kode */
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: #f4f4f4; /* Warna latar belakang seperti editor kode */
+    resize: vertical; /* Bisa diubah ukurannya hanya secara vertikal */
+}
+
+/* Efek saat textarea dalam keadaan fokus */
+#markdown-input2:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+    outline: none;
+    background-color: #fff; /* Latar belakang putih saat diklik */
+}
+
+
+
+
+/* Pengaturan untuk footer */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+
+
+
+/* Responsif: menyesuaikan tampilan pada layar kecil */
+@media (max-width: 768px) {
+    main {
+        padding: 15px;
+    }
+    article {
+        padding: 15px;
+    }
+    .article-image {
+        margin: 15px auto; /* Jarak lebih kecil untuk layar kecil */
+    }
+    table {
+        font-size: 0.9em;
+    }
+}

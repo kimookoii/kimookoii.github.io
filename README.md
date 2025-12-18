@@ -26,6 +26,7 @@
 6. **[Dynamic Analysis & Hooking](https://kimookoii.github.io/pm6-dynamic-analysis-hooking/)** x
 7. **[Reverse Engineering Mobile App](https://kimookoii.github.io/pm7-reverse-engineering-mobile-app/)** x
 8. **[Insecure Data Storage](https://kimookoii.github.io/pm8-insecure-data-storage/)** x
+9. **[Insecure Communication & SSL Pinning Bypass](https://kimookoii.github.io/pm9-insecure-communication-ssl-pinning-bypass/)** x
 
 ---
 
