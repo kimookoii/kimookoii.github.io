@@ -18,8 +18,8 @@
 
 ## Semester5 - Penetrasi Mobile
 
-1. **[Pengantar Penetrasi Mobile](https://kimookoii.github.io/pm1-pengantar-penetrasi-mobile/)** x
-2. **[Arsitektur Android dan IOS](https://kimookoii.github.io/pm2-arsitektur-android-dan-ios/)** x
+1. **[Pengantar Penetrasi Mobile](https://kimookoii.github.io/pm1-pengantar-penetrasi-mobile/)**
+2. **[Arsitektur Android dan IOS](https://kimookoii.github.io/pm2-arsitektur-android-dan-ios/)**
 3. **[Tools Pentest Mobile](https://kimookoii.github.io/pm3-tools-pentest-mobile/)** x
 4. **[Environment Pentest Mobile](https://kimookoii.github.io/pm4-environment-pentest-mobile/)** x
 5. **[Decompile APK & Static Analysis](https://kimookoii.github.io/pm5-decompile-apk-static-analysis/)** x

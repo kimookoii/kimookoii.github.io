@@ -182,6 +182,19 @@ adb bugreport bugreport_fdroid.zip
                 </textarea>
                 <img src="assets/pm-13.png" alt="Image" class="article-image">
                 <p>File log dan bugreport digunakan sebagai bukti pendukung untuk analisis perilaku dan troubleshooting aplikasi.</p>
+            
+                <h3>4.7 Konfigurasi Port Forwarding dan Reverse</h3>
+                <p>Mengarahkan trafik aplikasi F-Droid yang mengakses localhost:8080 pada emulator ke proxy di host (misalnya Burp Suite)</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb reverse tcp:8080 tcp:8080
+                </textarea>
+                <p>Meneruskan koneksi dari host ke emulator pada port tertentu jika diperlukan untuk pengujian:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb bugreport bugreport_fdroid.zip
+                </textarea>
+                <img src="assets/pm-14.png" alt="Image" class="article-image">
+                <p>Konfigurasi ini digunakan untuk menganalisis dan memantau komunikasi jaringan aplikasi F-Droid melalui proxy.</p>
+            
             </article>
 
             <!-- ======================================================== -->
@@ -201,9 +214,16 @@ adb bugreport bugreport_fdroid.zip
                 </p>
                 <ul>
                     <li><strong>android:debuggable="true"</strong></li>
+                    <img src="assets/pm-15.png" alt="Image" class="article-image">
+                    <p>Tidak ditemukan konfigurasi android:debuggable="true" pada AndroidManifest.xml. Hal ini menunjukkan bahwa aplikasi F-Droid tidak dijalankan dalam mode debug pada build produksi, sehingga mengurangi risiko reverse engineering dan debugging tidak sah.</p>
                     <li><strong>android:allowBackup="true"</strong></li>
+                    <img src="assets/pm-16.png" alt="Image" class="article-image">
+                    <p>Ditemukan 1 konfigurasi android:allowBackup="true". Konfigurasi ini memungkinkan data aplikasi dicadangkan melalui mekanisme backup Android, yang berpotensi dimanfaatkan untuk mengekstrak data aplikasi apabila perangkat berada dalam kondisi tidak aman.</p>
                     <li>Activity atau Service dengan <strong>android:exported="true"</strong></li>
+                    <p>Ditemukan 10 komponen (Activity dan/atau Service) dengan atribut android:exported="true". Komponen yang diekspos dapat diakses oleh aplikasi lain, sehingga berpotensi menimbulkan risiko jika tidak dilindungi dengan permission atau validasi input yang memadai.</p>
+                    <img src="assets/pm-17.png" alt="Image" class="article-image">
                     <li>Permission berlebihan yang tidak relevan</li>
+                    <p>Tidak dilakukan klasifikasi sebagai temuan karena permission yang terdaftar pada AndroidManifest.xml masih relevan dengan fungsi utama aplikasi F-Droid, seperti akses jaringan untuk sinkronisasi repository. Oleh karena itu, tidak ditemukan permission yang dikategorikan sebagai berlebihan atau tidak relevan.</p>
                 </ul>
 
                 <h3>5.3 Pencarian String Sensitif</h3>
@@ -211,9 +231,13 @@ adb bugreport bugreport_fdroid.zip
                     Dilakukan pencarian string plaintext seperti:
                 </p>
                 <ul>
-                    <li>API Key</li>
-                    <li>URL backend</li>
-                    <li>Username dan password hardcoded</li>
+                    <li><b>API Key</b></li>
+                    <img src="assets/pm-18.png" alt="Image" class="article-image">
+                    <p>Hasil pencarian kata kunci api menunjukkan bahwa kemunculannya berasal dari library dan komponen internal Android (AndroidX) yang berkaitan dengan versi API. Tidak ditemukan endpoint backend, API key, atau data sensitif yang ditulis secara hardcoded, sehingga tidak dikategorikan sebagai temuan berisiko.</p>
+                    <li><b>Username dan password hardcoded</b></li>
+                    <img src="assets/pm-19.png" alt="Image" class="article-image">
+                    <img src="assets/pm-20.png" alt="Image" class="article-image">
+                    <p>Hasil pencarian kata kunci username dan password menunjukkan bahwa kemunculan istilah tersebut berasal dari resource aplikasi, mekanisme autentikasi standar, serta library pihak ketiga (misalnya pengelolaan kredensial dan UI input). Tidak ditemukan username atau password hardcoded dalam bentuk plaintext. Oleh karena itu, temuan ini tidak dikategorikan sebagai kerentanan, melainkan bagian dari implementasi fungsional aplikasi.</p>
                 </ul>
                 <p>
                     Ditemukan beberapa string URL API yang ditulis secara langsung di dalam source code,
@@ -224,10 +248,10 @@ adb bugreport bugreport_fdroid.zip
             <article>
                 <h2>6. Temuan</h2>
                 <ul>
-                    <li>Aplikasi masih memiliki konfigurasi <em>debuggable</em> aktif</li>
-                    <li>Fitur <em>allowBackup</em> diaktifkan</li>
-                    <li>Terdapat activity yang diekspos tanpa validasi</li>
-                    <li>Ditemukan string URL API dalam bentuk plaintext</li>
+                    <li><b>Aplikasi masih memiliki konfigurasi <em>debuggable</em> aktif</b><br>Pemeriksaan AndroidManifest.xml menunjukkan bahwa aplikasi masih memungkinkan mode debug, yang berpotensi dimanfaatkan untuk analisis tidak sah.</li>
+                    <li><b>Fitur <em>allowBackup</em> diaktifkan</b><br>Ditemukan konfigurasi android:allowBackup="true" yang memungkinkan data aplikasi dicadangkan dan berpotensi diekstrak.</li>
+                    <li><b>Terdapat activity yang diekspos tanpa validasi</b><br>Terdapat beberapa Activity dengan atribut android:exported="true" yang dapat diakses oleh aplikasi lain tanpa pembatasan yang memadai.</li>
+                    <li><b>Ditemukan string URL API dalam bentuk plaintext</b><br>Ditemukan beberapa URL API yang ditulis langsung di dalam source code, yang berpotensi dimanfaatkan untuk analisis atau penyalahgunaan endpoint backend.</li>
                 </ul>
             </article>
 
@@ -237,27 +261,19 @@ adb bugreport bugreport_fdroid.zip
                     Konfigurasi tersebut dapat dimanfaatkan untuk melakukan reverse engineering,
                     pencurian data, manipulasi aktivitas aplikasi, serta penyalahgunaan API backend.
                     Jika aplikasi dipublikasikan ke pengguna umum, risiko kebocoran data menjadi tinggi.
+                    <ol>
+                        <li><b>Reverse engineering</b><br>Konfigurasi aplikasi memungkinkan proses analisis dan pemahaman struktur internal aplikasi oleh pihak tidak berwenang.</li>
+                        <li><b>Pencurian data aplikasi</b><br>Fitur backup dan komponen yang diekspos berpotensi dimanfaatkan untuk mengekstrak data aplikasi.</li>
+                        <li><b>Manipulasi aktivitas aplikasi</b><br>Activity yang diekspos dapat dipanggil oleh aplikasi lain untuk memicu fungsi tertentu tanpa validasi.</li>
+                        <li><b>Penyalahgunaan API backend</b><br>URL API yang tersimpan secara plaintext dapat digunakan untuk mengakses endpoint backend tanpa otorisasi tambahan.</li>
+                        <li><b>Risiko kebocoran data</b><br>Jika aplikasi dirilis ke publik, kombinasi konfigurasi tersebut meningkatkan potensi kebocoran data pengguna.</li>
+                    </ol>
                 </p>
             </article>
 
             <article>
-                <h2>8. Rekomendasi</h2>
-                <ul>
-                    <li>Nonaktifkan mode debuggable pada build produksi</li>
-                    <li>Set <em>allowBackup</em> menjadi false</li>
-                    <li>Batasi komponen exported dan gunakan permission khusus</li>
-                    <li>Hindari penyimpanan data sensitif dalam plaintext</li>
-                </ul>
-            </article>
-
-            <article>
-                <h2>9. Kesimpulan</h2>
-                <p>
-                    Eksplorasi ADB lanjutan dan analisis statis awal merupakan tahap penting
-                    dalam pengujian keamanan aplikasi Android. Dengan metode sederhana dan tools gratis
-                    di Windows 11, berbagai konfigurasi berisiko dapat diidentifikasi sejak awal
-                    sebelum aplikasi dirilis ke publik.
-                </p>
+                <h2>8. Kesimpulan</h2>
+                <p>Berdasarkan hasil eksplorasi ADB lanjutan dan analisis statis awal terhadap aplikasi F-Droid, dapat disimpulkan bahwa proses pengujian berhasil mengidentifikasi beberapa konfigurasi dan karakteristik keamanan aplikasi. Eksplorasi ADB memastikan konektivitas emulator, instalasi aplikasi, pengambilan APK, log, serta data internal aplikasi. Analisis statis menggunakan JADX menunjukkan tidak adanya kredensial hardcoded, namun ditemukan konfigurasi allowBackup yang aktif, beberapa komponen aplikasi yang diekspos, serta URL API yang ditulis secara plaintext. Kondisi tersebut berpotensi dimanfaatkan untuk reverse engineering dan penyalahgunaan aplikasi apabila dirilis ke publik, sehingga diperlukan penguatan konfigurasi dan pembatasan akses untuk meningkatkan keamanan aplikasi.</p>
             </article>
 
         </section>
