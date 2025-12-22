@@ -140,11 +140,12 @@ table th {
 
 
 
+
 /* Mengatur tampilan textarea agar menyerupai kode */
 #markdown-input {
     width: 100%;
     max-width: 800px;
-    height: 90px;
+    height: 38px;
     display: block;
     margin: 20px auto; /* Membuat jarak atas dan bawah 20px, serta center */
     border-radius: 10px;
@@ -166,13 +167,11 @@ table th {
 }
 
 
-
-
 /* Mengatur tampilan textarea agar menyerupai kode */
 #markdown-input2 {
     width: 100%;
     max-width: 800px;
-    height: 50px;
+    height: 57px;
     display: block;
     margin: 20px auto; /* Membuat jarak atas dan bawah 20px, serta center */
     border-radius: 10px;

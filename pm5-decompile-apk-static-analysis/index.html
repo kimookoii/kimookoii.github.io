@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Under Maintenance</title>
+    <title>Praktik Minggu 5 Pentest Mobile</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -11,40 +11,140 @@
     <header>
         <div class="header-container">
             <button class="back-button" onclick="window.history.back();">&#8592; Back</button>
-            <h1>88032023006  |  ZICO</h1>
+            <h1>88032023006 | ZICO</h1>
         </div>
     </header>
 
     <title1>
         <div class="title1-container">
-            <h1>🚧 Website Sedang Dalam Pemeliharaan 🚧</h1>
-            <h2>Kami akan segera kembali!</h2>
+            <h1>Praktik Minggu 5 Pentest Mobile</h1>
+            <h2>Decompile APK & Static Analysis</h2>
         </div>
     </title1>
 
     <main>
         <section class="content">
-            <article>
-                <p>
-                    Saat ini situs sedang dalam proses pemeliharaan untuk peningkatan sistem dan performa.
-                    Kami mohon maaf atas ketidaknyamanan ini.
-                </p>
-            </article>
+
+            <!-- ======================================================== -->
 
             <article>
-                <h2>Informasi</h2>
-                <ul>
-                    <li>Waktu maintenance: sementara</li>
-                    <li>Layanan akan aktif kembali dalam waktu dekat</li>
-                    <li>Terima kasih atas kesabaran Anda 🙏</li>
-                </ul>
-                <p>Silakan coba akses kembali beberapa saat lagi.</p>
+                <h2>1. Pendahuluan</h2>
+                <p>Artikel ini membahas praktik <b>analisis statis aplikasi Android</b> dengan metode decompile APK untuk mengidentifikasi potensi kelemahan keamanan tanpa menjalankan aplikasi.</p>
             </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>2. Environment Pengujian</h2>
+                <ul>
+                    <li>Host OS: Windows 11 (tanpa WSL, tanpa virtual machine Linux)</li>
+                    <li>APKTool: Apktool v2.12.1</li>
+                    <li>JADX: jadx-1.5.3</li>
+                    <li>ADB Version: 1.0.41</li>
+                </ul>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>3. Persiapan Awal</h2>
+
+                <h3>3.1 Mengambil File APK dari Emulator</h3>
+                <p>Menentukan lokasi file APK F-Droid pada emulator:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb shell pm path org.fdroid.fdroid
+                </textarea>
+                <p>Mengambil file APK F-Droid dari emulator ke sistem host Windows:</p>
+                <textarea id="markdown-input2" rows="0" cols="0">
+adb pull /data/app/~~Xd2S0pyQiIAEIpRwEhlcBA==/org.fdroid.fdroid-KR8PTYnYw0JyrT4SBtBt4w==/base.apk fdroid.apk
+                </textarea>
+                <p>APK diekstrak langsung dari emulator untuk dilakukan analisis statis di sisi host Windows.</p>
+                <p>Pastikan file tersedia</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+dir
+                </textarea>
+                <img src="assets/pm-1.png" alt="Image" class="article-image">
+
+                <h3>3.2 Decode APK dengan APKTool</h3>
+                <textarea id="markdown-input" rows="0" cols="0">
+apktool d fdroid.apk -o fdroid_apktool
+                </textarea>
+                <p>Pastikan file tersedia</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+dir
+                </textarea>
+                <img src="assets/pm-2.png" alt="Image" class="article-image">
+
+                <h3>3.3 Decompile Kode dengan JADX</h3>
+                <textarea id="markdown-input" rows="0" cols="0">
+jadx-gui fdroid.apk
+                </textarea>
+                <img src="assets/pm-3.png" alt="Image" class="article-image">
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>4. Analisis Hasil</h2>
+
+                <h3>1. Temuan: android:allowBackup="true"</h3>
+                <img src="assets/pm-4.png" alt="Image" class="article-image">
+                <p><b>Risiko</b></p>
+                <p>Jika perangkat berada dalam kondisi ADB aktif atau perangkat terkompromi, attacker dapat:<br>- Melakukan backup data aplikasi<br>- Mengakses SharedPreferences, database lokal, dan file internal</p>
+                <p>Berpotensi menyebabkan kebocoran data pengguna, konfigurasi aplikasi, atau metadata sensitif.</p>
+                <p><b>Mitigasi</b></p>
+                <p>Set nilai berikut pada build production:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+android:allowBackup="false"
+                </textarea>
+                <p>Jika backup memang dibutuhkan:<br>- Batasi data menggunakan backup_rules.xml<br>- Pastikan tidak ada data sensitif (token, credential) yang ikut ter-backup</p>
+
+                <h3>2. Temuan: Beberapa Activity android:exported="true"</h3>
+                <img src="assets/pm-5.png" alt="Image" class="article-image">
+                <p><b>Risiko</b></p>
+                <p>Activity yang diekspos (exported="true") dapat:<br>- Dipanggil oleh aplikasi lain<br>- Menjadi target Intent Injection</p>
+                <p>Jika tidak divalidasi dengan baik, attacker dapat:<br>- Mengakses fitur internal<br>- Memicu alur logika aplikasi tanpa otorisasi</p>
+                <p><b>Mitigasi</b></p>
+                <p>Set android:exported="false" untuk activity yang tidak perlu diakses eksternal<br>Jika harus true: Gunakan permission khusus</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+android:permission="com.example.SECURE_PERMISSION"
+                </textarea>
+
+                <h3>3. Temuan: Permission Sensitif & Berlebihan</h3>
+                <img src="assets/pm-6.png" alt="Image" class="article-image">
+                <img src="assets/pm-7.png" alt="Image" class="article-image">
+                <p><b>Risiko</b></p>
+                <p>MANAGE_EXTERNAL_STORAGE<br>- Memberikan akses luas ke seluruh storage pengguna<br>- Risiko kebocoran atau manipulasi file</p>
+                <p>QUERY_ALL_PACKAGES<br>- Memungkinkan enumerasi semua aplikasi terpasang<br>- Berpotensi melanggar privasi pengguna</p>
+                <p>WRITE_SETTINGS<br>- Dapat mengubah pengaturan sistem perangkat</p>
+                <p><b>Mitigasi</b></p>
+                <p>Terapkan principle of least privilege<br>- Hapus permission yang tidak benar-benar dibutuhkan<br>- Gunakan alternatif modern: Scoped Storage dan Storage Access Framework (SAF)<br>- Sertakan justifikasi jelas jika permission sensitif wajib digunakan</p>
+
+                <h3>4. Temuan: android:requestLegacyExternalStorage="true"</h3>
+                <img src="assets/pm-8.png" alt="Image" class="article-image">
+                <p><b>Risiko</b><br>- Menggunakan model storage lama (pre-Android 10)<br>- Memperluas akses file yang seharusnya dibatasi oleh Scoped Storage<br>- Berpotensi meningkatkan risiko kebocoran data</p>
+                <p><b>Mitigasi</b><br>- Migrasi penuh ke Scoped Storage<br>- Hapus flag ini pada target SDK modern<br>- Gunakan API penyimpanan resmi Android terbaru</p>
+
+                <h3>5. Temuan: Banyak Intent Filter HTTP tanpa autoVerify</h3>
+                <p><b>Risiko</b><br>- Intent dapat dipalsukan oleh aplikasi lain<br>- Risiko Intent Spoofing<br>- Pengguna bisa diarahkan ke alur aplikasi melalui URL tidak valid</p>
+                <p><b>Mitigasi</b><br>- Aktifkan android:autoVerify="true" untuk domain resmi<br>- Validasi domain dan path di sisi aplikasi<br>- Gunakan HTTPS saja jika memungkinkan</p>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+            <h2>5. Kesimpulan</h2>
+            <p>Berdasarkan hasil analisis statis dengan metode decompile APK menggunakan APKTool dan JADX pada aplikasi Android yang diuji, dapat disimpulkan bahwa aplikasi tidak menjalankan mode debug karena atribut android:debuggable tidak ditemukan pada AndroidManifest.xml, sehingga secara default berada pada kondisi produksi. Namun demikian, masih ditemukan beberapa potensi risiko keamanan, seperti allowBackup yang aktif, sejumlah activity dengan status exported="true", penggunaan permission sensitif yang cukup luas, serta penerapan legacy external storage. Konfigurasi tersebut berpotensi dimanfaatkan untuk akses tidak sah, penyalahgunaan intent, dan kebocoran data apabila aplikasi dijalankan pada perangkat yang terkompromi. Oleh karena itu, diperlukan penerapan prinsip least privilege, pembatasan komponen yang diekspos, penonaktifan backup untuk data sensitif, serta penyesuaian konfigurasi keamanan agar aplikasi lebih aman sebelum digunakan oleh pengguna umum.</p>
+            </article>
+
+            <!-- ======================================================== -->
+
         </section>
     </main>
 
-    <footer>
-        <p>&copy; 2025 | made with love -zico</p>
-    </footer>
+<footer>
+    <p>&copy; 2025 | made with love - zico</p>
+</footer>
+
 </body>
 </html>

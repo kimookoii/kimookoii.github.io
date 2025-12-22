@@ -22,7 +22,7 @@
 2. **[Arsitektur Android dan IOS](https://kimookoii.github.io/pm2-arsitektur-android-dan-ios/)**
 3. **[Tools Pentest Mobile](https://kimookoii.github.io/pm3-tools-pentest-mobile/)**
 4. **[Environment Pentest Mobile](https://kimookoii.github.io/pm4-environment-pentest-mobile/)**
-5. **[Decompile APK & Static Analysis](https://kimookoii.github.io/pm5-decompile-apk-static-analysis/)** x
+5. **[Decompile APK & Static Analysis](https://kimookoii.github.io/pm5-decompile-apk-static-analysis/)**
 6. **[Dynamic Analysis & Hooking](https://kimookoii.github.io/pm6-dynamic-analysis-hooking/)** x
 7. **[Reverse Engineering Mobile App](https://kimookoii.github.io/pm7-reverse-engineering-mobile-app/)** x
 8. **[Insecure Data Storage](https://kimookoii.github.io/pm8-insecure-data-storage/)** x
