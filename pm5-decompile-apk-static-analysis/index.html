@@ -87,7 +87,7 @@ jadx-gui fdroid.apk
             <article>
                 <h2>4. Analisis Hasil</h2>
 
-                <h3>1. Temuan: android:allowBackup="true"</h3>
+                <h3>4.1 Temuan: android:allowBackup="true"</h3>
                 <img src="assets/pm-4.png" alt="Image" class="article-image">
                 <p><b>Risiko</b></p>
                 <p>Jika perangkat berada dalam kondisi ADB aktif atau perangkat terkompromi, attacker dapat:<br>- Melakukan backup data aplikasi<br>- Mengakses SharedPreferences, database lokal, dan file internal</p>
@@ -99,7 +99,7 @@ android:allowBackup="false"
                 </textarea>
                 <p>Jika backup memang dibutuhkan:<br>- Batasi data menggunakan backup_rules.xml<br>- Pastikan tidak ada data sensitif (token, credential) yang ikut ter-backup</p>
 
-                <h3>2. Temuan: Beberapa Activity android:exported="true"</h3>
+                <h3>4.2 Temuan: Beberapa Activity android:exported="true"</h3>
                 <img src="assets/pm-5.png" alt="Image" class="article-image">
                 <p><b>Risiko</b></p>
                 <p>Activity yang diekspos (exported="true") dapat:<br>- Dipanggil oleh aplikasi lain<br>- Menjadi target Intent Injection</p>
@@ -110,7 +110,7 @@ android:allowBackup="false"
 android:permission="com.example.SECURE_PERMISSION"
                 </textarea>
 
-                <h3>3. Temuan: Permission Sensitif & Berlebihan</h3>
+                <h3>4.3 Temuan: Permission Sensitif & Berlebihan</h3>
                 <img src="assets/pm-6.png" alt="Image" class="article-image">
                 <img src="assets/pm-7.png" alt="Image" class="article-image">
                 <p><b>Risiko</b></p>
@@ -120,12 +120,12 @@ android:permission="com.example.SECURE_PERMISSION"
                 <p><b>Mitigasi</b></p>
                 <p>Terapkan principle of least privilege<br>- Hapus permission yang tidak benar-benar dibutuhkan<br>- Gunakan alternatif modern: Scoped Storage dan Storage Access Framework (SAF)<br>- Sertakan justifikasi jelas jika permission sensitif wajib digunakan</p>
 
-                <h3>4. Temuan: android:requestLegacyExternalStorage="true"</h3>
+                <h3>4.4 Temuan: android:requestLegacyExternalStorage="true"</h3>
                 <img src="assets/pm-8.png" alt="Image" class="article-image">
                 <p><b>Risiko</b><br>- Menggunakan model storage lama (pre-Android 10)<br>- Memperluas akses file yang seharusnya dibatasi oleh Scoped Storage<br>- Berpotensi meningkatkan risiko kebocoran data</p>
                 <p><b>Mitigasi</b><br>- Migrasi penuh ke Scoped Storage<br>- Hapus flag ini pada target SDK modern<br>- Gunakan API penyimpanan resmi Android terbaru</p>
 
-                <h3>5. Temuan: Banyak Intent Filter HTTP tanpa autoVerify</h3>
+                <h3>4.5 Temuan: Banyak Intent Filter HTTP tanpa autoVerify</h3>
                 <p><b>Risiko</b><br>- Intent dapat dipalsukan oleh aplikasi lain<br>- Risiko Intent Spoofing<br>- Pengguna bisa diarahkan ke alur aplikasi melalui URL tidak valid</p>
                 <p><b>Mitigasi</b><br>- Aktifkan android:autoVerify="true" untuk domain resmi<br>- Validasi domain dan path di sisi aplikasi<br>- Gunakan HTTPS saja jika memungkinkan</p>
             </article>
