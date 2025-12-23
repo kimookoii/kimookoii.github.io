@@ -23,7 +23,7 @@
 3. **[Tools Pentest Mobile](https://kimookoii.github.io/pm3-tools-pentest-mobile/)**
 4. **[Environment Pentest Mobile](https://kimookoii.github.io/pm4-environment-pentest-mobile/)**
 5. **[Decompile APK & Static Analysis](https://kimookoii.github.io/pm5-decompile-apk-static-analysis/)**
-6. **[Dynamic Analysis & Hooking](https://kimookoii.github.io/pm6-dynamic-analysis-hooking/)** x
+6. **[Dynamic Analysis & Hooking](https://kimookoii.github.io/pm6-dynamic-analysis-hooking/)**
 7. **[Reverse Engineering Mobile App](https://kimookoii.github.io/pm7-reverse-engineering-mobile-app/)** x
 8. **[Insecure Data Storage](https://kimookoii.github.io/pm8-insecure-data-storage/)** x
 9. **[Insecure Communication & SSL Pinning Bypass](https://kimookoii.github.io/pm9-insecure-communication-ssl-pinning-bypass/)** x
