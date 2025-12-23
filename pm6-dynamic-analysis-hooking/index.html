@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Under Maintenance</title>
+    <title>Praktik Minggu 6 Pentest Mobile</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -11,40 +11,160 @@
     <header>
         <div class="header-container">
             <button class="back-button" onclick="window.history.back();">&#8592; Back</button>
-            <h1>88032023006  |  ZICO</h1>
+            <h1>88032023006 | ZICO</h1>
         </div>
     </header>
 
     <title1>
         <div class="title1-container">
-            <h1>🚧 Website Sedang Dalam Pemeliharaan 🚧</h1>
-            <h2>Kami akan segera kembali!</h2>
+            <h1>Praktik Minggu 6 Pentest Mobile</h1>
+            <h2>Dynamic Analysis & Hooking</h2>
         </div>
     </title1>
 
     <main>
         <section class="content">
-            <article>
-                <p>
-                    Saat ini situs sedang dalam proses pemeliharaan untuk peningkatan sistem dan performa.
-                    Kami mohon maaf atas ketidaknyamanan ini.
-                </p>
-            </article>
+
+            <!-- ======================================================== -->
 
             <article>
-                <h2>Informasi</h2>
-                <ul>
-                    <li>Waktu maintenance: sementara</li>
-                    <li>Layanan akan aktif kembali dalam waktu dekat</li>
-                    <li>Terima kasih atas kesabaran Anda 🙏</li>
-                </ul>
-                <p>Silakan coba akses kembali beberapa saat lagi.</p>
+                <h2>1. Pendahuluan</h2>
+                <p>Dynamic analysis merupakan teknik pengujian keamanan aplikasi yang dilakukan saat aplikasi sedang berjalan (runtime). Pada pengujian ini digunakan tools Frida dan Objection untuk mengamati perilaku aplikasi Android secara langsung, seperti pemanggilan fungsi, penggunaan data sensitif, serta mekanisme keamanan yang diterapkan. Tujuan dari pengujian ini adalah untuk mengidentifikasi potensi celah keamanan yang tidak dapat ditemukan melalui analisis statis, serta memberikan rekomendasi mitigasi guna meningkatkan keamanan aplikasi.</p>
             </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>2. Environment Pengujian</h2>
+                <ul>
+                    <li>Host OS: Windows 11 (tanpa WSL, tanpa virtual machine Linux)</li>
+                    <li>ADB Version: 1.0.41</li>
+                    <li>Frida Version: 17.5.2</li>
+                    <li>Objection Version: 1.12.2</li>
+                    <li>Target: Android Emulator (rooted)</li>
+                </ul>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>3. Persiapan Awal</h2>
+
+                <h3>3.1 Menjalankan Frida Server</h3>
+                <p>Disesuaikan dengan ABI emulator lalu di-push ke device:</p>
+                <p>Instalasi Frida Server</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb push frida-server /data/local/tmp/
+                </textarea>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb shell chmod 755 /data/local/tmp/frida-server
+                </textarea>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb shell /data/local/tmp/frida-server
+                </textarea>
+                <img src="assets/pm-1.png" alt="Image" class="article-image">
+                <p>Verifikasi koneksi Frida untuk memastikan frida-server aktif dan device terdeteksi.</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+frida-ps -U
+                </textarea>
+                <img src="assets/pm-3.png" alt="Image" class="article-image">
+
+                <h3>3.2 Hooking Method Java (Custom Script)</h3>
+                <p>Hooking dilakukan untuk menangkap nilai sensitif saat runtime.</p>
+                <textarea id="markdown-input2" rows="0" cols="0">
+Java.perform(function () {
+    try {
+        var CM = Java.use("com.example.app.utils.CredentialManager");
+        CM.getApiKey.implementation = function () {
+            var key = this.getApiKey();
+            console.log("[HOOK] getApiKey -> " + key);
+            return key;
+        };
+    } catch (e) {
+        console.log("[ERROR] " + e);
+    }
+});
+                </textarea>
+                <p>Jalankan dengan perintah.</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+frida -U -f org.fdroid.fdroid -l hook.js
+                </textarea>
+                <img src="assets/pm-4.png" alt="Image" class="article-image">
+
+                <h3>3.3 Tracing Runtime Call</h3>
+                <p>Tracing digunakan untuk memantau pemanggilan method secara otomatis.</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+frida-trace -U -f org.fdroid.fdroid -i "java.*get.*"
+                </textarea>
+                <img src="assets/pm-5.png" alt="Image" class="article-image">
+                <p>Meskipun tidak ditemukan fungsi yang cocok dengan filter tracing, keberhasilan memulai sesi frida-trace menunjukkan bahwa aplikasi dapat dijalankan dalam mode dynamic analysis. Hasil 0 functions mencerminkan kemungkinan penerapan obfuscation dan desain internal aplikasi yang lebih kompleks.
+
+                </p>
+                <h3>3.4 Eksplorasi Runtime Menggunakan Objection</h3>
+                <p>Objection digunakan untuk eksplorasi cepat tanpa scripting manual.</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+objection -g org.fdroid.fdroid explore
+                </textarea>
+                <img src="assets/pm-7.png" alt="Image" class="article-image">
+                <textarea id="markdown-input" rows="0" cols="0">
+android sslpinning disable
+                </textarea>
+                <img src="assets/pm-8.png" alt="Image" class="article-image">
+                <p>Perintah android sslpinning disable pada Objection berhasil dijalankan hingga tahap deteksi mekanisme keamanan, ditunjukkan dengan keberhasilan Frida agent terhubung ke aplikasi serta terdeteksinya SSL Pinning berbasis OkHttp3 dan inisialisasi override terhadap SSLContext dan CertificatePinner. Namun, proses bypass tidak dapat diselesaikan karena terjadi ketidakcocokan signature method check$okhttp(), yang disebabkan oleh perbedaan overload parameter pada implementasi OkHttp berbasis Kotlin. Kondisi ini menunjukkan bahwa aplikasi menggunakan mekanisme SSL Pinning modern yang tidak dapat dibypass secara otomatis dengan script bawaan Objection, sekaligus menandakan tingkat ketahanan aplikasi yang lebih baik terhadap serangan dynamic instrumentation.</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+ls /data/data/org.fdroid.fdroid/
+                </textarea>
+                <img src="assets/pm-9.png" alt="Image" class="article-image">
+                <p>Perintah ls /data/data/org.fdroid.fdroid/ menunjukkan bahwa melalui Objection, direktori internal aplikasi F-Droid dapat diakses dan dibaca dengan hak baca dan tulis. Struktur direktori yang terlihat seperti shared_prefs, databases, files, dan app_keystore menandakan lokasi penyimpanan data penting aplikasi, termasuk preferensi pengguna, database internal, dan penyimpanan kunci. Hasil ini membuktikan bahwa pada kondisi perangkat yang telah terinstrumentasi, data internal aplikasi dapat dieksplorasi saat runtime, sehingga berpotensi menimbulkan risiko kebocoran data apabila aplikasi tidak menerapkan proteksi tambahan seperti enkripsi dan pembatasan akses yang kuat.</p>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>4. Hasil & Temuan</h2>
+
+                <p><b>Temuan 1 – Hooking Method Aplikasi</b></p>
+                <p>Percobaan hooking dan spawning aplikasi menggunakan Frida berhasil dijalankan tanpa error Failed to spawn. Aplikasi dapat dijalankan menggunakan Frida, namun tidak ditemukan method Java yang sesuai dengan filter hooking yang digunakan. Hal ini ditunjukkan dari hasil tracing yang tidak menampilkan fungsi yang ter-hook, yang mengindikasikan bahwa aplikasi kemungkinan telah menerapkan obfuscation atau tidak menggunakan pola method getter sederhana pada runtime.</p>
+                <p>Bukti: screenshot terminal Started tracing 0 functions.</p>
+                <img src="assets/pm-5.png" alt="Image" class="article-image">
+
+                <p><b>Temuan 2 – Tracing Runtime Call (frida-trace)</b></p>
+                <p>Tracing runtime call dilakukan menggunakan perintah frida-trace dengan filter java.*get.*. Proses tracing berhasil dijalankan dan Web UI frida-trace aktif, namun hasil tracing menunjukkan 0 fungsi yang berhasil ditelusuri. Kondisi ini menunjukkan bahwa tidak terdapat method yang cocok dengan filter atau method tersebut tidak terpanggil selama proses runtime aplikasi berlangsung.</p>
+                <p>Bukti: screenshot output Web UI.</p>
+                <img src="assets/pm-10.png" alt="Image" class="article-image">
+
+                <p><b>Temuan 3 – Objection Runtime Action (SSL Pinning)</b></p>
+                <p>Eksplorasi runtime menggunakan Objection berhasil terhubung ke aplikasi. Saat perintah android sslpinning disable dijalankan, mekanisme SSL Pinning berbasis OkHttp3 berhasil terdeteksi. Namun, proses bypass gagal diselesaikan karena ketidakcocokan signature method check$okhttp(), yang menunjukkan penggunaan implementasi OkHttp modern berbasis Kotlin.</p>
+                <p>Bukti: screenshot log Objection.</p>
+                <img src="assets/pm-8.png" alt="Image" class="article-image">
+
+                <p><b>Temuan 4 – Akses Filesystem Aplikasi</b></p>
+                <p>Melalui Objection, direktori internal aplikasi /data/data/org.fdroid.fdroid/ berhasil diakses dan memiliki hak baca dan tulis. Terlihat direktori penting seperti shared_prefs, databases, files, dan app_keystore, yang berpotensi menyimpan data sensitif aplikasi.</p>
+                <p>Bukti: screenshot hasil perintah ls /data/data/org.fdroid.fdroid/.</p>
+                <img src="assets/pm-9.png" alt="Image" class="article-image">
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>5. Analisis Hasil</h2>
+                <p><b>Analisis Risiko</b><br>Hasil pengujian menunjukkan bahwa meskipun tidak ditemukan method yang dapat di-hook secara langsung, aplikasi tetap dapat dijalankan dalam mode dynamic analysis dan filesystem internal dapat diakses pada kondisi tertentu. Akses ini berpotensi menyebabkan kebocoran data sensitif jika perangkat dalam kondisi terkompromi, sementara kegagalan bypass SSL pinning tetap perlu diwaspadai pada environment atau versi aplikasi yang berbeda.</p>
+                <p><b>Rekomendasi Mitigasi</b><br>1. Terapkan runtime integrity check dan deteksi Frida/Objection<br>2. Gunakan obfuscation menyeluruh (ProGuard/R8)<br>3. Pertahankan SSL Pinning modern berbasis OkHttp/Kotlin<br>4. Deteksi root dan emulator secara konsisten<br>5. Simpan data sensitif menggunakan Android Keystore dan enkripsi</p>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>6. Kesimpulan</h2>
+                <p>Pengujian dynamic analysis terhadap aplikasi F-Droid menggunakan Frida, frida-trace, dan Objection menunjukkan bahwa aplikasi dapat dijalankan dalam lingkungan instrumentasi, namun tidak seluruh teknik dapat diterapkan secara efektif. Proses hooking dan tracing berhasil dijalankan tanpa error spawn, tetapi tidak ditemukan method yang dapat di-hook atau ditelusuri, yang mengindikasikan penerapan obfuscation dan arsitektur aplikasi yang kompleks. Eksplorasi runtime menggunakan Objection berhasil mendeteksi mekanisme SSL Pinning berbasis OkHttp3 meskipun bypass tidak dapat diselesaikan, serta menunjukkan bahwa filesystem internal aplikasi dapat diakses pada kondisi tertentu. Secara keseluruhan, hasil ini menunjukkan bahwa aplikasi memiliki tingkat ketahanan yang cukup baik terhadap dynamic instrumentation standar, namun tetap memerlukan mitigasi tambahan untuk meminimalkan risiko kebocoran data dan penyalahgunaan pada lingkungan yang terkompromi.</p>
+            </article>
+
+            <!-- ======================================================== -->
         </section>
     </main>
 
-    <footer>
-        <p>&copy; 2025 | made with love -zico</p>
-    </footer>
+<footer>
+    <p>&copy; 2025 | made with love - zico</p>
+</footer>
 </body>
 </html>
