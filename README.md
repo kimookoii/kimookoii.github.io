@@ -13,6 +13,7 @@
 7. **[Docker Security dengan Trivy](https://kimookoii.github.io/dso7-docker-security-dengan-trivy/)**
 8. **[Infrastructure as Code (IaC) Security](https://kimookoii.github.io/dso8-infrastructure-as-code-security/)**
 9. **[Monitoring & Logging](https://kimookoii.github.io/dso9-monitoring-logging/)**
+10. **[Incident Handling](https://kimookoii.github.io/dso10-incident-handling/)**
 
 ---
 

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Praktik Minggu 10 DevSecOps</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <button class="back-button" onclick="window.history.back();">&#8592; Back</button>
+            <h1>88032023006  |  ZICO</h1>
+            <p>...</p>
+        </div>
+    </header>
+
+    <title1>
+        <div class="title1-container">
+            <h1>Praktik Minggu 10 DevSecOps</h1>
+            <h2>Incident Handling</h2>
+        </div>
+    </title1>
+
+    <main>
+        <section class="content">
+
+          <!-- ======================================================== -->
+
+          <article>
+            <h2>1. Pendahuluan</h2>
+            <p>Incident handling merupakan proses sistematis untuk mendeteksi, merespons, menangani, dan mendokumentasikan insiden keamanan. Pada praktik ini dilakukan simulasi insiden <strong>Brute Force Login Attack</strong> pada aplikasi web sederhana berbasis Flask, dengan pendekatan DevSecOps menggunakan <strong>ELK Stack</strong> untuk log monitoring serta <strong>Prometheus dan Grafana</strong> untuk pemantauan metrik sistem.</p>
+          </article>
+
+          <!-- ======================================================== -->
+
+          <article>
+            <h2>2. Tahap Persiapan</h2>
+            <p>Tahap persiapan dilakukan dengan menyiapkan lingkungan pengujian yang terdiri dari:</p>
+            <ul>
+              <li>Aplikasi web sederhana berbasis Flask dengan endpoint login</li>
+              <li>Logging aplikasi diaktifkan untuk mencatat aktivitas login</li>
+              <li>Monitoring menggunakan ELK Stack dan Grafana</li>
+              <li>Monitoring metrik sistem menggunakan Prometheus dan Grafana</li>
+            </ul>
+
+            <h3>2.1 Menjalankan Docker (File Minggu 9)</h3>
+            <p>Tahap persiapan bertujuan memastikan sistem siap menghadapi insiden. Lingkungan pengujian dibangun menggunakan Docker di Windows 11 dengan PowerShell.</p>
+            <textarea id="markdown-input" rows="0" cols="0">
+docker compose up -d
+            </textarea>
+            <img src="assets/dso-1.png" alt="Image1" class="article-image">
+
+            <h3>2.2 Menjalankan Elasticsearch dan Kibana (File Minggu 9)</h3>
+            <p>Aplikasi Flask dibuat untuk menghasilkan berbagai jenis log yang akan dianalisis pada Kibana.</p>
+            <textarea id="markdown-input" rows="0" cols="0">
+py app.py
+            </textarea>
+            <img src="assets/dso-2.png" alt="Image1" class="article-image">
+            <p>Endpoint /login digunakan untuk mensimulasikan login gagal berulang (brute force).</p>
+            <p><b>Log:</b></p>
+            <img src="assets/dso-4.png" alt="Image1" class="article-image">
+            <p><b>Log Kibana:</b></p>
+            <img src="assets/dso-5.png" alt="Image1" class="article-image">
+
+            <h3>2.3 Menjalankan Prometheus (File Minggu 9)</h3>
+            <p>Prometheus diakses melalui browser: <a href="http://localhost:9090">http://localhost:9090</a></p>
+            <p>Menu Status → Targets</p>
+            <img src="assets/dso-6.png" alt="Image1" class="article-image">
+            <P>Menu Status → Targets digunakan untuk memastikan bahwa Node Exporter berada dalam status UP.</P>
+
+            <h3>2.4 Menjalankan Grafana dengan Tambahkan Data Source Prometheus (File Minggu 9)</h3>
+            <p>Prometheus diakses melalui browser: <a href="http://localhost:9090">http://localhost:9090</a></p>
+            <p>Menu Status → Targets</p>
+            <img src="assets/dso-7.png" alt="Image1" class="article-image">
+            <P>Menu Status → Targets digunakan untuk memastikan bahwa Node Exporter berada dalam status UP.</P>
+
+            <h3>2.5 Log</h3>
+            <img src="assets/dso-4.png" alt="Image1" class="article-image">
+            <p><b>Failed login attempt from IP address</b> dicatat untuk setiap kegagalan autentikasi, sehingga dapat digunakan sebagai indikator awal insiden keamanan.</p>
+          </article>
+
+          <!-- ======================================================== -->
+
+          <article>
+            <h2>3. Identifikasi Insiden</h2>
+            <p>Tahap identifikasi bertujuan untuk mendeteksi adanya insiden berdasarkan log dan metrics.</p>
+
+            <h3>3.1 Deteksi dari Log (ELK)</h3>
+            <img src="assets/dso-3.png" alt="Image1" class="article-image">
+            <img src="assets/dso-8.png" alt="Image1" class="article-image">
+            <textarea id="markdown-input" rows="0" cols="0">
+{
+  "@timestamp": [
+    "2025-12-24T12:29:01.119Z"
+  ],
+  "agent.ephemeral_id": [
+    "f24b131a-6909-42b6-95d9-c6429748312b"
+  ],
+  "agent.hostname": [
+    "DESKTOP-L7U6A3F"
+  ],
+  "agent.id": [
+    "ec6e5b95-5ce5-4930-80ed-0eff272e19b3"
+  ],
+  "agent.name": [
+    "DESKTOP-L7U6A3F"
+  ],
+  "agent.type": [
+    "filebeat"
+  ],
+  "agent.version": [
+    "9.2.2"
+  ],
+  "ecs.version": [
+    "8.0.0"
+  ],
+  "host.name": [
+    "DESKTOP-L7U6A3F"
+  ],
+  "input.type": [
+    "filestream"
+  ],
+  "log.file.fingerprint": [
+    "a7742ee7628bcf3fb4ec4a8b64ceb754f8152858d1b99df30a9675e232e1a601"
+  ],
+  "log.file.idxhi": [
+    "458752"
+  ],
+  "log.file.idxlo": [
+    "294950"
+  ],
+  "log.file.path": [
+    "C:\\Users\\laptop\\OneDrive\\Documents\\GitHub\\devsecops-week10\\devsecops-monitoring\\app\\app.log"
+  ],
+  "log.file.vol": [
+    "3087253948"
+  ],
+  "log.offset": [
+    39900
+  ],
+  "message": [
+    "2025-12-24 19:28:56,262 WARNING Failed login attempt from IP 172.20.10.2"
+  ],
+  "_id": "NmNVUJsBjzWNUBP5rqBs",
+  "_index": ".ds-filebeat-9.2.2-2025.12.17-000001",
+  "_score": null
+}
+            </textarea>
+            <p>Analisis dilakukan melalui Kibana dengan query:</p>
+            <p><b>message: "Failed login attempt"</b></p>
+            <p>Indikasi insiden yang teridentifikasi:</p>
+            <ul>
+              <li>Login gagal terjadi berulang kali</li>
+              <li>Alamat IP yang sama</li>
+              <li>Terjadi dalam rentang waktu singkat</li>
+            </ul>
+
+            <h3>3.2 Deteksi dari Metrics (Grafana)</h3>
+            <img src="assets/dso-7.png" alt="Image1" class="article-image">
+            <ul>
+            <li>Peningkatan jumlah request login</li>
+            <li>Lonjakan penggunaan CPU</li>
+            </ul>
+            <p>
+            Kombinasi log dan metrics memperkuat indikasi terjadinya brute force login attack.
+            </p>
+          </article>
+
+          <!-- ======================================================== -->
+
+          <article>
+            <h2>4. Isolasi Insiden</h2>
+            <p>Containment dilakukan untuk membatasi dampak insiden agar tidak meluas. Langkah yang dilakukan antara lain:</p>
+
+            <h3>4.1 Blok IP via Windows Defender Firewall (PowerShell)</h3>
+            <textarea id="markdown-input" rows="0" cols="0">
+New-NetFirewallRule `
+   -DisplayName "BLOCK-Bruteforce-172.20.10.2" `
+   -Direction Inbound `
+   -Action Block `
+   -RemoteAddress 172.20.10.2 `
+   -Protocol TCP `
+   -Profile Any
+            </textarea>
+            <img src="assets/dso-9.png" alt="Image1" class="article-image">
+
+            <h3>4.2 Rate Limiting di Aplikasi Flask</h3>
+            <p>Install Flask-Limiter</p>
+            <textarea id="markdown-input" rows="0" cols="0">
+pip install flask-limiter
+            </textarea>
+            <p>Edit app.py (Rate Limiting Login)</p>
+            <textarea id="markdown-input" rows="0" cols="0">
+import logging
+import os
+from flask import Flask, request
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
+app = Flask(__name__)
+
+# Log file path
+LOG_FILE = os.path.join(os.path.dirname(__file__), "app.log")
+
+# Logging configuration
+logging.basicConfig(
+    filename=LOG_FILE,
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s"
+)
+
+# Rate limiter configuration
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["100 per minute"]
+)
+
+@app.route("/")
+def home():
+    app.logger.info("User accessed home page")
+    return "Hello DevSecOps"
+
+@app.route("/login")
+@limiter.limit("5 per minute")
+def login():
+    app.logger.warning(
+        "Failed login attempt from IP %s",
+        request.remote_addr
+    )
+    return "Login failed", 401
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+            </textarea>
+            <p>Jalankan ulang aplikasi</p>
+            <textarea id="markdown-input" rows="0" cols="0">
+py app.py
+            </textarea>
+            <img src="assets/dso-10.png" alt="Image1" class="article-image">
+            <p>Simulasikan Brute Force dengan refresh berulang</p>
+            <img src="assets/dso-11.png" alt="Image1" class="article-image">
+
+            <p>Pemblokiran IP dapat dilakukan melalui firewall atau mekanisme di aplikasi. Tujuan utama tahap ini adalah menghentikan serangan tanpa mengganggu layanan utama.</p>
+          </article>
+
+          <!-- ======================================================== -->
+
+          <article>
+            <h2>5. Pembersihan</h2>
+            <p>Setelah serangan berhasil diisolasi, dilakukan proses eradikasi untuk menghilangkan akar masalah. Langkah yang dilakukan meliputi:</p>
+
+            <h3>5.1 Menghapus akun attacker jika ditemukan</h3>
+            <p>Menghapus akun attacker jika ditemukan</p>
+            <ul>
+              <li>Tidak ada sistem login database</li>
+              <li>Tidak ada akun nyata</li>
+            </ul>
+            <p>Lakukan verifikasi log untuk memastikan:</p>
+            <ul>
+              <li>Tidak ada akun berhasil login</li>
+              <li>Semua percobaan login gagal</li>
+            </ul>
+            <p>Tidak ditemukan akun attacker karena seluruh percobaan login bersifat gagal.</p>
+
+            <h3>5.2 Patch celah keamanan</h3>
+            <p>Akar Masalah</p>
+            <ul>
+              <li>Endpoint /login tidak memiliki proteksi</li>
+              <li>Bisa diakses tanpa batas</li>
+              <li>Rentan brute force</li>
+            </ul>
+            <p>Patch yang Dilakukan (TANPA UBAH STRUKTUR BESAR)</p>
+            <textarea id="markdown-input" rows="0" cols="0">
+@app.route("/login")
+def login():
+    return "Unauthorized", 401
+            </textarea>
+            <p>Dilakukan patch pada endpoint login dengan menonaktifkan akses terbuka dan memastikan respons yang konsisten untuk mencegah eksploitasi berulang.</p>
+
+            <h3>5.3 Update dependency aplikasi</h3>
+            <textarea id="markdown-input" rows="0" cols="0">
+pip list --outdated
+            </textarea>
+            <img src="assets/dso-12.png" alt="Image1" class="article-image">
+            <p>Jika ada:</p>
+            <textarea id="markdown-input" rows="0" cols="0">
+pip install --upgrade flask
+            </textarea>
+            <p>Tujuan:</p>
+            <ol>
+              <li>Menghindari eksploitasi vulnerability versi lama</li>
+              <li>Menutup celah known CVE</li>
+            </ol>
+            <p>Seluruh dependency aplikasi diperbarui ke versi terbaru untuk mengurangi risiko eksploitasi kerentanan yang telah diketahui.</p>
+
+            <h3>5.4 Reset Kredensial Pengguna</h3>
+            <p>Karena tidak ada user database, reset dilakukan secara konseptual tapi sah.</p>
+            <p>Implementasi Praktik:</p>
+            <ol>
+              <li>Dokumentasikan bahwa semua kredensial dianggap terkompromi</li>
+              <li>Reset dilakukan jika sistem production</li>
+            </ol>
+            <p>Sebagai langkah preventif, dilakukan simulasi reset kredensial pengguna untuk menghindari potensi penyalahgunaan akun apabila kredensial telah terpapar selama serangan.</p>
+
+            <h3>5.5 Membersihkan Artefak Serangan</h3>
+            <p>Yang dibersihkan:</p>
+            <ol>
+              <li>Firewall rule sementara</li>
+              <li>Job brute force</li>
+              <li>Script load test</li>
+            </ol>
+            <textarea id="markdown-input" rows="0" cols="0">
+Remove-NetFirewallRule -DisplayName "BLOCK-Bruteforce-172.20.10.2"
+            </textarea>
+            <p>Tujuan:</p>
+            <ol>
+              <li>Sistem kembali ke kondisi normal</li>
+              <li>Tidak ada konfigurasi darurat tertinggal</li>
+            </ol>
+          </article>
+
+          <!-- ======================================================== -->
+
+          <article>
+            <h2>6. Pemulihan</h2>
+
+            <h3>6.1 Mengaktifkan Kembali Layanan Aplikasi</h3>
+            <p>Kondisi Awal:</p>
+            <ol>
+              <li>Aplikasi sempat dibatasi</li>
+              <li>Firewall rule sementara diterapkan</li>
+              <li>Rate limiting aktif</li>
+            </ol>
+            <p>Pastikan aplikasi Flask berjalan normal</p>
+            <textarea id="markdown-input" rows="0" cols="0">
+py app.py
+            </textarea>
+            <img src="assets/dso-10.png" alt="Image1" class="article-image">
+            <p>Pastikan firewall sudah dibersihkan dari rule darurat</p>
+            <textarea id="markdown-input" rows="0" cols="0">
+Get-NetFirewallRule | Where-Object DisplayName -Like "*BLOCK*"
+            </textarea>
+            <p>Jika ada rule darurat:</p>
+            <textarea id="markdown-input" rows="0" cols="0">
+Remove-NetFirewallRule -DisplayName "BLOCK-Bruteforce-172.20.10.2"
+            </textarea>
+            <p>Artinya:</p>
+            <ol>
+              <li>Akses sah dipulihkan</li>
+              <li>Sistem kembali melayani user normal</li>
+            </ol>
+
+            <h3>6.2 Memastikan Performa Sistem Stabil (Grafana)</h3>
+            <img src="assets/dso-7.png" alt="Image1" class="article-image">
+            <p>Hasil yang diharapkan:</p>
+            <ol>
+              <li>CPU turun ke kondisi normal</li>
+              <li>Tidak ada spike ekstrem</li>
+              <li>Memory stabil</li>
+            </ol>
+
+            <h3>6.3 Monitoring Ulang Secara Intensif (Kibana)</h3>
+            <img src="assets/dso-13.png" alt="Image1" class="article-image">
+            <p>Hasil yang diharapkan: Last 15 minutes</p>
+            <ol>
+              <li>Tidak ada lonjakan log</li>
+              <li>Pola akses kembali normal</li>
+            </ol>
+
+            <h3>6.4 Validasi Tidak Ada Serangan Ulang</h3>
+            <textarea id="markdown-input" rows="0" cols="0">
+Invoke-WebRequest http://localhost:5000/login -UseBasicParsing
+            </textarea>
+            <p>Hasil yang diharapkan:</p>
+            <ol>
+              <li>Login failed</li>
+              <li>Tidak: Timeout, Error, Flooding</li>
+            </ol>
+            <img src="assets/dso-14.png" alt="Image1" class="article-image">
+          </article>
+
+          <!-- ======================================================== -->
+
+          <article>
+            <h2>7. Evaluasi</h2>
+            <p>Tahap evaluasi dilakukan untuk meningkatkan kesiapan sistem di masa depan. Beberapa poin evaluasi yang dihasilkan:</p>
+            <ul>
+              <li><b>Kenapa Insiden Terjadi?</b><br>Insiden brute force login terjadi karena endpoint login pada aplikasi Flask dapat diakses secara terbuka tanpa mekanisme pembatasan percobaan autentikasi. Tidak adanya proteksi seperti rate limiting atau deteksi percobaan berulang memungkinkan penyerang melakukan login gagal secara terus-menerus dalam waktu singkat. Selain itu, sistem belum memiliki alert otomatis yang dapat memberikan peringatan dini ketika terjadi pola anomali pada log atau lonjakan penggunaan sumber daya.</li>
+              <li><b>Apa yang Kurang?</b><br>- Beberapa kontrol keamanan dasar belum diterapkan sejak awal, antara lain:<br>- Tidak adanya pembatasan jumlah percobaan login per IP.<br>- Monitoring masih bersifat pasif dan hanya dianalisis setelah insiden terjadi.<br>- Tidak terdapat mekanisme deteksi dini atau notifikasi otomatis pada sistem monitoring.<br>- Pengamanan aplikasi masih bergantung pada konfigurasi default tanpa hardening tambahan.<br>- Kondisi ini menyebabkan serangan dapat berlangsung sebelum dilakukan intervensi manual.</li>
+              <li><b>Bagaimana Mencegah Insiden Terulang?</b><br>- Untuk mencegah insiden serupa di masa depan, langkah-langkah berikut perlu diterapkan:<br>- Menerapkan rate limiting dan kontrol akses pada endpoint sensitif seperti login.<br>- Mengaktifkan alert berbasis log dan metrics untuk mendeteksi percobaan login gagal berulang dan lonjakan resource.<br>- Melakukan hardening konfigurasi aplikasi dan sistem operasi secara berkala.<br>- Memperbarui dependency aplikasi secara rutin untuk menghindari eksploitasi kerentanan yang telah diketahui.<br>- Menjadikan monitoring sebagai proses proaktif, bukan hanya reaktif setelah insiden terjadi.</li>
+            </ul>
+            <p>
+            Hasil evaluasi digunakan sebagai dasar perbaikan dan peningkatan keamanan sistem.
+            </p>
+          </article>
+
+          <!-- ======================================================== -->
+
+          <article>
+          <h2>8. Kesimpulan</h2>
+          <p>Pada Topik ini dilakukan simulasi penanganan insiden keamanan pada aplikasi web berupa serangan brute force login menggunakan pendekatan incident handling. Proses dimulai dari tahap persiapan dengan membangun aplikasi Flask sederhana serta mengaktifkan logging dan monitoring menggunakan ELK Stack dan Grafana. Insiden diidentifikasi melalui log login gagal berulang dan lonjakan penggunaan sumber daya sistem. Selanjutnya dilakukan containment dengan membatasi akses penyerang dan isolasi sementara, diikuti tahap eradication untuk menghilangkan akar masalah melalui patch aplikasi, pembaruan dependency, dan simulasi reset kredensial. Tahap recovery memastikan layanan kembali berjalan normal dengan performa sistem yang stabil dan monitoring lanjutan. Melalui proses ini dapat disimpulkan bahwa penerapan monitoring terpusat dan respons insiden yang terstruktur sangat penting untuk mendeteksi, menangani, dan mencegah serangan keamanan agar tidak terulang kembali.</p>
+          </article>
+
+          <!-- ======================================================== -->
+
+        </section>
+      </main>
+
+    <footer>
+      <p>&copy; 2025 | made with love -zico</p>
+    </footer>
+
+  </body>
+</html>
