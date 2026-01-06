@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Under Maintenance</title>
+    <title>Praktik Minggu 7 Pentest Mobile</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -11,40 +11,193 @@
     <header>
         <div class="header-container">
             <button class="back-button" onclick="window.history.back();">&#8592; Back</button>
-            <h1>88032023006  |  ZICO</h1>
+            <h1>88032023006 | ZICO</h1>
         </div>
     </header>
 
     <title1>
         <div class="title1-container">
-            <h1>🚧 Website Sedang Dalam Pemeliharaan 🚧</h1>
-            <h2>Kami akan segera kembali!</h2>
+            <h1>Praktik Minggu 7 Pentest Mobile</h1>
+            <h3>Reverse Engineering & Modifikasi APK<br>Menggunakan APKTool dan JADX</h3>
         </div>
     </title1>
 
     <main>
         <section class="content">
+
+            <!-- ======================================================== -->
+
             <article>
+                <h2>1. Pendahuluan</h2>
+                    <p>Reverse Engineering pada aplikasi Android merupakan proses membongkar file APK untuk memahami struktur internal, logika program, serta konfigurasi keamanan. Teknik ini umum digunakan dalam analisis keamanan, audit aplikasi, dan pembelajaran mekanisme kerja aplikasi Android.</p>
+                    <p>Pada artikel ini dilakukan proses <i>decompile – analisis – modifikasi – rebuild – signing</i> APK menggunakan <b>APKTool</b> dan <b>JADX</b> di lingkungan <b>Windows 11</b> tanpa WSL maupun virtual machine.</p>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>2. Praktik 1 - Decompile APK dengan APKTool</h2>
+
+                <p><b>2.1 Install APKTool</b></p>
+                <textarea id="markdown-input" rows="0" cols="0">
+sudo apt install apktool
+                </textarea>
+                
+                <p><b>2.2 Decompile APK</b></p>
+                <p>Langkah kedua adalah melakukan decompile APK untuk mendapatkan struktur file dan source code dalam bentuk smali.</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+apktool d fdroid.apk -o hasil_decompile
+                </textarea>
+                <img src="assets/pm-1.png" alt="Image" class="article-image">
+                <p>Hasil decompile menghasilkan beberapa folder utama:</p>
+                <ul>
+                    <li><b>smali/</b> – kode bytecode Android</li>
+                    <li><b>res/</b> – resource aplikasi</li>
+                    <li><b>AndroidManifest.xml</b> – konfigurasi aplikasi</li>
+                </ul>
+                <img src="assets/pm-2.png" alt="Image" class="article-image">
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>3. Praktik 2 - Analisis Source Code Menggunakan JADX</h2>
+                
+                <p><b>3.1 Install JADX GUI</b></p>
+                <textarea id="markdown-input" rows="0" cols="0">
+sudo apt install jadx
+                </textarea>
+                <p><b>3.2 Buka aplikasi</b></p>
+                <textarea id="markdown-input" rows="0" cols="0">
+jadx-gui
+                </textarea>
+                <p>Untuk mempermudah analisis logika aplikasi, digunakan <b>jadx-gui</b> yang menampilkan hasil decompile dalam bentuk Java-like code.</p>
+
+                <p><b>3.3 Load file fdroid.apk</b></p>
+                <p>Langkah analisis:</p>
+                <ul>
+                    <li>Membuka file APK menggunakan jadx-gui</li>
+                    <li>Menelusuri package utama aplikasi</li>
+                    <li>Mencari string sensitif seperti <code>login</code>, <code>token</code>, atau <code>api</code></li>
+                </ul>
+                <p>Key</p>
+                <img src="assets/pm-3.png" alt="Image" class="article-image">
+                <p>Token</p>
+                <img src="assets/pm-4.png" alt="Image" class="article-image">
+                <p>Api</p>
+                <img src="assets/pm-5.png" alt="Image" class="article-image">
+                <p>Login</p>
+                <img src="assets/pm-6.png" alt="Image" class="article-image">
+
                 <p>
-                    Saat ini situs sedang dalam proses pemeliharaan untuk peningkatan sistem dan performa.
-                    Kami mohon maaf atas ketidaknyamanan ini.
+                Dari hasil analisis, ditemukan method autentikasi yang menentukan status login pengguna.
                 </p>
             </article>
 
+            <!-- ======================================================== -->
+
             <article>
-                <h2>Informasi</h2>
-                <ul>
-                    <li>Waktu maintenance: sementara</li>
-                    <li>Layanan akan aktif kembali dalam waktu dekat</li>
-                    <li>Terima kasih atas kesabaran Anda 🙏</li>
-                </ul>
-                <p>Silakan coba akses kembali beberapa saat lagi.</p>
+                <h2>4. Praktik 3 - Modifikasi Smali (Patch Sederhana)</h2>
+                <p>Aplikasi tidak memiliki mekanisme login, sehingga patch tidak dilakukan pada autentikasi. Modifikasi difokuskan pada fitur Panic dengan mem‐patch method isTriggerIntent() pada kelas info.guardianproject.panic.Panic. Method ini berfungsi untuk mendeteksi intent panic. Dengan memaksa nilai return menjadi false, mekanisme panic dapat dinonaktifkan.</p>
+
+                <p><b>4.1 Temukan File Smali dari hasil decompile</b></p>
+                <img src="assets/pm-7.png" alt="Image" class="article-image">
+                <p><b>4.2 Patch Smali</b></p>
+                <p>Sebelum patch:</p>
+                <textarea id="markdown-input2" rows="0" cols="0">
+.method public static isTriggerIntent(Landroid/content/Intent;)Z
+    ...
+    return p0
+.end method
+                </textarea>
+                <img src="assets/pm-9.png" alt="Image" class="article-image">
+                <p>Sesudah patch (dipaksa selalu false):</p>
+                <textarea id="markdown-input2" rows="0" cols="0">
+.method public static isTriggerIntent(Landroid/content/Intent;)Z
+    .locals 1
+    const/4 p0, 0x0
+    return p0
+.end method
+                </textarea>
+                <img src="assets/pm-8.png" alt="Image" class="article-image">
             </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>4. Praktik 4 - Proses Rebuild APK</h2>
+                <p>Setelah modifikasi selesai, APK dibangun ulang menggunakan APKTool:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+apktool b hasil_decompile -o fdroid_mod.apk
+                </textarea>
+                <img src="assets/pm-10.png" alt="Image" class="article-image">
+                <p>File APK hasil modifikasi berhasil dibuat dengan nama <b>fdroid_mod.apk</b>.</p>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>6. Proses Signing APK</h2>
+                <p>APK hasil rebuild belum dapat diinstal karena belum memiliki signature digital. Oleh karena itu dilakukan proses signing.</p>
+
+                <h3>6.1 Membuat Keystore</h3>
+                <textarea id="markdown-input3" rows="0" cols="0">
+keytool -genkey -v -keystore mykey.keystore -alias myalias -keyalg RSA -keysize 2048 -validity 10000
+                </textarea>
+                <img src="assets/pm-11.png" alt="Image" class="article-image">
+
+                <h3>6.2 Signing APK</h3>
+                <textarea id="markdown-input" rows="0" cols="0">
+apksigner sign --ks mykey.keystore fdroid_mod.apk
+                </textarea>
+                <img src="assets/pm-12.png" alt="Image" class="article-image">
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>7. Instalasi APK ke Emulator</h2>
+                <p>Setelah proses signing selesai, APK diinstal ke emulator Android menggunakan ADB:</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb uninstall org.fdroid.fdroid
+                </textarea>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb install fdroid_mod.apk
+                </textarea>
+                <img src="assets/pm-13.png" alt="Image" class="article-image">
+                <p>Instalasi berhasil dan aplikasi dapat dijalankan tanpa error.</p>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>8. Perubahan Aplikasi Setelah Dimodifikasi</h2>
+                <img src="assets/pm-14.png" alt="Image" class="article-image">
+                <p>Setelah modifikasi dilakukan, aplikasi menunjukkan perubahan perilaku sebagai berikut:</p>
+                <ul>
+                    <li>Intent dengan action info.guardianproject.panic.action.TRIGGER tidak lagi dikenali sebagai pemicu panic oleh aplikasi.</li>
+                    <li>Mekanisme panic / emergency trigger tidak dijalankan karena logika internal aplikasi telah dimodifikasi pada level smali.</li>
+                    <li>Aplikasi tetap berjalan normal tanpa mengeksekusi logika panic.</li>
+                </ul>
+                <p>Fitur panic pada aplikasi tidak disediakan dalam bentuk menu atau antarmuka pengguna, melainkan bekerja melalui intent internal. Oleh karena itu, tidak terdapat tampilan menu panic pada screenshot emulator, dan perubahan perilaku aplikasi hanya dapat dijelaskan melalui analisis logika internal aplikasi. Hal ini membuktikan bahwa modifikasi smali berhasil diterapkan sesuai dengan tujuan pengujian.</p>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>9. Kesimpulan</h2>
+                <p>Berdasarkan hasil reverse engineering dan modifikasi aplikasi Android yang telah dilakukan, dapat disimpulkan bahwa proses decompile, analisis, dan modifikasi APK berhasil dilaksanakan menggunakan APKTool dan JADX pada lingkungan Windows. Analisis statis menunjukkan bahwa aplikasi tidak memiliki mekanisme autentikasi atau login, sehingga fokus modifikasi diarahkan pada logika internal aplikasi, khususnya fitur panic yang bekerja melalui intent internal.</p>
+                <p>Modifikasi dilakukan dengan melakukan patch pada file smali Panic.smali, tepatnya pada method isTriggerIntent(), dengan memaksa nilai return selalu bernilai false. Perubahan ini menyebabkan aplikasi tidak lagi mengenali intent panic sebagai pemicu eksekusi logika emergency. Setelah dilakukan proses rebuild, signing, dan instalasi ulang ke emulator, aplikasi hasil modifikasi dapat dijalankan dengan normal tanpa error, yang menunjukkan bahwa perubahan pada level smali berhasil diterapkan.</p>
+                <p>Hasil pengujian membuktikan bahwa reverse engineering memungkinkan pemahaman dan perubahan perilaku aplikasi pada level bytecode, serta menegaskan pentingnya penerapan mekanisme keamanan yang lebih kuat untuk melindungi logika internal aplikasi dari potensi modifikasi tidak sah.</p>
+            </article>
+
+            <!-- ======================================================== -->
+
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2025 | made with love -zico</p>
+        <p>&copy; 2025 | made with love - zico</p>
     </footer>
-</body>
+    </body>
 </html>
