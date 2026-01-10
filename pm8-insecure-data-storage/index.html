@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Under Maintenance</title>
+    <title>Praktik Minggu 8 Pentest Mobile</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -11,40 +11,148 @@
     <header>
         <div class="header-container">
             <button class="back-button" onclick="window.history.back();">&#8592; Back</button>
-            <h1>88032023006  |  ZICO</h1>
+            <h1>88032023006 | ZICO</h1>
         </div>
     </header>
 
     <title1>
         <div class="title1-container">
-            <h1>🚧 Website Sedang Dalam Pemeliharaan 🚧</h1>
-            <h2>Kami akan segera kembali!</h2>
+            <h1>Praktik Minggu 8 Pentest Mobile</h1>
+            <h2>Insecure Data Storage</h2>
         </div>
     </title1>
 
     <main>
         <section class="content">
-            <article>
-                <p>
-                    Saat ini situs sedang dalam proses pemeliharaan untuk peningkatan sistem dan performa.
-                    Kami mohon maaf atas ketidaknyamanan ini.
-                </p>
-            </article>
+
+            <!-- ======================================================== -->
 
             <article>
-                <h2>Informasi</h2>
-                <ul>
-                    <li>Waktu maintenance: sementara</li>
-                    <li>Layanan akan aktif kembali dalam waktu dekat</li>
-                    <li>Terima kasih atas kesabaran Anda 🙏</li>
-                </ul>
-                <p>Silakan coba akses kembali beberapa saat lagi.</p>
+                <h2>1. Pendahuluan</h2>
+                    <p>Insecure Data Storage merupakan salah satu kerentanan umum pada aplikasi Android, di mana aplikasi menyimpan data sensitif tanpa perlindungan yang memadai. Praktikum ini bertujuan untuk mengidentifikasi data sensitif yang tersimpan secara tidak aman melalui file system aplikasi Android menggunakan ADB pada lingkungan Windows 11 tanpa WSL dan tanpa virtual machine.</p>
             </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>2. Environment Pengujian</h2>
+                <ul>
+                    <li>Host OS: Windows 11 (tanpa WSL, tanpa virtual machine Linux)</li>
+                    <li>Tools: Android SDK (ADB)</li>
+                    <li>Device: Android Emulator (rooted)</li>
+                    <li>Aplikasi Uji: Android App (debuggable)</li>
+                    <li>Metode: Static file inspection via ADB</li>
+                </ul>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>3. Praktek 1 – Menemukan File Penyimpanan Aplikasi</h2>
+                <p>Tahap pertama dilakukan untuk mengidentifikasi lokasi penyimpanan data aplikasi. Dengan menggunakan ADB, package name aplikasi dicari kemudian dilakukan eksplorasi direktori internal aplikasi.</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb shell
+                </textarea>
+                <textarea id="markdown-input" rows="0" cols="0">
+su
+                </textarea>
+                <textarea id="markdown-input" rows="0" cols="0">
+cd /data/data/org.fdroid.fdroid/
+                </textarea>
+                <textarea id="markdown-input" rows="0" cols="0">
+ls -R
+                </textarea>
+                <img src="assets/pm-1.png" alt="Image" class="article-image">
+                <p>Hasil eksplorasi menunjukkan adanya direktori utama seperti:</p>
+                <ul>
+                    <li><b>shared_prefs/</b> – penyimpanan konfigurasi aplikasi</li>
+                    <li><b>databases/</b> – database SQLite</li>
+                    <li><b>files/</b> – file tambahan aplikasi</li>
+                    <li><b>cache/</b> – data sementara</li>
+                </ul>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>4. Praktek 2 – Analisis Shared Preferences</h2>
+                <p>Pada tahap ini dilakukan pengambilan file Shared Preferences untuk melihat apakah terdapat data sensitif yang disimpan tanpa enkripsi.</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb pull /data/data/org.fdroid.fdroid/shared_prefs/
+                </textarea>
+                <img src="assets/pm-2.png" alt="Image" class="article-image">
+                <p>Dari hasil analisis file XML, ditemukan data berikut:</p>
+                <ul>
+                    <li>Username tersimpan dalam bentuk plaintext</li>
+                    <li>Token autentikasi tidak dienkripsi</li>
+                    <li>Flag status seperti <code>premium=true</code> dapat dimodifikasi</li>
+                </ul>
+                <p>Hal ini menunjukkan bahwa aplikasi rentan terhadap manipulasi status dan kebocoran informasi pengguna.</p>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>5. Praktek 3 – Analisis Database SQLite</h2>
+                <p>Database SQLite aplikasi diekstrak untuk dianalisis strukturnya.</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+adb pull /data/data/org.fdroid.fdroid/databases/fdroid_db
+                </textarea>
+                <img src="assets/pm-3.png" alt="Image" class="article-image">
+                <img src="assets/pm-4.png" alt="Image" class="article-image">
+                <p>Database berhasil diakses dan dibuka menggunakan SQLite Viewer di Windows. Database berisi tabel-tabel metadata aplikasi FDroid. Tabel android_metadata hanya menyimpan informasi locale (en_US).</p>
+                <p>Tidak ditemukan tabel yang menyimpan:</p>
+                <ul>
+                    <li>Kredensial pengguna</li>
+                    <li>Password</li>
+                    <li>Token autentikasi</li>
+                </ul>
+                <p>Tidak ditemukan indikasi Insecure Data Storage pada SQLite Database</p>
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>6. Praktek 4 – Analisis File Storage (TXT / JSON)</h2>
+                <p>Pada tahap ini dilakukan analisis terhadap direktori <code>/data/data/org.fdroid.fdroid/files</code> untuk mengidentifikasi kemungkinan penyimpanan data dalam bentuk file teks atau file terstruktur.</p>
+                <textarea id="markdown-input" rows="0" cols="0">
+ls -R /data/data/org.fdroid.fdroid/files
+                </textarea>
+                <img src="assets/pm-5.png" alt="Image" class="article-image">
+                <p>Berdasarkan hasil pemeriksaan, direktori <code>files</code> berisi file berupa <code>index.html</code> dan beberapa file gambar (<code>.png</code>) yang digunakan sebagai bagian dari repository metadata dan antarmuka aplikasi.</p>
+                <p>Tidak ditemukan file dengan ekstensi <code>.txt</code>, <code>.json</code>, maupun file lain yang mengandung data sensitif pengguna seperti username, token autentikasi, atau informasi sesi.</p>
+                <p>Dengan demikian, dapat disimpulkan bahwa aplikasi tidak menyimpan data sensitif secara plaintext pada file system internal, sehingga tidak ditemukan indikasi kerentanan <b>Insecure Data Storage</b> pada aspek file storage.</p>    
+            </article>
+
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>7. Analisis Risiko Keamanan</h2>
+                <p>Berdasarkan hasil pengujian pada seluruh tahapan praktikum, tidak ditemukan penyimpanan data sensitif pengguna seperti username, password, maupun token autentikasi dalam bentuk plaintext pada penyimpanan internal aplikasi.</p>
+                <p>Database SQLite yang dianalisis hanya berisi metadata aplikasi dan informasi repository, sedangkan direktori <code>files</code> hanya menyimpan file HTML dan image yang berfungsi sebagai cache dan komponen antarmuka aplikasi.</p>
+                <p>Dengan tidak ditemukannya data sensitif pada Shared Preferences, database SQLite, maupun file system internal, maka risiko <b>credential leakage</b>, <b>session hijacking</b>, dan <b>manipulasi status aplikasi</b> dinilai rendah pada aplikasi ini.</p>
+                <p>Hal ini menunjukkan bahwa aplikasi telah menerapkan praktik pengelolaan penyimpanan data yang cukup baik dan tidak menempatkan informasi sensitif pada lokasi yang mudah diakses.</p>
+            </article>
+                
+            <!-- ======================================================== -->
+
+            <article>
+                <h2>8. Kesimpulan</h2>
+                <p>Praktikum Insecure Data Storage dilakukan melalui empat tahap, yaitu identifikasi struktur penyimpanan aplikasi, analisis Shared Preferences, pemeriksaan database SQLite, dan analisis file system internal menggunakan ADB pada lingkungan Windows 11.</p>
+                <p>Berdasarkan hasil pengujian, tidak ditemukan data sensitif pengguna yang disimpan secara tidak aman dalam bentuk plaintext pada aplikasi yang diuji. Database SQLite hanya berisi metadata aplikasi, sedangkan direktori file internal digunakan untuk menyimpan komponen non-sensitif seperti file HTML dan gambar.</p>
+                <p>Dengan demikian, dapat disimpulkan bahwa aplikasi tidak menunjukkan indikasi kerentanan <b>Insecure Data Storage</b>. Kondisi ini mengindikasikan bahwa aplikasi telah menerapkan pengelolaan penyimpanan data yang sesuai dan meminimalkan risiko kebocoran informasi pengguna.</p>
+                <p>Hasil ini menegaskan bahwa tidak semua aplikasi Android memiliki kerentanan Insecure Data Storage, dan proses pengujian tetap penting untuk memastikan keamanan aplikasi berdasarkan bukti teknis yang ditemukan.</p>
+            </article>
+                
+            <!-- ======================================================== -->
+
+
         </section>
     </main>
 
-    <footer>
-        <p>&copy; 2025 | made with love -zico</p>
-    </footer>
+<footer>
+    <p>&copy; 2025 | made with love - zico</p>
+</footer>
+
 </body>
 </html>
