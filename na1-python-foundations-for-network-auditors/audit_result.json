@@ -1,0 +1,5 @@
+{
+    "hostname": "R1-Core-NOC",
+    "password_encryption_enabled": false,
+    "telnet_enabled": true
+}
