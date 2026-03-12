@@ -1,0 +1,8 @@
+{
+    "mikrotik_ip": "10.200.10.127",
+    "service_output": "Flags: D - DYNAMIC; X - DISABLED, I - INVALID; c - CONNECTION\nColumns: NAME, PORT, PROTO, CERTIFICATE, VRF, MAX-SESSIONS, LOCAL, REMOTE\n #     NAME        PORT  PROTO  CERTIFICATE  VRF   MAX-SESSIONS  LOCAL          REMOTE             \n 0     ftp           21  tcp                 main            20                                    \n 1     ssh           22  tcp                 main            20                                    \n 2 D c ssh           22  tcp                                     10.200.10.127  10.200.10.110:57372\n 3     telnet        23  tcp                 main            20                                    \n 4 D   dhcpclient    68  udp                                                                       \n 5     www           80  tcp                 main            20                                    \n 6  X  www-ssl      443  tcp    none         main            20                                    \n 7 D   btest       2000  tcp                                                                       \n 8 D   discover    5678  udp                                                                       \n 9     winbox      8291  tcp                 main            20                                    \n10     api         8728  tcp                 main            20                                    \n11     api-ssl     8729  tcp    none         main            20",
+    "vulnerabilities_found": [
+        "Telnet service aktif (VULNERABLE)",
+        "FTP service aktif (VULNERABLE)"
+    ]
+}
