@@ -1,0 +1,52 @@
+[
+    {
+        "ip_router": "10.10.93.53",
+        "username": "88032023006",
+        "status": "TERVERIFIKASI"
+    },
+    {
+        "ip_router": "10.10.93.54",
+        "username": "88032023006",
+        "status": "TERVERIFIKASI"
+    },
+    {
+        "ip_router": "10.10.93.55",
+        "username": "88032023006",
+        "status": "TERVERIFIKASI"
+    },
+    {
+        "ip_router": "10.10.93.28",
+        "username": "88032023006",
+        "status": "TERVERIFIKASI"
+    },
+    {
+        "ip_router": "10.10.93.46",
+        "username": "88032023006",
+        "status": "TERVERIFIKASI"
+    },
+    {
+        "ip_router": "10.10.93.47",
+        "username": "88032023006",
+        "status": "TERVERIFIKASI"
+    },
+    {
+        "ip_router": "10.10.93.48",
+        "username": "88032023006",
+        "status": "TERVERIFIKASI"
+    },
+    {
+        "ip_router": "10.10.93.51",
+        "username": "88032023006",
+        "status": "TERVERIFIKASI"
+    },
+    {
+        "ip_router": "10.10.93.49",
+        "username": "88032023006",
+        "status": "TERVERIFIKASI"
+    },
+    {
+        "ip_router": "10.10.93.50",
+        "username": "88032023006",
+        "status": "TERVERIFIKASI"
+    }
+]
