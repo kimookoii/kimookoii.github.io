@@ -1,0 +1,71 @@
+{
+    "timestamp": "2026-05-19 22:18:06",
+    "threshold": 5,
+    "routers": [
+        {
+            "router_ip": "10.10.93.46",
+            "status": "success",
+            "blocked_ips": [
+                {
+                    "attacker_ip": "10.10.93.66",
+                    "attempt_count": 5,
+                    "action": "blocked"
+                }
+            ],
+            "total_attacks_detected": 1,
+            "error": null
+        },
+        {
+            "router_ip": "10.10.93.48",
+            "status": "success",
+            "blocked_ips": [
+                {
+                    "attacker_ip": "10.10.93.66",
+                    "attempt_count": 5,
+                    "action": "blocked"
+                }
+            ],
+            "total_attacks_detected": 1,
+            "error": null
+        },
+        {
+            "router_ip": "10.10.93.50",
+            "status": "success",
+            "blocked_ips": [
+                {
+                    "attacker_ip": "10.10.93.66",
+                    "attempt_count": 5,
+                    "action": "blocked"
+                }
+            ],
+            "total_attacks_detected": 1,
+            "error": null
+        },
+        {
+            "router_ip": "10.10.93.52",
+            "status": "success",
+            "blocked_ips": [
+                {
+                    "attacker_ip": "10.10.93.66",
+                    "attempt_count": 5,
+                    "action": "blocked"
+                }
+            ],
+            "total_attacks_detected": 1,
+            "error": null
+        },
+        {
+            "router_ip": "10.10.93.54",
+            "status": "success",
+            "blocked_ips": [
+                {
+                    "attacker_ip": "10.10.93.66",
+                    "attempt_count": 5,
+                    "action": "blocked"
+                }
+            ],
+            "total_attacks_detected": 1,
+            "error": null
+        }
+    ]
+}
